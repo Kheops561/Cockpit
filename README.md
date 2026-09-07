@@ -47,11 +47,12 @@ assets/css/styles.css      Toute la mise en forme, commentée et numérotée
 assets/css/fonts.css       Déclaration des polices locales
 assets/js/site.js          Menu, apparitions, témoignages, vidéos, fil, schéma
 assets/fonts/              Inter, Source Serif 4, Caveat + licences OFL
-assets/images/             Visuels (provisoires — voir GUIDE-VISUELS.md)
+assets/images/             Photographies et logo — voir GUIDE-VISUELS.md
 assets/videos/             Vidéos d’ambiance (à déposer — voir le LISEZ-MOI)
 
 outils/verifier-site.py    Vérifie liens, ancres, ressources, invariants
 outils/donnees-structurees.py  Régénère le JSON-LD de l’accueil et du diagnostic
+outils/dimensions-images.py    Recale width et height sur les fichiers réels
 
 DESIGN-SYSTEM.md           Couleurs, typographie, composants, animations
 GUIDE-VISUELS.md           Chaque emplacement d’image et de vidéo

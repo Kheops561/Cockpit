@@ -22,10 +22,10 @@ calme, précision, indépendance, méthode et décision.
 ## Invariants de marque
 
 - Nom : `AMÉLIE & PARTNERS`.
-- Marque : un entrelacs de **quatre boucles**, dessiné en SVG dans les pages.
-  Il reste identique partout : ne pas le recomposer, ne pas faire varier son
-  nombre de boucles selon le contexte, ne pas l’animer. Voir
-  `DESIGN-SYSTEM.md` et `outils/marque.py`.
+- Marque : le fichier fourni `assets/images/logo.png`, un entrelacs de
+  **trois boucles** en lavande. L’employer tel quel : ne pas le redessiner,
+  ne pas le recolorer, ne pas l’animer, ne pas faire varier son nombre de
+  boucles. Voir `DESIGN-SYSTEM.md`.
 - Signature du logo : `Investir avec méthode · Décider avec clarté`.
 - Promesse principale : `Votre partenaire stratégique pour réussir vos projets
   immobiliers.`
@@ -136,7 +136,8 @@ modification de navigation doit être reportée dans les onze fichiers.
 4. Lancer `python3 outils/verifier-site.py` — il doit renvoyer « Aucune
    erreur ».
 5. Relancer `python3 outils/donnees-structurees.py` si `index.html` ou
-   `diagnostic.html` ont été régénérés.
+   `diagnostic.html` ont été régénérés, et
+   `python3 outils/dimensions-images.py` après tout changement de visuel.
 6. Vérifier le rendu à 375, 768, 1024, 1200 et 1440 px.
 7. Vérifier clavier, contrastes, textes alternatifs et mouvement réduit.
 8. Donner un résumé des fichiers modifiés, des tests réellement effectués et

@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Amélie &amp; Partners" focusable="false"
-     fill="none" stroke="#75508f" stroke-width="6.5"
-     stroke-linecap="round" stroke-linejoin="round">
-    <path class="mark__lobe" d="M39.00 50.00 C63.46 23.59 59.64 12.46 50.00 12.00 C40.36 12.46 36.54 23.59 61.00 50.00"/>
-    <path class="mark__lobe" d="M50.00 39.00 C76.41 63.46 87.54 59.64 88.00 50.00 C87.54 40.36 76.41 36.54 50.00 61.00"/>
-    <path class="mark__lobe" d="M61.00 50.00 C36.54 76.41 40.36 87.54 50.00 88.00 C59.64 87.54 63.46 76.41 39.00 50.00"/>
-    <path class="mark__lobe" d="M50.00 61.00 C23.59 36.54 12.46 40.36 12.00 50.00 C12.46 59.64 23.59 63.46 50.00 39.00"/>
-</svg>

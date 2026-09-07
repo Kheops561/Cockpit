@@ -35,17 +35,29 @@ confirmés par Amélie avant de considérer la publication comme définitive.
 Le taux de 98 % n’est affiché nulle part, en attente d’une définition, d’une
 base et d’une période auditées.
 
+## Identité — à trancher
+
+- [ ] **Signature du logo.** Le bloc fourni porte `PARTENAIRE STRATÉGIQUE DES
+      INVESTISSEURS IMMOBILIERS`. Les instructions de marque retiennent
+      `Investir avec méthode · Décider avec clarté`, qui est la version
+      affichée sur le site. Confirmer laquelle fait foi.
+- [ ] **Accent sur le nom.** Le logo écrit `AMELIE & PARTNERS`, le site
+      `AMÉLIE & PARTNERS`. Confirmer.
+- [ ] Fournir une version vectorielle du logo (`.svg`) si elle existe : plus
+      nette sur les écrans à forte densité, et plus légère.
+
 ## Visuels et vidéos
 
-- [ ] Remplacer les visuels provisoires par de vraies photographies — voir
-      `GUIDE-VISUELS.md` pour les noms de fichiers et l’ordre de priorité.
+- [ ] Valider le choix et le cadrage des photographies fournies. Chacune sert
+      à plusieurs endroits : voir le tableau de `GUIDE-VISUELS.md`.
+- [ ] Confirmer les droits d’usage commercial de chaque photographie.
+- [ ] Confirmer que le portrait de la fondatrice est celui à publier.
 - [ ] Déposer les vidéos d’ambiance dans `assets/videos/` (`accueil.mp4`,
       `paris.mp4`, `a-propos.mp4`). Tant qu’elles sont absentes, la
       photographie s’affiche et le navigateur enregistre une requête sans
       réponse, sans effet visible.
-- [ ] Créer une image Open Graph 1200 × 630 px dédiée à la marque
-      (`assets/images/og-image.jpg`).
-- [ ] Vérifier les droits d’usage commercial de chaque image.
+- [ ] Valider l’image de partage (`assets/images/og-image.jpg`), construite à
+      partir du bloc marine fourni.
 - [ ] Valider la carte du parcours de `a-propos.html` : elle est stylisée et
       décorative, elle ne prétend pas être une carte géographique.
 

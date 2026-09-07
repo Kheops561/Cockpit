@@ -20,21 +20,15 @@
 <script>document.documentElement.classList.add('js');</script>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/styles.css">
-<link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/images/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/images/favicon.png">
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
 <header class="header" data-header>
   <div class="wrap header__inner">
     <a class="logo" href="index.html" aria-label="Amélie &amp; Partners, retour à l&rsquo;accueil">
-      <svg class="mark logo__mark" viewBox="0 0 100 100" role="presentation" aria-hidden="true" focusable="false"
-           fill="none" stroke="currentColor" stroke-width="6.5"
-           stroke-linecap="round" stroke-linejoin="round">
-          <path class="mark__lobe" d="M39.00 50.00 C63.46 23.59 59.64 12.46 50.00 12.00 C40.36 12.46 36.54 23.59 61.00 50.00"/>
-          <path class="mark__lobe" d="M50.00 39.00 C76.41 63.46 87.54 59.64 88.00 50.00 C87.54 40.36 76.41 36.54 50.00 61.00"/>
-          <path class="mark__lobe" d="M61.00 50.00 C36.54 76.41 40.36 87.54 50.00 88.00 C59.64 87.54 63.46 76.41 39.00 50.00"/>
-          <path class="mark__lobe" d="M50.00 61.00 C23.59 36.54 12.46 40.36 12.00 50.00 C12.46 59.64 23.59 63.46 50.00 39.00"/>
-      </svg>
+      <img class="logo__mark" src="assets/images/logo.png" alt="" width="400" height="400" decoding="async">
       <span class="logo__text">
         <span class="logo__name">Amélie &amp; Partners</span>
         <span class="logo__tag">Investir avec méthode <span>&middot;</span> Décider avec clarté</span>
@@ -76,7 +70,7 @@
 <main id="contenu" class="timeline" data-timeline>
 <section class="hero hero--compact">
   <div class="hero__media kenburns">
-    <img src="assets/images/hero-a-propos.jpg" alt="" width="1800" height="1013" loading="eager" decoding="async" fetchpriority="high">
+    <img src="assets/images/hero-a-propos.jpg" alt="" width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
     <video class="hero__video" data-video muted loop playsinline preload="metadata"
            poster="assets/images/hero-a-propos.jpg" aria-label="Vidéo d’ambiance, sans son, en boucle." tabindex="-1">
       <source src="assets/videos/a-propos.mp4" type="video/mp4">
@@ -109,7 +103,7 @@
       <div class="reveal reveal--right">
         <figure class="figure">
           <div class="frame frame--portrait frame--zoom frame--sheen parallax" data-parallax="16">
-            <img src="assets/images/portrait-amelie-large.jpg" alt="Portrait d&rsquo;Amélie-Thu DUONG" width="1200" height="1500" loading="lazy" decoding="async">
+            <img src="assets/images/portrait-amelie-large.jpg" alt="Portrait d&rsquo;Amélie-Thu DUONG" width="960" height="1200" loading="lazy" decoding="async">
           </div>
           <figcaption>Amélie-Thu DUONG — Fondatrice &amp; Investisseuse à Paris depuis 2014</figcaption>
         </figure>
@@ -188,7 +182,7 @@
     <div class="split split--reverse">
       <div class="reveal reveal--left">
         <div class="frame frame--landscape frame--zoom frame--underline parallax" data-parallax="14">
-          <img src="assets/images/approche-principes.jpg" alt="Immeuble parisien, détail de balcon" width="1280" height="960" loading="lazy" decoding="async">
+          <img src="assets/images/approche-principes.jpg" alt="Un peintre installé sur les quais de Seine, face au Pont-Neuf" width="1080" height="810" loading="lazy" decoding="async">
         </div>
       </div>
       <div class="reveal">
@@ -234,22 +228,22 @@
     </div>
     <div class="mosaic">
       <div class="frame frame--portrait frame--zoom reveal" style="--reveal-delay:0.00s">
-        <img src="assets/images/paris-01.jpg" alt="Immeuble parisien, façade sur rue" width="840" height="1120" loading="lazy" decoding="async">
+        <img src="assets/images/paris-01.jpg" alt="Le Louvre et la rue de Rivoli au soleil couchant" width="660" height="880" loading="lazy" decoding="async">
       </div>
       <div class="frame frame--portrait frame--zoom reveal" style="--reveal-delay:0.08s">
-        <img src="assets/images/paris-02.jpg" alt="Cour intérieure parisienne" width="840" height="1120" loading="lazy" decoding="async">
+        <img src="assets/images/paris-02.jpg" alt="La Seine au couchant, le Pont des Arts et la tour Eiffel" width="660" height="880" loading="lazy" decoding="async">
       </div>
       <div class="frame frame--portrait frame--zoom reveal" style="--reveal-delay:0.16s">
-        <img src="assets/images/paris-03.jpg" alt="Devanture et rez-de-chaussée commercial" width="840" height="1120" loading="lazy" decoding="async">
+        <img src="assets/images/paris-03.jpg" alt="Un peintre installé sur les quais de Seine" width="660" height="880" loading="lazy" decoding="async">
       </div>
       <div class="frame frame--portrait frame--zoom reveal" style="--reveal-delay:0.24s">
-        <img src="assets/images/paris-04.jpg" alt="Toits de Paris en fin de journée" width="840" height="1120" loading="lazy" decoding="async">
+        <img src="assets/images/paris-04.jpg" alt="Promenade arborée le long de la Seine" width="660" height="880" loading="lazy" decoding="async">
       </div>
     </div>
   </div>
 </section>
 <section class="cta" data-timeline-step="Travailler ensemble">
-  <div class="cta__media" aria-hidden="true"><img src="assets/images/cta-fond.jpg" alt="" width="1800" height="810" loading="lazy" decoding="async"></div>
+  <div class="cta__media" aria-hidden="true"><img src="assets/images/cta-fond.jpg" alt="" width="1600" height="720" loading="lazy" decoding="async"></div>
   <div class="wrap cta__inner">
     <div>
       <div class="reveal">
@@ -268,14 +262,7 @@
     <div class="footer__top">
       <div>
         <span class="logo">
-          <svg class="mark logo__mark" viewBox="0 0 100 100" role="presentation" aria-hidden="true" focusable="false"
-               fill="none" stroke="currentColor" stroke-width="6.5"
-               stroke-linecap="round" stroke-linejoin="round">
-              <path class="mark__lobe" d="M39.00 50.00 C63.46 23.59 59.64 12.46 50.00 12.00 C40.36 12.46 36.54 23.59 61.00 50.00"/>
-              <path class="mark__lobe" d="M50.00 39.00 C76.41 63.46 87.54 59.64 88.00 50.00 C87.54 40.36 76.41 36.54 50.00 61.00"/>
-              <path class="mark__lobe" d="M61.00 50.00 C36.54 76.41 40.36 87.54 50.00 88.00 C59.64 87.54 63.46 76.41 39.00 50.00"/>
-              <path class="mark__lobe" d="M50.00 61.00 C23.59 36.54 12.46 40.36 12.00 50.00 C12.46 59.64 23.59 63.46 50.00 39.00"/>
-          </svg>
+          <img class="logo__mark" src="assets/images/logo.png" alt="" width="400" height="400" loading="lazy" decoding="async">
           <span class="logo__text">
             <span class="logo__name">Amélie &amp; Partners</span>
             <span class="logo__tag">Investir avec méthode <span>&middot;</span> Décider avec clarté</span>

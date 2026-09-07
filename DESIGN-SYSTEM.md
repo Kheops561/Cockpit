@@ -54,33 +54,26 @@ couleur plus bas et ne l’employez pas sous 14 px.
 
 ## La marque
 
-Le logo est un **entrelacs de boucles** : chaque boucle part du centre, se
-déploie vers l’extérieur et revient en se croisant elle-même, si bien que les
-brins de boucles voisines se chevauchent et forment un nœud à claire-voie.
+Le logo est un **entrelacs de trois boucles**, en lavande, fourni par la
+marque et employé tel quel : `assets/images/logo.png`. Il n’est ni
+recomposé, ni recoloré, ni animé.
 
-Il compte **quatre boucles et reste identique partout** où il apparaît. Il
-n’est ni recomposé ni animé selon le contexte.
+La lavande se détache aussi bien sur l’ivoire que sur le bleu nuit, si bien
+qu’un seul fichier sert dans tous les contextes.
 
-| Où | Couleur |
+| Où | Fond |
 |---|---|
-| En-tête | Lavande sombre, à côté du nom |
-| Pied de page | Lavande, sur bleu nuit |
-| Onglet du navigateur (`favicon.svg`) | Lavande sur bleu nuit |
-| Schéma de `approche.html` | Lavande sombre |
-| Fichier autonome (`assets/images/logo.svg`) | Lavande sombre, fond transparent |
+| En-tête | Ivoire, à côté du nom |
+| Pied de page | Bleu nuit |
+| Schéma de `approche.html` | Ivoire secondaire |
+| Onglet du navigateur (`favicon.png`) | Bleu nuit |
+| Partage sur les réseaux (`og-image.jpg`) | Bleu nuit, avec le nom |
 
-Il est dessiné en SVG dans les pages plutôt qu’appelé comme image : il prend
-ainsi la couleur de son contexte et reste net à toute taille.
-
-Le tracé actuel est une **reconstruction** en SVG. Si le fichier source
-officiel du logo existe, il remplace avantageusement `assets/images/logo.svg`
-et les tracés inscrits dans les pages — voir `GUIDE-VISUELS.md`.
-
-Pour régénérer son tracé :
-
-```bash
-python3 outils/marque.py
-```
+**À faire trancher.** Le bloc logo fourni porte la signature `PARTENAIRE
+STRATÉGIQUE DES INVESTISSEURS IMMOBILIERS` et écrit `AMELIE & PARTNERS` sans
+accent. Les instructions de marque retiennent `Investir avec méthode ·
+Décider avec clarté` et `AMÉLIE & PARTNERS` avec accent : c’est cette version
+qui figure sur le site. Voir `A-VALIDER-AVANT-LIVE.md`.
 
 ## Typographie
 

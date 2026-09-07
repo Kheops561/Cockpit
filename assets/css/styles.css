@@ -1611,15 +1611,14 @@ html:not(.js) .booking__confirm { display: none; }
 
 /* ==========================================================================
    29 · La marque
-   Le logo est un entrelacs de quatre boucles, identique partout où il
-   apparaît : en-tête, pied de page, onglet du navigateur et schéma de la
-   page « Notre approche ». Il est dessiné en SVG plutôt qu'appelé comme
-   image, ce qui lui permet de prendre la couleur de son contexte.
+   Le logo fourni par la marque : un entrelacs de trois boucles, en lavande.
+   Il est employé tel quel, comme image, sans reconstruction ni variante.
+   La lavande se détache aussi bien sur l'ivoire que sur le bleu nuit, si
+   bien qu'un seul fichier suffit pour tous les contextes.
    ========================================================================== */
 
-.mark { display: block; width: 100%; height: auto; color: var(--lavender-dark); }
-.logo__mark { flex: none; width: 1.9rem; color: var(--lavender-dark); }
-.footer .logo__mark { color: var(--lavender); }
+.mark { display: block; width: 100%; height: auto; }
+.logo__mark { flex: none; width: 2.15rem; }
 
 .logo {
   display: inline-flex;
@@ -1629,6 +1628,5 @@ html:not(.js) .booking__confirm { display: none; }
 }
 .logo__text { display: flex; flex-direction: column; gap: .3rem; }
 
-.mark-figure { max-width: 15rem; margin-inline: auto; }
-.section--ink .mark { color: var(--lavender); }
+.mark-figure { max-width: 12rem; margin-inline: auto; }
 
