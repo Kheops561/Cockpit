@@ -58,27 +58,28 @@ Le logo est un **entrelacs de boucles** : chaque boucle part du centre, se
 déploie vers l’extérieur et revient en se croisant elle-même, si bien que les
 brins de boucles voisines se chevauchent et forment un nœud à claire-voie.
 
-Sa construction est **paramétrée par le nombre de boucles**. Quatre boucles
-pour la marque elle-même ; autant de boucles que d’étapes lorsqu’elle sert de
-repère dans un schéma. Sur `approche.html`, les quatre boucles correspondent
-aux quatre étapes et se dessinent l’une après l’autre, au rythme des étapes
-qu’elles représentent.
+Il compte **quatre boucles et reste identique partout** où il apparaît. Il
+n’est ni recomposé ni animé selon le contexte.
 
-| Où | Boucles | Comportement |
-|---|---|---|
-| En-tête et pied de page | 4 | Statique, à côté du nom |
-| Onglet du navigateur (`favicon.svg`) | 4 | Statique, lavande sur bleu nuit |
-| Schéma de `approche.html` | 4 | Chaque boucle se dessine avec son étape |
-| Fichier autonome (`assets/images/logo.svg`) | 4 | Lavande sombre sur fond transparent |
+| Où | Couleur |
+|---|---|
+| En-tête | Lavande sombre, à côté du nom |
+| Pied de page | Lavande, sur bleu nuit |
+| Onglet du navigateur (`favicon.svg`) | Lavande sur bleu nuit |
+| Schéma de `approche.html` | Lavande sombre |
+| Fichier autonome (`assets/images/logo.svg`) | Lavande sombre, fond transparent |
+
+Il est dessiné en SVG dans les pages plutôt qu’appelé comme image : il prend
+ainsi la couleur de son contexte et reste net à toute taille.
 
 Le tracé actuel est une **reconstruction** en SVG. Si le fichier source
 officiel du logo existe, il remplace avantageusement `assets/images/logo.svg`
 et les tracés inscrits dans les pages — voir `GUIDE-VISUELS.md`.
 
-Pour produire une variante à un autre nombre de boucles :
+Pour régénérer son tracé :
 
 ```bash
-python3 outils/marque.py 5      # affiche le SVG d'une marque à cinq boucles
+python3 outils/marque.py
 ```
 
 ## Typographie

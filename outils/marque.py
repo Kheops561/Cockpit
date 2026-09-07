@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
-"""Marque Amélie & Partners : un nœud à N boucles.
+"""Marque Amélie & Partners : le tracé du logo.
 
-Le logo de la marque est un entrelacs à quatre boucles. La construction est
-ici paramétrée par le nombre de boucles, ce qui permet de l'accorder au
-nombre d'étapes d'un schéma : quatre boucles pour quatre étapes, cinq pour
-cinq, trois pour trois.
+Le logo est un entrelacs de quatre boucles. Chaque boucle part du centre, se
+déploie vers l'exterieur et revient en se croisant elle-meme ; les brins des
+boucles voisines se chevauchent et forment le noeud.
+
+Le logo du site compte toujours quatre boucles et reste identique partout.
+Le parametre `n` n'existe que pour reconstruire ce trace ; il n'a pas
+vocation a produire des variantes publiees.
+
+    python3 outils/marque.py     # affiche le SVG du logo
 """
 import math
 
@@ -35,13 +40,11 @@ def lobe_path(n, i, cx=50.0, cy=50.0, rayon=38.0, ecart=11.0, largeur=20.0):
             f"C{f(c3)} {f(c4)} {f(arrivee)}")
 
 
-def marque(n=4, classe="mark", epaisseur=6.5, titre=None, etapes=False):
-    """SVG de la marque. `etapes=True` numérote chaque boucle pour qu'un
-    schéma puisse en allumer une à la fois."""
+def marque(n=4, classe="mark", epaisseur=6.5, titre=None):
+    """SVG de la marque."""
     chemins = []
     for i in range(n):
-        attrs = f'class="mark__lobe"' + (f' data-lobe="{i}"' if etapes else '')
-        chemins.append(f'    <path {attrs} d="{lobe_path(n, i)}"/>')
+        chemins.append(f'    <path class="mark__lobe" d="{lobe_path(n, i)}"/>')
     role = (f'role="img" aria-label="{titre}"' if titre
             else 'role="presentation" aria-hidden="true"')
     return (f'<svg class="{classe}" viewBox="0 0 100 100" {role} focusable="false"\n'
@@ -53,6 +56,6 @@ def marque(n=4, classe="mark", epaisseur=6.5, titre=None, etapes=False):
 if __name__ == "__main__":
     import sys
     n = int(sys.argv[1]) if len(sys.argv) > 1 else 4
-    if n < 2:
-        raise SystemExit("Il faut au moins deux boucles.")
+    if n != 4:
+        print("Note : le logo du site compte quatre boucles.", file=sys.stderr)
     print(marque(n, titre="Amelie & Partners"))

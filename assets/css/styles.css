@@ -1650,10 +1650,10 @@ html:not(.js) .booking__confirm { display: none; }
 
 /* ==========================================================================
    29 · La marque
-   Le logo est un entrelacs de boucles. Sa construction est paramétrée par le
-   nombre de boucles : quatre pour la marque, mais autant que d'étapes
-   lorsqu'il sert de repère dans un schéma. Les boucles se dessinent alors
-   l'une après l'autre, au rythme des étapes qu'elles représentent.
+   Le logo est un entrelacs de quatre boucles, identique partout où il
+   apparaît : en-tête, pied de page, onglet du navigateur et schéma de la
+   page « Notre approche ». Il est dessiné en SVG plutôt qu'appelé comme
+   image, ce qui lui permet de prendre la couleur de son contexte.
    ========================================================================== */
 
 .mark { display: block; width: 100%; height: auto; color: var(--lavender-dark); }
@@ -1668,29 +1668,6 @@ html:not(.js) .booking__confirm { display: none; }
 }
 .logo__text { display: flex; flex-direction: column; gap: .3rem; }
 
-/* Le tracé se dessine boucle par boucle. La longueur réelle est mesurée par
-   le script ; sans lui, les boucles sont simplement tracées. */
-.js .mark--draw .mark__lobe {
-  stroke-dasharray: var(--lobe-len, 260);
-  stroke-dashoffset: var(--lobe-len, 260);
-  transition: stroke-dashoffset 1.1s var(--ease);
-  transition-delay: var(--lobe-delay, 0s);
-}
-.js .is-visible .mark--draw .mark__lobe,
-.js .mark--draw.is-visible .mark__lobe { stroke-dashoffset: 0; }
-
 .mark-figure { max-width: 15rem; margin-inline: auto; }
-.mark-figure figcaption {
-  margin-top: 1.25rem;
-  text-align: center;
-  font-size: .75rem;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.section--ink .mark-figure figcaption { color: rgba(255, 255, 255, .6); }
 .section--ink .mark { color: var(--lavender); }
 
-@media (prefers-reduced-motion: reduce) {
-  .js .mark--draw .mark__lobe { stroke-dasharray: none; stroke-dashoffset: 0; }
-}

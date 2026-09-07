@@ -22,10 +22,10 @@ calme, précision, indépendance, méthode et décision.
 ## Invariants de marque
 
 - Nom : `AMÉLIE & PARTNERS`.
-- Marque : un entrelacs de boucles, dessiné en SVG dans les pages. Le nombre
-  de boucles s’accorde au nombre d’étapes lorsqu’il sert de repère dans un
-  schéma — quatre boucles pour quatre étapes. Voir `DESIGN-SYSTEM.md` et
-  `outils/marque.py`.
+- Marque : un entrelacs de **quatre boucles**, dessiné en SVG dans les pages.
+  Il reste identique partout : ne pas le recomposer, ne pas faire varier son
+  nombre de boucles selon le contexte, ne pas l’animer. Voir
+  `DESIGN-SYSTEM.md` et `outils/marque.py`.
 - Signature du logo : `Investir avec méthode · Décider avec clarté`.
 - Promesse principale : `Votre partenaire stratégique pour réussir vos projets
   immobiliers.`

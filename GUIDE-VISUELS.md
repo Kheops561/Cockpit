@@ -118,9 +118,10 @@ Trois fichiers ne figurent pas dans ce tableau :
 ## Le logo
 
 Le tracé du logo est une **reconstruction** en SVG à partir du visuel fourni :
-un entrelacs de quatre boucles. Il est dessiné directement dans les pages
-(en-tête, pied de page, schéma de `approche.html`) plutôt qu’appelé comme
-image, ce qui lui permet de prendre la couleur du contexte et de s’animer.
+un entrelacs de quatre boucles, identique partout. Il est dessiné directement
+dans les pages (en-tête, pied de page, schéma de `approche.html`) plutôt
+qu’appelé comme image, ce qui lui permet de prendre la couleur du contexte et
+de rester net à toute taille.
 
 Si vous disposez du **fichier source officiel** du logo, deux niveaux de
 remplacement sont possibles :
@@ -128,19 +129,16 @@ remplacement sont possibles :
 1. *Le plus simple* — remplacer `assets/images/logo.svg` par le fichier
    officiel. Il sert de référence et peut être fourni à un imprimeur.
 2. *Le plus complet* — remplacer aussi les tracés inscrits dans les pages.
-   Dans chaque fichier `.html`, chercher `class="mark logo__mark"` et
-   substituer le contenu du `<svg>`. Conserver les classes existantes pour que
-   la mise en forme continue de s’appliquer. Le schéma de `approche.html`
-   utilise `class="mark mark--draw"` avec un attribut `data-lobe` par boucle :
-   ces attributs pilotent l’animation étape par étape et doivent être
-   reportés sur les tracés du nouveau logo pour qu’elle continue de
-   fonctionner.
+   Dans chaque fichier `.html`, chercher `class="mark"` et substituer le
+   contenu du `<svg>`. Conserver les classes existantes pour que la mise en
+   forme continue de s’appliquer, et garder `stroke="currentColor"` afin que
+   le logo prenne la couleur de son contexte. Le logo apparaît deux fois par
+   page (en-tête et pied de page), plus une fois sur `approche.html`.
 
-Pour générer une variante avec un autre nombre de boucles (par exemple cinq
-boucles pour un schéma à cinq étapes) :
+Pour régénérer le tracé actuel :
 
 ```bash
-python3 outils/marque.py 5
+python3 outils/marque.py
 ```
 
 ## Ce qui est le plus visible
