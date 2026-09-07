@@ -1,0 +1,23 @@
+Vidéos d'ambiance
+=================
+
+Déposez ici vos vidéos, avec exactement ces noms de fichiers :
+
+  accueil.mp4     bandeau de tête de la page d'accueil
+  paris.mp4       bande filmée « Le terrain, plutôt que le discours »
+  a-propos.mp4    bandeau de tête de la page À propos
+
+Recommandations
+---------------
+- Format MP4, codec H.264, son inutile (la vidéo est toujours muette).
+- 1920 x 1080 au maximum, 8 à 15 secondes, en boucle propre.
+- Moins de 4 Mo par fichier : au-delà, la page devient lente sur mobile.
+- Plan large, mouvement lent. La vidéo accompagne le texte, elle ne le
+  concurrence pas.
+
+Si un fichier est absent, illisible, ou si la personne a demandé moins
+d'animation dans les réglages de son appareil, la photographie du même nom
+reste affichée et la page fonctionne normalement. Vous pouvez donc mettre le
+site en ligne avant d'avoir les vidéos.
+
+Pour ajouter une vidéo sur une autre page, voir GUIDE-VISUELS.md.
