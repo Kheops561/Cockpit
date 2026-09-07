@@ -1,8 +1,7 @@
 # Amélie & Partners — site amelie-invest.com
 
 Site statique, en français, pour un cabinet de conseil en stratégie
-d’investissement immobilier. Deux publics : investisseurs particuliers et
-professionnels (dirigeants, indépendants, professions libérales).
+d’investissement immobilier.
 
 Aucune compilation, aucun gestionnaire de paquets, aucune dépendance
 externe : ce sont des fichiers HTML, une feuille de styles, un script et des
@@ -33,8 +32,6 @@ Points à régler côté hébergeur :
 
 ```
 index.html                 Accueil
-particuliers.html          Investisseurs particuliers
-professionnels.html        Dirigeants, indépendants, professions libérales
 approche.html              Notre approche (schéma des 4 étapes + méthode)
 accompagnements.html       Les quatre accompagnements
 diagnostic.html            Diagnostic Stratégique — 450 € HT
@@ -66,7 +63,7 @@ CLAUDE.md                  Instructions permanentes pour toute reprise
 
 Les textes sont directement dans les fichiers `.html`. L’en-tête et le pied de
 page sont répétés dans chaque page : une modification de navigation doit être
-reportée dans les treize fichiers. Les caractères accentués sont écrits en
+reportée dans les onze fichiers. Les caractères accentués sont écrits en
 clair ; les apostrophes typographiques utilisent `&rsquo;`.
 
 ## Vérifier avant de publier

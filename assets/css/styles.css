@@ -642,57 +642,19 @@ a.card:hover,
 .card--media { padding: 0; overflow: hidden; }
 .card--media .card__body { padding: clamp(1.6rem, 2.4vw, 2.25rem); display: flex; flex-direction: column; flex: 1; }
 
-/* Grande carte de public (particuliers / professionnels) */
-.audience {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  background: var(--ink);
-  color: var(--white);
-  min-height: clamp(24rem, 46vw, 32rem);
-}
-.audience img {
-  position: absolute;
-  inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform 1.6s var(--ease);
-}
-.audience::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(18, 40, 60, .94) 8%, rgba(18, 40, 60, .55) 52%, rgba(18, 40, 60, .22) 100%);
-  transition: background .6s var(--ease);
-}
-.audience:hover img { transform: scale(1.07); }
-.audience:hover::after { background: linear-gradient(to top, rgba(18, 40, 60, .96) 8%, rgba(18, 40, 60, .68) 60%, rgba(117, 80, 143, .4) 100%); }
-.audience__body {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  height: 100%;
-  min-height: inherit;
-  padding: clamp(1.75rem, 3vw, 2.75rem);
-}
-.audience__body h3 { color: var(--white); font-size: var(--type-heading); margin-bottom: .85rem; }
-.audience__body p { color: rgba(255, 255, 255, .8); font-size: .9375rem; max-width: 34ch; }
-.audience__list {
-  margin: 1.4rem 0 1.75rem;
+/* Puces d'étiquettes, sur fond clair */
+.taglist {
   display: flex;
   flex-wrap: wrap;
   gap: .5rem;
 }
-.audience__list li {
+.taglist li {
   font-size: .75rem;
   letter-spacing: .04em;
   padding: .4rem .75rem;
-  border: 1px solid var(--line-light);
-  color: rgba(255, 255, 255, .82);
+  border: 1px solid var(--line);
+  color: var(--muted);
 }
-.audience .linkarrow { align-self: flex-start; }
 
 /* -------------------------------------------------------------- 11 étapes */
 
@@ -1070,7 +1032,6 @@ a.card:hover,
   .marquee { overflow-x: auto; scrollbar-width: thin; }
   .floating { animation: none; }
   .frame--zoom:hover img { transform: none; }
-  .audience:hover img { transform: none; }
 }
 
 /* Impression : contenu lisible, décors retirés */

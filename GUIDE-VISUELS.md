@@ -78,7 +78,7 @@ toujours pouvoir être arrêtée.
 | `approche-capital.jpg` | 1280 × 960 | approche.html, index.html |
 | `approche-methode.jpg` | 1280 × 960 | approche.html, index.html |
 | `approche-principes.jpg` | 1280 × 960 | a-propos.html |
-| `cta-fond.jpg` | 1800 × 810 | a-propos.html, accompagnements.html, approche.html, index.html, particuliers.html, professionnels.html, ressource-3-effets.html, ressources.html |
+| `cta-fond.jpg` | 1800 × 810 | a-propos.html, accompagnements.html, approche.html, index.html, ressource-3-effets.html, ressources.html |
 | `hero-a-propos.jpg` | 1800 × 1013 | a-propos.html |
 | `hero-accompagnements.jpg` | 1800 × 1013 | accompagnements.html |
 | `hero-accueil.jpg` | 1800 × 1013 | index.html |
@@ -86,26 +86,17 @@ toujours pouvoir être arrêtée.
 | `hero-contact.jpg` | 1800 × 1013 | contact.html |
 | `hero-diagnostic.jpg` | 1800 × 1013 | diagnostic.html |
 | `hero-mentions.jpg` | 1800 × 810 | confidentialite.html, mentions-legales.html |
-| `hero-particuliers.jpg` | 1800 × 1013 | particuliers.html |
-| `hero-professionnels.jpg` | 1800 × 1013 | professionnels.html |
 | `hero-ressources.jpg` | 1800 × 1013 | ressource-3-effets.html, ressources.html |
 | `paris-01.jpg` | 840 × 1120 | a-propos.html, index.html |
 | `paris-02.jpg` | 840 × 1120 | a-propos.html, index.html |
 | `paris-03.jpg` | 840 × 1120 | a-propos.html, index.html |
 | `paris-04.jpg` | 840 × 1120 | a-propos.html, index.html |
 | `paris.mp4` | — | index.html |
-| `particuliers-arbitrage.jpg` | 1280 × 960 | particuliers.html |
-| `particuliers-locatif.jpg` | 1280 × 960 | particuliers.html |
-| `particuliers-premier-achat.jpg` | 1280 × 960 | particuliers.html |
 | `portrait-amelie-large.jpg` | 1200 × 1500 | a-propos.html |
 | `portrait-amelie.jpg` | 1080 × 1350 | index.html |
-| `professionnels-dirigeant.jpg` | 1280 × 960 | professionnels.html |
-| `professionnels-murs.jpg` | 1280 × 960 | professionnels.html |
-| `professionnels-structuration.jpg` | 1280 × 960 | professionnels.html |
-| `public-particuliers.jpg` | 1080 × 1350 | index.html |
-| `public-professionnels.jpg` | 1080 × 1350 | index.html |
 | `ressource-3-effets.jpg` | 1500 × 844 | ressource-3-effets.html, ressources.html |
 | `ressource-couverture.jpg` | 1500 × 844 | ressources.html |
+
 Trois fichiers ne figurent pas dans ce tableau :
 
 - `assets/images/og-image.jpg` (1200 × 630) — image affichée quand un lien du
@@ -148,10 +139,9 @@ Par ordre d’importance, si vous ne remplacez que quelques images :
 1. `portrait-amelie.jpg` et `portrait-amelie-large.jpg` — le portrait de la
    fondatrice, présent dès le premier écran de l’accueil.
 2. `hero-accueil.jpg` — le bandeau du premier écran.
-3. `public-particuliers.jpg` et `public-professionnels.jpg` — les deux grandes
-   cartes d’orientation de l’accueil.
-4. `hero-particuliers.jpg`, `hero-professionnels.jpg`, `hero-diagnostic.jpg`.
-5. `paris-01` à `paris-04.jpg` — la mosaïque et la galerie parisiennes.
+3. `hero-diagnostic.jpg` et `hero-accompagnements.jpg` — les deux pages qui
+   mènent à la prise de rendez-vous.
+4. `paris-01` à `paris-04.jpg` — la mosaïque et la galerie parisiennes.
 
 ## Regénérer des visuels provisoires
 

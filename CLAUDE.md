@@ -33,8 +33,11 @@ calme, précision, indépendance, méthode et décision.
   liberté de choix.`
 - Ton : posé, concret, exigeant, pédagogique. Jamais agressif, tapageur ou
   fondé sur une promesse d’enrichissement.
-- Ordre narratif : promesse de marque → publics → expérience → approche →
-  accompagnements → témoignages → premier échange → FAQ.
+- Ordre narratif : promesse de marque → expérience → approche →
+  accompagnements → témoignages → premier échange → FAQ. Le site ne segmente
+  pas ses visiteurs : pas de page ni de parcours « particuliers » ou
+  « professionnels ». Le contenu commercial reste celui de la proposition
+  d’origine.
 - Les textes commerciaux parlent au nom de la marque. Éviter « J’accompagne »,
   « mon approche », « mes ressources ». Les citations et témoignages gardent
   leur voix. Ne pas inventer une équipe, des associés ou des partenaires non
@@ -64,15 +67,6 @@ réintroduire les anciens forfaits ni la sélection Premium. Le taux de 98 %
 reste retiré de l’affichage en attendant une définition, une base et une
 période auditées. La réussite est une destination recherchée, jamais une
 garantie. Les méthodes non lancées restent confidentielles.
-
-## Deux publics
-
-`particuliers.html` et `professionnels.html` s’adressent respectivement aux
-investisseurs particuliers et aux dirigeants, indépendants et professions
-libérales. La méthode est la même ; ce qui change est la lecture des
-contraintes. La page professionnels affiche une limite explicite : le cabinet
-ne délivre pas de conseil juridique, fiscal ou comptable et ne se substitue
-pas aux professionnels réglementés. Ne pas retirer cette limite.
 
 ## Preuve sociale — ne pas dégrader
 
@@ -126,13 +120,13 @@ vectoriels monochromes : aucun émoji, aucune flèche Unicode.
 
 ## Où modifier
 
-- Pages : les treize fichiers `.html` à la racine.
+- Pages : les onze fichiers `.html` à la racine.
 - Mise en forme : `assets/css/styles.css`, sections numérotées.
 - Comportements : `assets/js/site.js`.
 - Visuels : `assets/images/` et `assets/videos/` — voir `GUIDE-VISUELS.md`.
 
 L’en-tête et le pied de page sont **répétés dans chaque page**. Une
-modification de navigation doit être reportée dans les treize fichiers.
+modification de navigation doit être reportée dans les onze fichiers.
 
 ## Méthode obligatoire avant livraison
 

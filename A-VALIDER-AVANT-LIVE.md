@@ -23,22 +23,6 @@ confirmés par Amélie avant de considérer la publication comme définitive.
 - [ ] Zone d’intervention : Paris pour la recherche ; France au cas par cas
       pour la stratégie et l’arbitrage.
 
-## Nouveau public : les professionnels — à relire mot à mot
-
-La page `professionnels.html` a été écrite pour ce site. Elle n’existait pas
-sur la version précédente. Rien n’y est chiffré et aucun tarif nouveau n’y
-figure, mais son périmètre engage le cabinet.
-
-- [ ] Valider le périmètre annoncé : revenus non salariés et capacité réelle,
-      murs d’activité et locaux professionnels, détention et arbitrages.
-- [ ] Valider la limite affichée : « ne délivre pas de conseil juridique,
-      fiscal ou comptable et ne se substitue pas aux professionnels
-      réglementés — expert-comptable, notaire, avocat, courtier ».
-- [ ] Confirmer que la recherche immobilière peut concerner des locaux
-      professionnels, ou faire retirer cette réponse de la FAQ.
-- [ ] Vérifier la FAQ « détenir en nom propre ou en société » : la réponse
-      renvoie explicitement la décision aux conseils réglementés.
-
 ## Preuves sociales — priorité haute
 
 - [ ] Autorisation de publication pour chacun des huit témoignages.
@@ -118,7 +102,7 @@ pas des conseils juridiques.
 
 ## Contrôles déjà effectués
 
-- Treize pages rendues dans Chromium à 375, 768, 1024, 1200 et 1440 px :
+- Onze pages rendues dans Chromium à 375, 768, 1024, 1200 et 1440 px :
   aucun débordement horizontal, aucune erreur JavaScript.
 - Liens internes, ancres, ressources référencées, titres, descriptions et
   attributs `alt` vérifiés par `outils/verifier-site.py`.
