@@ -106,12 +106,42 @@ toujours pouvoir être arrêtée.
 | `public-professionnels.jpg` | 1080 × 1350 | index.html |
 | `ressource-3-effets.jpg` | 1500 × 844 | ressource-3-effets.html, ressources.html |
 | `ressource-couverture.jpg` | 1500 × 844 | ressources.html |
-Deux fichiers ne figurent pas dans ce tableau :
+Trois fichiers ne figurent pas dans ce tableau :
 
 - `assets/images/og-image.jpg` (1200 × 630) — image affichée quand un lien du
   site est partagé sur les réseaux ou dans une messagerie. À remplacer par un
   visuel de marque dédié.
-- `assets/images/favicon.svg` — icône de l’onglet du navigateur.
+- `assets/images/favicon.svg` — icône de l’onglet du navigateur : la marque en
+  lavande sur fond bleu nuit.
+- `assets/images/logo.svg` — la marque seule, en lavande sombre.
+
+## Le logo
+
+Le tracé du logo est une **reconstruction** en SVG à partir du visuel fourni :
+un entrelacs de quatre boucles. Il est dessiné directement dans les pages
+(en-tête, pied de page, schéma de `approche.html`) plutôt qu’appelé comme
+image, ce qui lui permet de prendre la couleur du contexte et de s’animer.
+
+Si vous disposez du **fichier source officiel** du logo, deux niveaux de
+remplacement sont possibles :
+
+1. *Le plus simple* — remplacer `assets/images/logo.svg` par le fichier
+   officiel. Il sert de référence et peut être fourni à un imprimeur.
+2. *Le plus complet* — remplacer aussi les tracés inscrits dans les pages.
+   Dans chaque fichier `.html`, chercher `class="mark logo__mark"` et
+   substituer le contenu du `<svg>`. Conserver les classes existantes pour que
+   la mise en forme continue de s’appliquer. Le schéma de `approche.html`
+   utilise `class="mark mark--draw"` avec un attribut `data-lobe` par boucle :
+   ces attributs pilotent l’animation étape par étape et doivent être
+   reportés sur les tracés du nouveau logo pour qu’elle continue de
+   fonctionner.
+
+Pour générer une variante avec un autre nombre de boucles (par exemple cinq
+boucles pour un schéma à cinq étapes) :
+
+```bash
+python3 outils/marque.py 5
+```
 
 ## Ce qui est le plus visible
 

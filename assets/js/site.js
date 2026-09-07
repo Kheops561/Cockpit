@@ -539,7 +539,21 @@
 (function () {
   'use strict';
 
+  // Chaque boucle de la marque se dessine sur sa propre longueur, décalée
+  // pour suivre l'étape qu'elle représente.
+  function preparerMarques() {
+    var lobes = document.querySelectorAll('.mark--draw .mark__lobe');
+    Array.prototype.forEach.call(lobes, function (lobe, i) {
+      var index = parseInt(lobe.getAttribute('data-lobe'), 10);
+      if (isNaN(index)) index = i;
+      lobe.style.setProperty('--lobe-len', Math.ceil(lobe.getTotalLength()));
+      lobe.style.setProperty('--lobe-delay', (0.15 + index * 0.22).toFixed(2) + 's');
+    });
+  }
+
   function initSchema() {
+    preparerMarques();
+
     var blocs = document.querySelectorAll('[data-schema]');
     if (!blocs.length) return;
 

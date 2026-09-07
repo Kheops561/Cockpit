@@ -353,9 +353,13 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   gap: clamp(.75rem, 1.6vw, 1.5rem);
   min-height: 5rem;
 }
-/* La barre de navigation a besoin d'un peu plus d'air que le corps du site. */
+/* La barre de navigation est plus dense que le corps du site : elle gagne en
+   largeur utile et resserre ses marges pour que le bouton reste entier. */
 @media (min-width: 1200px) {
-  .header .wrap { max-width: 1360px; }
+  .header .wrap { max-width: 1400px; padding-inline: 1.75rem; }
+}
+@media (min-width: 1500px) {
+  .header .wrap { padding-inline: var(--gutter); }
 }
 
 .logo { display: inline-flex; flex-direction: column; gap: .3rem; line-height: 1; }
@@ -1642,4 +1646,51 @@ html:not(.js) .booking__confirm { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .js .schema__rail span { transform: scaleX(1); }
   .js .schema__step { opacity: 1; transform: none; }
+}
+
+/* ==========================================================================
+   29 · La marque
+   Le logo est un entrelacs de boucles. Sa construction est paramétrée par le
+   nombre de boucles : quatre pour la marque, mais autant que d'étapes
+   lorsqu'il sert de repère dans un schéma. Les boucles se dessinent alors
+   l'une après l'autre, au rythme des étapes qu'elles représentent.
+   ========================================================================== */
+
+.mark { display: block; width: 100%; height: auto; color: var(--lavender-dark); }
+.logo__mark { flex: none; width: 1.9rem; color: var(--lavender-dark); }
+.footer .logo__mark { color: var(--lavender); }
+
+.logo {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: .7rem;
+}
+.logo__text { display: flex; flex-direction: column; gap: .3rem; }
+
+/* Le tracé se dessine boucle par boucle. La longueur réelle est mesurée par
+   le script ; sans lui, les boucles sont simplement tracées. */
+.js .mark--draw .mark__lobe {
+  stroke-dasharray: var(--lobe-len, 260);
+  stroke-dashoffset: var(--lobe-len, 260);
+  transition: stroke-dashoffset 1.1s var(--ease);
+  transition-delay: var(--lobe-delay, 0s);
+}
+.js .is-visible .mark--draw .mark__lobe,
+.js .mark--draw.is-visible .mark__lobe { stroke-dashoffset: 0; }
+
+.mark-figure { max-width: 15rem; margin-inline: auto; }
+.mark-figure figcaption {
+  margin-top: 1.25rem;
+  text-align: center;
+  font-size: .75rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.section--ink .mark-figure figcaption { color: rgba(255, 255, 255, .6); }
+.section--ink .mark { color: var(--lavender); }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .mark--draw .mark__lobe { stroke-dasharray: none; stroke-dashoffset: 0; }
 }

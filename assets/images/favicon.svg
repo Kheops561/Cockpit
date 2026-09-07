@@ -1,5 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Amélie &amp; Partners">
-  <rect width="64" height="64" fill="#12283c"/>
-  <path d="M14 46 24 18h4l10 28h-5.2l-2.4-7.1H21.6L19.2 46H14zm9.1-11.4h6.6L26.4 24h-.2l-3.1 10.6z" fill="#f8f5ef"/>
-  <path d="M42 46V18h5v28h-5z" fill="#cbb5df"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Amélie &amp; Partners">
+  <rect width="100" height="100" fill="#12283c"/>
+  <g fill="none" stroke="#cbb5df" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M39.00 50.00 C63.46 23.59 59.64 12.46 50.00 12.00 C40.36 12.46 36.54 23.59 61.00 50.00"/>
+    <path d="M50.00 39.00 C76.41 63.46 87.54 59.64 88.00 50.00 C87.54 40.36 76.41 36.54 50.00 61.00"/>
+    <path d="M61.00 50.00 C36.54 76.41 40.36 87.54 50.00 88.00 C59.64 87.54 63.46 76.41 39.00 50.00"/>
+    <path d="M50.00 61.00 C23.59 36.54 12.46 40.36 12.00 50.00 C12.46 59.64 23.59 63.46 50.00 39.00"/>
+  </g>
 </svg>
