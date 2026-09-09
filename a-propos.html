@@ -110,35 +110,61 @@
       </div>
     </div>
 
-    <div class="split split--wide-text" style="margin-top:clamp(3rem,6vw,5rem);align-items:center">
-      <div class="reveal">
-      <figure class="carte" data-carte>
-        <div class="carte__vues carte__vues--duo">
-            <div class="carte__vue">
-              <img src="assets/images/parcours-vietnam.jpg" alt="Hanoï au crépuscule, le lac et la ville" width="620" height="775" loading="lazy" decoding="async">
-            </div>
-            <div class="carte__vue">
-              <img src="assets/images/parcours-paris.jpg" alt="La Seine au couchant, la pointe de l&rsquo;île de la Cité" width="620" height="775" loading="lazy" decoding="async">
-            </div>
+  </div>
+
+  <!-- La carte postale sort de la colonne de lecture : elle prend toute la
+       largeur de l&rsquo;écran, comme une carte posée en travers de la page. -->
+    <figure class="postale reveal" data-carte>
+      <div class="postale__feuille">
+        <div class="postale__grille">
+        <div class="postale__vue postale__vue--gauche">
+          <img src="assets/images/parcours-paris.jpg" alt="La Seine au couchant, la pointe de l&rsquo;île de la Cité" width="620" height="775" loading="lazy" decoding="async">
         </div>
 
-        <div class="carte__route">
-          <span class="carte__lieu">Viêt Nam</span>
-          <span class="carte__ligne" aria-hidden="true">
-            <svg viewBox="0 0 600 26" role="presentation" focusable="false">
-              <path class="carte__itineraire" d="M6 20 C150 4 450 4 594 20"/>
-              <path class="carte__trace" data-journey-path d="M6 20 C150 4 450 4 594 20"/>
-              <circle class="carte__repere" cx="6" cy="20" r="2.6"/>
-              <circle class="carte__repere" cx="594" cy="20" r="2.6"/>
-              <g class="carte__avion" style="offset-path:path('M6 20 C150 4 450 4 594 20')">
-                <path d="M7 0 L-2 -4.5 L-.9 -1 L-5.2 -1 L-6.5 -2.7 L-7.4 -2.7 L-6.6 0 L-7.4 2.7 L-6.5 2.7 L-5.2 1 L-.9 1 L-2 4.5 Z"/>
-              </g>
-            </svg>
-          </span>
-          <span class="carte__lieu">Paris</span>
-        </div>
+          <div class="postale__champ">
+        <span class="postale__cachet postale__cachet--a" aria-hidden="true">
+          <svg viewBox="0 0 100 100" role="presentation" focusable="false">
+            <circle cx="50" cy="50" r="46"/>
+            <circle cx="50" cy="50" r="40"/>
+            <g class="postale__cachet-avion" transform="translate(50 34) scale(1.35)"><path d="M7 0 L-2 -4.5 L-.9 -1 L-5.2 -1 L-6.5 -2.7 L-7.4 -2.7 L-6.6 0 L-7.4 2.7 L-6.5 2.7 L-5.2 1 L-.9 1 L-2 4.5 Z"/></g>
+            <text x="50" y="54">PARIS</text>
+            <text x="50" y="70">2014</text>
+          </svg>
+        </span>
+        <span class="postale__cachet postale__cachet--b" aria-hidden="true">
+          <svg viewBox="0 0 100 100" role="presentation" focusable="false">
+            <circle cx="50" cy="50" r="46"/>
+            <circle cx="50" cy="50" r="40"/>
+            <g class="postale__cachet-avion" transform="translate(50 34) scale(1.35)"><path d="M7 0 L-2 -4.5 L-.9 -1 L-5.2 -1 L-6.5 -2.7 L-7.4 -2.7 L-6.6 0 L-7.4 2.7 L-6.5 2.7 L-5.2 1 L-.9 1 L-2 4.5 Z"/></g>
+            <text x="50" y="62">VI&Ecirc;T NAM</text>
+          </svg>
+        </span>
 
-        <ul class="journey__steps">
+            <p class="postale__titre">
+            <span class="postale__ligne"><span style="--hand-delay:0.00s">Du Viêt Nam&hellip;</span></span>
+            <span class="postale__ligne"><span style="--hand-delay:0.40s">à Paris.</span></span>
+            </p>
+            <span class="postale__filet" aria-hidden="true"></span>
+
+            <div class="postale__trajet">
+              <div class="postale__vol">
+                <svg viewBox="0 0 600 120" role="presentation" focusable="false" aria-hidden="true">
+                  <path class="postale__itineraire" d="M520 92 C420 18 180 18 80 92"/>
+                  <path class="postale__trace" data-journey-path d="M520 92 C420 18 180 18 80 92"/>
+                  <circle class="postale__anneau" cx="80" cy="92" r="8"/>
+                  <circle class="postale__point" cx="80" cy="92" r="3.4"/>
+                  <circle class="postale__anneau" cx="520" cy="92" r="8"/>
+                  <circle class="postale__point" cx="520" cy="92" r="3.4"/>
+                  <g class="postale__avion" style="offset-path:path('M520 92 C420 18 180 18 80 92')">
+                    <path d="M7 0 L-2 -4.5 L-.9 -1 L-5.2 -1 L-6.5 -2.7 L-7.4 -2.7 L-6.6 0 L-7.4 2.7 L-6.5 2.7 L-5.2 1 L-.9 1 L-2 4.5 Z"/>
+                  </g>
+                </svg>
+                <span class="postale__lieu postale__lieu--a" aria-hidden="true">Paris</span>
+                <span class="postale__lieu postale__lieu--b" aria-hidden="true">Viêt Nam</span>
+              </div>
+            </div>
+
+            <ul class="journey__steps">
             <li class="journey__step" data-journey-step>
               <span class="journey__when">Le départ</span>
               <span class="journey__what">Née au Viêt Nam.</span>
@@ -155,10 +181,18 @@
               <span class="journey__when">2014</span>
               <span class="journey__what">Première acquisition, en parallèle du CDI.</span>
             </li>
-        </ul>
-      </figure>
+            </ul>
+          </div>
+
+        <div class="postale__vue postale__vue--droite">
+          <img src="assets/images/parcours-vietnam.jpg" alt="Le Viêt Nam au crépuscule, le lac et la ville" width="620" height="775" loading="lazy" decoding="async">
+        </div>
+        </div>
       </div>
-      <div class="reveal reveal--right">
+    </figure>
+
+  <div class="wrap">
+    <div class="postale__mot reveal">
       <figure class="handnote" data-handnote>
         <blockquote style="margin:0">
         <span class="handnote__line"><span style="--hand-delay:0.00s">&laquo;&nbsp;Ma vraie compétence</span></span>
@@ -171,7 +205,6 @@
         <span class="handnote__rule" aria-hidden="true"></span>
         <figcaption class="handnote__caption">Amélie-Thu DUONG &middot; Fondatrice</figcaption>
       </figure>
-      </div>
     </div>
   </div>
 </section>

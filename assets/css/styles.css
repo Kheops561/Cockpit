@@ -37,6 +37,9 @@
   --wrap: 1200px;
   --wrap-narrow: 780px;
   --gutter: clamp(1.25rem, 4vw, 3rem);
+  /* Hauteur de l'en-tête collant : les ancres et les barres collées
+     doivent s'arrêter en dessous. */
+  --header-h: 5.0625rem;
   --section-y: clamp(4rem, 9vw, 8.5rem);
   --shadow: 0 24px 70px rgba(18, 40, 60, .11);
   --shadow-soft: 0 12px 40px rgba(18, 40, 60, .07);
@@ -408,9 +411,23 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   transition: transform .35s var(--ease);
 }
 .nav__link:hover { color: var(--ink); }
-.nav__link:hover::after,
-.nav__link[aria-current="page"]::after { transform: scaleX(1); }
-.nav__link[aria-current="page"] { color: var(--ink); font-weight: 500; }
+.nav__link:hover::after { transform: scaleX(1); }
+
+/* Page courante : le lecteur doit voir d'un coup d'oeil ou il se trouve.
+   Un filet rouille de 2 px, un texte en bleu nuit appuye et une pastille
+   claire : le repere tient meme sur un ecran peu contraste. */
+.nav__link[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 600;
+  background: var(--paper-soft);
+  padding-inline: .7rem;
+  margin-inline: -.2rem;
+}
+.nav__link[aria-current="page"]::after {
+  height: 2px;
+  background: var(--rust);
+  transform: scaleX(1);
+}
 
 .header__cta { display: none; white-space: nowrap; }
 @media (min-width: 1200px) { .header__cta { display: inline-flex; padding: .8rem 1.2rem; font-size: .875rem; } }
@@ -451,7 +468,13 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   font-size: 1.0625rem;
   color: var(--ink);
 }
-.drawer__link[aria-current="page"] { color: var(--lavender-dark); }
+.drawer__link[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 600;
+  border-left: 2px solid var(--rust);
+  padding-left: .8rem;
+  margin-left: -1rem;
+}
 .drawer .btn { width: 100%; justify-content: center; margin-top: 1.5rem; }
 
 /* ------------------------------------------------------------------ 7 hero */
@@ -1402,95 +1425,193 @@ html:not(.js) .booking__confirm { display: none; }
 }
 
 /* ==========================================================================
-   26 · Le parcours de la fondatrice
-   Une photographie, un trait entre deux lieux, quatre étapes. Pas de faux
-   timbre, pas de bordure d'aérogramme, pas de fond de carte inventé : le
-   registre reste celui du reste du site, et c'est la photographie qui porte
-   le bloc. Le trait est décoratif ; les quatre étapes qui suivent portent
-   seules l'information, et restent lisibles sans image, sans animation et
-   sans JavaScript.
+   26 · Le parcours de la fondatrice, en carte postale
+   Le vocabulaire d'une carte postale par avion : un bord d'aérogramme, deux
+   vues photographiques qui encadrent un champ ivoire, un titre écrit à la
+   main, un trajet pointillé parcouru par un avion, deux cachets ronds. Les
+   couleurs restent celles de la maison : bleu nuit, ivoire, rouille. Le
+   bloc occupe toute la largeur de l'écran, hors de la colonne de lecture.
+
+   Le trajet et les cachets sont décoratifs : les quatre étapes écrites en
+   toutes lettres portent seules l'information, et restent lisibles sans
+   image, sans animation et sans JavaScript.
    ========================================================================== */
 
-.carte {
-  margin: 0;
-  background: var(--white);
-  border: 1px solid var(--line);
-  padding: clamp(.9rem, 1.8vw, 1.35rem);
+.postale {
+  margin: 0 auto;
+  max-width: 1680px;
+  /* Le bord d'aérogramme : des bandes obliques bleu nuit et rouille. */
+  padding: clamp(6px, .8vw, 11px);
+  background:
+    repeating-linear-gradient(45deg,
+      var(--ink) 0 10px,
+      var(--paper) 10px 20px,
+      var(--rust) 20px 30px,
+      var(--paper) 30px 40px);
+}
+.postale__feuille {
+  position: relative;
+  background: var(--paper);
+  overflow: hidden;
 }
 
-.carte__vues {
+.postale__grille {
   display: grid;
-  gap: clamp(.9rem, 1.8vw, 1.35rem);
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
 }
-.carte__vues--duo { grid-template-columns: 1fr 1fr; }
-.carte__vue { position: relative; overflow: hidden; background: var(--paper-soft); }
-.carte__vue img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.carte__vues:not(.carte__vues--duo) .carte__vue { aspect-ratio: 2 / 1; }
-.carte__vues--duo .carte__vue { aspect-ratio: 4 / 5; }
-.js .carte .carte__vue img { transform: scale(1.05); transition: transform 1.6s var(--ease); }
-.js .carte.is-visible .carte__vue img { transform: none; }
 
-/* Le trajet : deux lieux écrits à la main, un trait entre les deux. */
-.carte__route {
-  display: flex;
-  align-items: center;
-  gap: clamp(.7rem, 1.6vw, 1.25rem);
-  margin-block: clamp(1.1rem, 2.2vw, 1.6rem) clamp(1.25rem, 2.5vw, 1.9rem);
+/* Les vues touchent le bord de la carte et se fondent vers le champ ivoire. */
+.postale__vue { position: relative; overflow: hidden; background: var(--paper-soft); }
+.postale__vue img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.postale__vue::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
-.carte__lieu {
-  flex: none;
+.postale__vue--gauche::after {
+  background: linear-gradient(to right, transparent 72%, var(--paper));
+}
+.postale__vue--droite::after {
+  background: linear-gradient(to left, transparent 72%, var(--paper));
+}
+.js .postale__vue img { transform: scale(1.06); transition: transform 1.8s var(--ease); }
+.js .postale.is-visible .postale__vue img { transform: none; }
+
+.postale__champ {
+  position: relative;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  padding: clamp(1.75rem, 4vw, 3.25rem) clamp(1.25rem, 3.5vw, 3rem) clamp(2.5rem, 5vw, 4rem);
+  text-align: center;
+}
+
+/* Au-delà de cette largeur, la carte prend sa forme d'origine : une vue à
+   gauche, une vue à droite, le champ écrit au milieu. */
+@media (min-width: 1080px) {
+  .postale__grille { grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr) minmax(0, .8fr); }
+  .postale__champ { grid-column: 2; grid-row: 1; }
+  .postale__vue--droite { grid-column: 3; grid-row: 1; }
+}
+@media (max-width: 1079.98px) {
+  .postale__vue { aspect-ratio: 4 / 5; }
+}
+
+/* Le titre, écrit à la main, se découvre ligne à ligne. */
+.postale__titre {
+  margin: 0;
   font-family: 'Caveat', 'Segoe Script', cursive;
-  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
+  line-height: 1.15;
+  color: var(--ink);
+}
+.postale__ligne { display: block; overflow: hidden; }
+.postale__ligne > span { display: inline-block; white-space: nowrap; }
+.js .postale__ligne > span {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1.1s cubic-bezier(.55, .1, .3, 1);
+  transition-delay: var(--hand-delay, 0s);
+}
+.js .postale.is-visible .postale__ligne > span { clip-path: inset(0 0 0 0); }
+
+.postale__filet {
+  display: block;
+  width: clamp(3.5rem, 8vw, 6rem);
+  height: 1px;
+  margin: clamp(1rem, 2vw, 1.5rem) auto 0;
+  background: var(--line-strong);
+  transform-origin: center;
+}
+.js .postale__filet { transform: scaleX(0); transition: transform .9s var(--ease) .8s; }
+.js .postale.is-visible .postale__filet { transform: scaleX(1); }
+
+/* Le trajet : deux repères, un pointillé, un avion qui le parcourt. */
+.postale__trajet { margin: clamp(1.25rem, 2.5vw, 2rem) 0 clamp(2.75rem, 4vw, 3.5rem); }
+.postale__vol { position: relative; }
+.postale__vol svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+.postale__itineraire {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1.2;
+  stroke-dasharray: 5 6;
+  stroke-linecap: round;
+}
+.postale__trace {
+  fill: none;
+  stroke: var(--rust);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+.js .postale__trace {
+  stroke-dasharray: var(--len, 620);
+  stroke-dashoffset: var(--len, 620);
+}
+.js .postale.is-visible .postale__trace {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 2.2s cubic-bezier(.32, .1, .2, 1) .5s;
+}
+.postale__anneau { fill: none; stroke: var(--rust); stroke-width: 1.2; }
+.postale__point { fill: var(--rust); }
+.postale__avion { fill: var(--rust); offset-rotate: auto; offset-distance: 0%; }
+.js .postale.is-visible .postale__avion {
+  animation: vol 2.2s cubic-bezier(.32, .1, .2, 1) .5s forwards;
+}
+@keyframes vol { to { offset-distance: 100%; } }
+
+/* Les deux noms de lieu se posent sous leur repère, jamais sur un bord. */
+.postale__lieu {
+  position: absolute;
+  top: 76.7%;
+  transform: translate(-50%, .5rem);
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: clamp(1.1rem, 1.9vw, 1.6rem);
   line-height: 1;
   color: var(--ink);
   white-space: nowrap;
 }
-.carte__ligne { flex: 1 1 auto; min-width: 0; }
-.carte__ligne svg { display: block; width: 100%; height: auto; overflow: visible; }
+.postale__lieu--a { left: 13.33%; }
+.postale__lieu--b { left: 86.67%; }
 
-.carte__itineraire {
-  fill: none;
-  stroke: var(--line-strong);
-  stroke-width: 1;
-  stroke-dasharray: 4 5;
-  stroke-linecap: round;
+/* Les cachets : deux tampons ronds, discrets, décoratifs. */
+.postale__cachet {
+  position: absolute;
+  top: clamp(1rem, 2vw, 1.75rem);
+  width: clamp(4.25rem, 6vw, 5.5rem);
+  color: var(--ink);
+  opacity: .3;
+  display: none;
 }
-.carte__trace {
-  fill: none;
-  stroke: var(--rust);
-  stroke-width: 1.6;
-  stroke-linecap: round;
+.postale__cachet--a { left: clamp(.5rem, 1.5vw, 1.5rem); transform: rotate(-9deg); }
+.postale__cachet--b { right: clamp(.5rem, 1.5vw, 1.5rem); transform: rotate(7deg); }
+.postale__cachet svg { display: block; width: 100%; height: auto; }
+.postale__cachet circle { fill: none; stroke: currentColor; stroke-width: 1.8; }
+.postale__cachet-avion { fill: currentColor; }
+.postale__cachet text {
+  fill: currentColor;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-anchor: middle;
 }
-.js .carte__trace {
-  stroke-dasharray: var(--len, 620);
-  stroke-dashoffset: var(--len, 620);
-}
-.js .carte.is-visible .carte__trace {
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 2s cubic-bezier(.32, .1, .2, 1) .3s;
-}
-.carte__avion { fill: var(--rust); offset-rotate: auto; offset-distance: 0%; }
-.js .carte.is-visible .carte__avion {
-  animation: vol 2s cubic-bezier(.32, .1, .2, 1) .3s forwards;
-}
-@keyframes vol { to { offset-distance: 100%; } }
-.carte__repere { fill: var(--rust); }
+/* Ils n'apparaissent que là où ils ne gênent aucun texte. */
+@media (min-width: 1200px) { .postale__cachet { display: block; } }
 
-/* Étapes : quatre colonnes réglées, sans cadre dans le cadre. */
+/* Les quatre étapes : c'est ici que l'information est écrite. */
 .journey__steps {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: clamp(1rem, 2vw, 1.5rem);
+  gap: clamp(1rem, 2vw, 1.6rem) clamp(1.25rem, 2.5vw, 2.25rem);
   grid-template-columns: 1fr;
+  text-align: left;
 }
-/* Deux colonnes suffisent : le bloc n'occupe qu'une moitié de la page, et
-   quatre colonnes y hacheraient les phrases. */
 @media (min-width: 560px) { .journey__steps { grid-template-columns: repeat(2, 1fr); } }
 
-.journey__step { padding-top: .85rem; border-top: 1px solid var(--line); }
+.journey__step { padding-top: .85rem; border-top: 1px solid var(--line-strong); }
 .js .journey__step {
   opacity: 0;
   transform: translateY(10px);
@@ -1510,11 +1631,16 @@ html:not(.js) .booking__confirm { display: none; }
 .journey__step--now .journey__when { color: var(--rust); }
 .journey__what { display: block; font-size: .9375rem; color: var(--text); line-height: 1.55; }
 
+/* La citation manuscrite se pose sous la carte, au centre de la page. */
+.postale__mot { display: flex; justify-content: center; margin-top: clamp(2.5rem, 5vw, 4rem); }
+
 @media (prefers-reduced-motion: reduce) {
-  .js .carte .carte__vue img { transform: none; transition: none; }
-  .js .carte__trace { stroke-dasharray: 4 5; stroke-dashoffset: 0; }
-  .js .carte .carte__avion { offset-distance: 60%; animation: none; }
-  .js .journey__step { opacity: 1; transform: none; }
+  .js .postale__vue img { transform: none; transition: none; }
+  .js .postale__ligne > span { clip-path: none; transition: none; }
+  .js .postale__filet { transform: none; transition: none; }
+  .js .postale__trace { stroke-dasharray: 5 6; stroke-dashoffset: 0; transition: none; }
+  .js .postale .postale__avion { offset-distance: 55%; animation: none; }
+  .js .journey__step { opacity: 1; transform: none; transition: none; }
 }
 
 /* --------------------------------------------------------- note manuscrite */
@@ -1643,6 +1769,10 @@ html:not(.js) .booking__confirm { display: none; }
 }
 
 .timeline__label {
+  /* Le fil longe maintenant des blocs pleine largeur : sans ce coussin
+     ivoire, le libellé se perdrait sur une photographie. */
+  background: var(--paper);
+  box-shadow: 0 0 0 .3rem var(--paper);
   display: none;
   font-size: .6875rem;
   letter-spacing: .12em;
@@ -1816,60 +1946,47 @@ html:not(.js) .booking__confirm { display: none; }
 
 
 /* ==========================================================================
-   30 · Le processus qui defile
-   Les cinq etapes de la methode passent l'une apres l'autre. Une barre
-   d'onglets les commande : un bloc bleu nuit glisse jusqu'a l'onglet actif,
-   et le panneau se substitue en fondu. Sans JavaScript, les cinq etapes
-   restent affichees a la suite, comme une simple liste : le defilement est
-   un confort de lecture, jamais une condition d'acces au contenu. Sous
-   mouvement reduit, il ne s'enclenche pas.
+   30 · Le processus : une barre de repères et le récapitulatif complet
+   Les cinq étapes restent toutes affichées, comme un schéma récapitulatif :
+   le lecteur les embrasse d'un regard. Au-dessus, une barre de repères
+   pleine largeur permet d'aller directement à une étape. Ce sont de vrais
+   liens d'ancre : ils fonctionnent sans JavaScript. Le script n'ajoute que
+   deux conforts, le défilement adouci et la mise en surbrillance de
+   l'étape en cours de lecture.
    ========================================================================== */
 
 .processus__nav {
-  position: relative;
   display: flex;
   flex-wrap: nowrap;
-  gap: 0;
-  padding: 2px;
-  margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
-  background: var(--paper-soft);
+  background: var(--white);
   border-block: 1px solid var(--line);
+  margin-bottom: clamp(2rem, 4vw, 3rem);
   overflow-x: auto;
+  /* Elle se cale sous l'en-tête : le lecteur garde les cinq étapes sous la
+     main et voit celle qu'il est en train de lire. */
+  position: sticky;
+  top: calc(var(--header-h) - 1px);
+  z-index: 50;
   scrollbar-width: none;
 }
 .processus__nav::-webkit-scrollbar { display: none; }
-.section--paper-soft .processus__nav { background: var(--white); }
-
-/* Le bloc qui glisse jusqu'a l'onglet actif. */
-.processus__curseur {
-  position: absolute;
-  top: 2px;
-  bottom: 2px;
-  left: 0;
-  width: 0;
-  background: var(--ink);
-  transform: translateX(0);
-  transition: transform .55s cubic-bezier(.22, .61, .36, 1),
-              width .55s cubic-bezier(.22, .61, .36, 1);
-  pointer-events: none;
-}
 
 .processus__stop {
-  position: relative;
-  z-index: 1;
-  flex: 1 0 auto;
-  min-width: 8.5rem;
-  padding: .8rem 1rem 1.15rem;
-  background: none;
-  border: 0;
-  text-align: left;
-  cursor: pointer;
+  flex: 1 0 8.5rem;
+  min-width: 0;
+  padding: .9rem clamp(.85rem, 1.6vw, 1.5rem) 1rem;
   color: var(--muted);
-  transition: color .4s var(--ease);
+  border-right: 1px solid var(--line);
+  transition: background .45s var(--ease), color .45s var(--ease);
 }
-.processus__stop:hover { color: var(--ink); }
-.processus__stop[aria-selected="true"] { color: var(--white); }
+.processus__stop:last-child { border-right: 0; }
+.processus__stop:hover { background: var(--paper-soft); color: var(--ink); }
 .processus__stop:focus-visible { outline-offset: -3px; }
+.processus__stop[aria-current="true"] { background: var(--ink); color: var(--white); }
+
+/* Au-delà de cette largeur les cinq repères tiennent sur une ligne : ils se
+   partagent l'écran à parts égales et aucun n'est plus rogné sur les bords. */
+@media (min-width: 760px) { .processus__stop { flex: 1 1 0; } }
 
 .processus__num {
   display: block;
@@ -1878,58 +1995,49 @@ html:not(.js) .booking__confirm { display: none; }
   letter-spacing: .12em;
   color: var(--lavender-dark);
   margin-bottom: .3rem;
-  transition: color .4s var(--ease);
+  transition: color .45s var(--ease);
 }
-.processus__stop[aria-selected="true"] .processus__num { color: var(--lavender); }
+.processus__stop[aria-current="true"] .processus__num { color: var(--lavender); }
 .processus__label {
   display: block;
   font-size: .9375rem;
   font-weight: 500;
   line-height: 1.2;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Jauge : le temps qu'il reste avant l'etape suivante. */
-.processus__jauge {
-  position: absolute;
-  left: 1rem;
-  right: 1rem;
-  bottom: .6rem;
-  height: 1px;
-  background: rgba(255, 255, 255, .45);
-  transform: scaleX(0);
-  transform-origin: left;
+/* Le récapitulatif : une ligne par étape, quatre colonnes réglées dès que
+   la place le permet, empilées en dessous. */
+.steps--recap .step {
+  grid-template-columns: auto minmax(0, 1fr);
+  padding-inline: clamp(.75rem, 1.5vw, 1.25rem);
+  /* L'en-tête reste au-dessus du contenu : l'ancre doit s'arrêter en dessous. */
+  scroll-margin-top: calc(var(--header-h) + 5rem);
+  transition: background .5s var(--ease);
 }
-.processus__stop[aria-selected="true"] .processus__jauge {
-  animation: jauge var(--duree, 5.5s) linear forwards;
-}
-.processus.est-en-pause .processus__jauge { animation-play-state: paused; }
-@keyframes jauge { to { transform: scaleX(1); } }
+.steps--recap .step__num { grid-column: 1; grid-row: 1 / span 3; }
+.steps--recap .step__name,
+.steps--recap .step__desc,
+.steps--recap .step__out { grid-column: 2; }
+.steps--recap .step.est-active { background: var(--white); }
 
-/* Panneau : une seule etape a la fois, hauteur figee pour eviter les sauts. */
-.js .processus.est-defilant .steps { position: relative; }
-.js .processus.est-defilant .step { display: none; border: 0; padding-block: 0; }
-.js .processus.est-defilant .step.est-active {
-  display: grid;
-  animation: onglet .55s cubic-bezier(.22, .61, .36, 1) both;
-}
-@keyframes onglet {
-  from { opacity: 0; transform: translateX(-12px) scale(.985); filter: blur(6px); }
-  to   { opacity: 1; transform: none; filter: blur(0); }
-}
-
-.processus__commandes {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: .85rem 1.25rem;
-  margin-top: clamp(1.5rem, 3vw, 2rem);
+@media (min-width: 900px) {
+  .steps--recap .step {
+    grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1.5fr);
+    gap: .35rem clamp(1.25rem, 2.4vw, 2.5rem);
+    align-items: start;
+  }
+  .steps--recap .step__num { grid-column: 1; grid-row: 1; }
+  .steps--recap .step__name { grid-column: 2; margin-bottom: 0; }
+  .steps--recap .step__desc { grid-column: 3; }
+  .steps--recap .step__out { grid-column: 4; margin-top: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .processus__curseur { transition: none; }
-  .js .processus.est-defilant .step.est-active { animation: none; }
-  .processus__stop[aria-selected="true"] .processus__jauge { animation: none; transform: scaleX(1); }
+  .processus__stop,
+  .steps--recap .step { transition: none; }
 }
 
 
