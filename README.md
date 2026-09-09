@@ -32,13 +32,14 @@ Points à régler côté hébergeur :
 
 ```
 index.html                 Accueil
-approche.html              Notre approche (schéma des 4 étapes + méthode)
+approche.html              Notre approche (récapitulatif des 5 étapes)
 accompagnements.html       Les quatre accompagnements
 diagnostic.html            Diagnostic Stratégique · 450 € HT
 ressources.html            La bibliothèque
 ressource-3-effets.html    Ressource « Les 3 effets dans l’immobilier »
-a-propos.html              La fondatrice, la carte du parcours, le fil de lecture
-contact.html               Réserver ou écrire
+temoignages.html           Les huit témoignages, en pile de cartes
+a-propos.html              La fondatrice, la carte postale du parcours, le fil de lecture
+contact.html               Réserver, écrire ou remplir le formulaire
 mentions-legales.html      Modèle à compléter
 confidentialite.html       Modèle à compléter
 404.html                   Page introuvable
@@ -64,7 +65,7 @@ CLAUDE.md                  Instructions permanentes pour toute reprise
 
 Les textes sont directement dans les fichiers `.html`. L’en-tête et le pied de
 page sont répétés dans chaque page : une modification de navigation doit être
-reportée dans les onze fichiers. Les caractères accentués sont écrits en
+reportée dans les douze fichiers. Les caractères accentués sont écrits en
 clair ; les apostrophes typographiques utilisent `&rsquo;`.
 
 ## Vérifier avant de publier

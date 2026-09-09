@@ -10,7 +10,7 @@ confirmés par Amélie avant de considérer la publication comme définitive.
       structurées. Si la décision change, relancer
       `python3 outils/donnees-structurees.py` après avoir modifié le domaine
       dans ce script, puis reprendre `sitemap.xml`, `robots.txt` et les
-      `<link rel="canonical">` des treize pages.
+      `<link rel="canonical">` des douze pages.
 
 ## Identité et conversion · priorité haute
 
@@ -63,13 +63,25 @@ base et d’une période auditées.
 
 ## Mentions légales et données · obligatoire avant live
 
-- [ ] Dénomination sociale exacte.
+- [x] Dénomination sociale : **AMÉLIE ET PARTNERS**, nom commercial
+      **AMÉLIE & PARTNERS**.
+- [x] SIREN : **940 688 377**.
+- [x] Hébergeur : **Vercel Inc.**, 440 N Barranca Ave #4133, Covina,
+      CA 91723, États-Unis.
 - [ ] Forme juridique et capital social.
 - [ ] Adresse du siège.
-- [ ] SIREN/SIRET, RCS et ville d’immatriculation.
+- [ ] SIRET du siège, greffe du RCS et date d’immatriculation.
 - [ ] Numéro de TVA intracommunautaire, si applicable.
+- [ ] Code APE et son libellé.
 - [ ] Nom de la directrice de publication.
-- [ ] Coordonnées et identité de l’hébergeur retenu.
+- [ ] Bureau d’enregistrement du domaine `amelie-invest.com`.
+- [ ] Adresse du profil LinkedIn :
+      `https://www.linkedin.com/company/amelie-partners` : page publiée ?
+
+Les données de l’éditeur n’ont pas pu être vérifiées depuis cet
+environnement : l’accès à `annuaire-entreprises.data.gouv.fr` y est bloqué.
+Rien n’a donc été deviné ; seul le SIREN transmis par Eric est inscrit, et
+toutes les autres lignes restent marquées « à compléter » dans la page.
 - [ ] Mentions des activités réglementées éventuellement exercées : carte
       professionnelle, garantie financière, assurance de responsabilité civile
       professionnelle.
@@ -87,11 +99,20 @@ pas des conseils juridiques.
 
 ## Formulaire de contact
 
-- [ ] Décider s’il faut un formulaire. Le code est prêt et commenté dans
-      `contact.html` ; il faut un service de traitement (Formspree, Netlify
-      Forms, Basin…) et l’ajouter à la politique de confidentialité. Tant que
-      ce choix n’est pas fait, la page propose la réservation Calendly et
-      l’adresse e-mail, sans formulaire qui perdrait les messages.
+Le formulaire est en place sur `contact.html`. Comme le site est statique et
+n’appelle aucun domaine tiers, il n’envoie rien lui-même : à la validation,
+le script compose le message dans la messagerie du visiteur, déjà rempli. Le
+visiteur reste libre de l’envoyer, et aucune donnée saisie ne transite par le
+site. Sans JavaScript, le formulaire reste affiché et l’adresse e-mail est
+écrite juste au-dessus.
+
+- [ ] Vérifier que ce fonctionnement convient. Il suppose une messagerie
+      configurée chez le visiteur : sur un poste sans client de messagerie,
+      le bouton n’ouvre rien et il reste l’adresse écrite à côté.
+- [ ] Si Amélie préfère recevoir les messages sans passer par la messagerie
+      du visiteur, il faut un service de traitement (Formspree, Netlify
+      Forms, Basin…), le déclarer dans la page « Données personnelles », et
+      accepter que le site appelle alors un domaine tiers.
 
 ## Référencement et mesure · recommandé
 

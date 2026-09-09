@@ -116,19 +116,20 @@ vectoriels monochromes : aucun émoji, aucune flèche Unicode.
 5. Les vidéos sont muettes, facultatives et retombent sur une photographie si
    le fichier est absent ou illisible.
 6. Aucun appel à un domaine tiers dans les pages : polices, styles et scripts
-   sont hébergés avec le site. Seuls Calendly et `mailto:` sont des liens
-   sortants.
+   sont hébergés avec le site. Seuls Calendly, LinkedIn et `mailto:` sont des
+   liens sortants. Le formulaire de contact n’appelle donc aucun service : il
+   prépare un message dans la messagerie du visiteur.
 7. Une seule balise `h1` par page.
 
 ## Où modifier
 
-- Pages : les onze fichiers `.html` à la racine.
+- Pages : les douze fichiers `.html` à la racine.
 - Mise en forme : `assets/css/styles.css`, sections numérotées.
 - Comportements : `assets/js/site.js`.
 - Visuels : `assets/images/` et `assets/videos/`, voir `GUIDE-VISUELS.md`.
 
 L’en-tête et le pied de page sont **répétés dans chaque page**. Une
-modification de navigation doit être reportée dans les onze fichiers.
+modification de navigation doit être reportée dans les douze fichiers.
 
 ## Méthode obligatoire avant livraison
 

@@ -362,7 +362,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 /* La barre de navigation est plus dense que le corps du site : elle gagne en
    largeur utile et resserre ses marges pour que le bouton reste entier. */
 @media (min-width: 1200px) {
-  .header .wrap { max-width: 1400px; padding-inline: 1.75rem; }
+  .header .wrap { max-width: 1480px; padding-inline: 1.5rem; }
 }
 @media (min-width: 1500px) {
   .header .wrap { padding-inline: var(--gutter); }
@@ -389,8 +389,18 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 }
 
 .nav { display: none; }
+/* Six entrees, un logo et un bouton. Entre 1200 et 1440 px la barre se
+   resserre pour tout garder entier ; en dessous, le menu deroulant prend le
+   relais. */
 @media (min-width: 1200px) {
-  .nav { display: flex; align-items: center; gap: clamp(.85rem, 1.5vw, 1.85rem); }
+  .nav { display: flex; align-items: center; gap: .7rem; }
+  .nav__link { font-size: .875rem; }
+  .nav__link[aria-current="page"] { padding-inline: .55rem; }
+}
+@media (min-width: 1440px) {
+  .nav { gap: clamp(.85rem, 1.4vw, 1.6rem); }
+  .nav__link { font-size: .9375rem; }
+  .nav__link[aria-current="page"] { padding-inline: .7rem; }
 }
 .nav__link {
   position: relative;
@@ -430,8 +440,8 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 }
 
 .header__cta { display: none; white-space: nowrap; }
-@media (min-width: 1200px) { .header__cta { display: inline-flex; padding: .8rem 1.2rem; font-size: .875rem; } }
-@media (min-width: 1360px) { .header__cta { padding: .85rem 1.4rem; font-size: .9375rem; } }
+@media (min-width: 1200px) { .header__cta { display: inline-flex; padding: .75rem 1rem; font-size: .8125rem; } }
+@media (min-width: 1440px) { .header__cta { padding: .85rem 1.35rem; font-size: .9375rem; } }
 
 /* Bouton menu : trois traits, aucun émoji */
 .burger {
@@ -1077,13 +1087,30 @@ a.card:hover,
 .field--inline { display: flex; align-items: flex-start; gap: .75rem; }
 .field--inline input { margin-top: .3rem; }
 .field--inline label { font-weight: 400; color: var(--muted); font-size: .8125rem; line-height: 1.6; }
+.field--inline label a { color: var(--lavender-dark); text-decoration: underline; text-underline-offset: .2em; }
+
+.field input::placeholder,
+.field textarea::placeholder { color: var(--muted); opacity: 1; }
+
+/* Un champ obligatoire laisse en blanc se signale une fois quitte, jamais
+   avant : le lecteur n'est pas averti d'une erreur qu'il n'a pas encore
+   faite. */
+.field input:not(:placeholder-shown):invalid,
+.field textarea:not(:placeholder-shown):invalid { border-color: var(--rust); }
+
+.form__envoi { display: grid; gap: .85rem; margin-top: .5rem; }
+.form__envoi .btn { justify-self: start; }
+
+/* Une adresse citee, pas cliquee : elle reste lisible sans etre un lien. */
+.prose__url { font-family: var(--font-editorial); letter-spacing: .01em; }
 
 /* ------------------------------------------------------------- 19 pied de page */
 
 .footer { background: var(--ink); color: rgba(255, 255, 255, .68); padding-block: clamp(3.5rem, 6vw, 5.5rem) 2.5rem; }
 .footer h2, .footer h3 { color: var(--white); }
 .footer__top { display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
-@media (min-width: 900px) { .footer__top { grid-template-columns: 1.4fr 1fr 1fr; } }
+@media (min-width: 760px) { .footer__top { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1080px) { .footer__top { grid-template-columns: 1.5fr 1fr 1fr 1fr; } }
 .footer .logo__name { color: var(--white); }
 .footer .logo__tag { color: rgba(255, 255, 255, .55); }
 .footer .logo__tag span { color: var(--lavender); }
@@ -2213,7 +2240,7 @@ html:not(.js) .booking__confirm { display: none; }
 .temoignages-duo { display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
 @media (min-width: 1100px) {
   .temoignages-duo {
-    grid-template-columns: minmax(0, 1fr) 34rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
     gap: clamp(3rem, 6vw, 6rem);
     align-items: center;
   }
@@ -2226,10 +2253,11 @@ html:not(.js) .booking__confirm { display: none; }
   padding: 0;
   display: grid;
   gap: clamp(1.25rem, 2.5vw, 2rem);
-  grid-template-columns: 1fr;
+  /* Le nombre de colonnes suit la largeur du conteneur, jamais celle de
+     l'ecran : sans JavaScript la grille tient dans la colonne etroite que
+     la pile occupe une fois le script actif. */
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
 }
-@media (min-width: 700px) { .pile__cartes { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1100px) { .pile__cartes { grid-template-columns: repeat(3, 1fr); } }
 
 .pile__carte {
   display: flex;

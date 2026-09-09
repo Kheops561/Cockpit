@@ -608,30 +608,45 @@
       }
     }
 
+    // La ligne de lecture : juste sous l'en-tete et sous la barre de reperes,
+    // tous deux collants. Le saut y depose l'etape, et c'est elle que suit la
+    // mise en surbrillance : repere et contenu ne peuvent pas se contredire.
+    var entete = document.querySelector('.header');
+    var barre = bloc.querySelector('.processus__nav');
+    function ligne() {
+      return (entete ? entete.offsetHeight : 0)
+           + (barre ? barre.offsetHeight : 0) + 16;
+    }
+
     Array.prototype.forEach.call(stops, function (stop, i) {
       stop.addEventListener('click', function (e) {
         marquer(i);
-        if (!doux || !etapes[i].scrollIntoView) return;
+        if (!doux || !window.scrollTo) return;
         e.preventDefault();
-        etapes[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Calcul explicite plutot que scrollIntoView : avec une barre
+        // collante, le navigateur vise trop court.
+        var y = window.pageYOffset + etapes[i].getBoundingClientRect().top - ligne();
+        try {
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        } catch (err) {
+          window.scrollTo(0, y);
+        }
         if (window.history && window.history.replaceState) {
           window.history.replaceState(null, '', stop.getAttribute('href'));
         }
       });
     });
 
-    // Repere de lecture : l'etape dont le centre est le plus proche de celui
-    // de l'ecran. Le lecteur voit ou il en est sans avoir rien a cliquer.
+    // Repere de lecture : la derniere etape dont le haut a passe la ligne de
+    // lecture, celle-la meme ou un clic sur un repere depose l'etape. Les
+    // deux designent ainsi toujours la meme chose.
     var attente = false;
     function suivre() {
       attente = false;
-      var milieu = window.innerHeight / 2;
+      var repere = ligne();
       var meilleur = 0;
-      var ecart = Infinity;
       for (var k = 0; k < etapes.length; k++) {
-        var r = etapes[k].getBoundingClientRect();
-        var d = Math.abs(r.top + r.height / 2 - milieu);
-        if (d < ecart) { ecart = d; meilleur = k; }
+        if (etapes[k].getBoundingClientRect().top - repere <= 2) meilleur = k;
       }
       marquer(meilleur);
     }
@@ -803,5 +818,70 @@
     document.addEventListener('DOMContentLoaded', initPile);
   } else {
     initPile();
+  }
+})();
+
+/* ==========================================================================
+   Le formulaire de contact.
+   Le site est statique et n'appelle aucun domaine tiers : a l'envoi, le
+   script compose un message dans la messagerie du visiteur, deja rempli
+   avec ce qu'il vient d'ecrire. Rien ne part sans sa validation, et aucune
+   donnee ne transite par ce site.
+
+   Sans ce script, le formulaire reste affiche et utilisable : l'adresse est
+   ecrite juste au-dessus, et le bouton ouvre un message vers la meme
+   adresse.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  function initFormulaire() {
+    var form = document.querySelector('[data-form-mail]');
+    if (!form) return;
+
+    var action = form.getAttribute('action') || '';
+    var adresse = action.replace(/^mailto:/, '').split('?')[0];
+    if (!adresse) return;
+
+    function valeur(nom) {
+      var champ = form.elements[nom];
+      return champ ? String(champ.value || '').trim() : '';
+    }
+
+    form.addEventListener('submit', function (e) {
+      // Laisser le navigateur signaler lui-meme les champs incomplets.
+      if (form.checkValidity && !form.checkValidity()) return;
+      e.preventDefault();
+
+      var nom = valeur('nom');
+      var corps = [
+        'Nom : ' + nom,
+        'Adresse e-mail : ' + valeur('courriel'),
+        'Où j’en suis : ' + valeur('profil'),
+        '',
+        valeur('message'),
+        '',
+        'Message préparé depuis le formulaire de contact d’amelie-invest.com.'
+      ].join('\r\n');
+
+      var sujet = 'Premier échange' + (nom ? ' \u00b7 ' + nom : '');
+      var lien = document.createElement('a');
+      lien.href = 'mailto:' + adresse
+        + '?subject=' + encodeURIComponent(sujet)
+        + '&body=' + encodeURIComponent(corps);
+      // Un lien clique passe partout : certains navigateurs refusent une
+      // affectation directe d'adresse vers un protocole externe.
+      lien.style.display = 'none';
+      document.body.appendChild(lien);
+      lien.click();
+      document.body.removeChild(lien);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFormulaire);
+  } else {
+    initFormulaire();
   }
 })();
