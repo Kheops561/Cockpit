@@ -150,7 +150,7 @@ jamais d’information seule.
 | Filet qui se dessine | Cadres `.frame--underline` |
 | Bandeau des témoignages | Section Témoignages |
 | Réservation en deux temps | Bloc « Parlons de… » |
-| Carte postale : itinéraire tracé, avion, vignette | `a-propos.html` |
+| Parcours : trajet tracé et avion qui le suit | `a-propos.html` |
 | Fil de lecture vertical | `a-propos.html` |
 | Frise des quatre étapes et cachet du logo | `approche.html` |
 | Vidéos en boucle, muettes | Bandeaux équipés |

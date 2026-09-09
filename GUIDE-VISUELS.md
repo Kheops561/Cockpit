@@ -135,6 +135,17 @@ disposez d’une version vectorielle (`.svg`), elle sera plus nette sur les
 Le fichier fourni sert de référence : `logo.png` est aussi la source de
 `favicon.png`.
 
+## Le parcours de la fondatrice
+
+Le bloc « parcours » de `a-propos.html` accepte **une ou deux**
+photographies. Avec une seule, elle occupe toute la largeur du cadre ; avec
+deux, le bloc devient un diptyque Viêt Nam / Paris, en format portrait.
+
+Aujourd’hui il n’y a qu’une photographie, `parcours-paris.jpg`, faute d’une
+vue du Viêt Nam. Pour passer au diptyque, déposer la seconde sous le nom
+`parcours-vietnam.jpg` et le signaler : le bloc bascule tout seul, la mise en
+forme est déjà prête.
+
 ## Ce qui est le plus visible
 
 Par ordre d’importance, si vous ne changez que quelques images :
