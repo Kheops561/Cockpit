@@ -79,32 +79,46 @@ toujours pouvoir être arrêtée.
 | Fichier | Dimensions | Poids | Pages |
 |---|---|---|---|
 | `a-propos.mp4` | à venir | à venir | a-propos.html |
-| `accompagnement-diagnostic.jpg` | 1100 × 733 | 96 Ko | accompagnements.html, diagnostic.html, index.html |
+| `accompagnement-diagnostic.jpg` | 1100 × 733 | 91 Ko | accompagnements.html, diagnostic.html, index.html |
 | `accompagnement-financement.jpg` | 1100 × 733 | 193 Ko | accompagnements.html, index.html |
 | `accompagnement-recherche.jpg` | 1100 × 733 | 99 Ko | accompagnements.html, index.html |
 | `accompagnement-trajectoire.jpg` | 1100 × 733 | 81 Ko | accompagnements.html, index.html |
 | `accueil.mp4` | à venir | à venir | index.html |
-| `approche-capital.jpg` | 1080 × 810 | 90 Ko | approche.html, index.html |
-| `approche-methode.jpg` | 1080 × 810 | 101 Ko | approche.html, index.html |
-| `approche-principes.jpg` | 1080 × 810 | 108 Ko | a-propos.html |
-| `cta-fond.jpg` | 1600 × 720 | 150 Ko | a-propos.html, accompagnements.html, approche.html, index.html, ressource-3-effets.html, ressources.html |
+| `approche-capital.jpg` | 1080 × 810 | 159 Ko | approche.html, index.html |
+| `approche-methode.jpg` | 900 × 1125 | 230 Ko | approche.html, index.html |
+| `approche-principes.jpg` | 1080 × 810 | 189 Ko | a-propos.html |
+| `couloir-01.jpg` | 540 × 750 | 92 Ko | a-propos.html |
+| `couloir-02.jpg` | 540 × 750 | 67 Ko | a-propos.html |
+| `couloir-03.jpg` | 540 × 750 | 56 Ko | a-propos.html |
+| `couloir-04.jpg` | 540 × 750 | 90 Ko | a-propos.html |
+| `couloir-05.jpg` | 540 × 750 | 88 Ko | a-propos.html |
+| `couloir-06.jpg` | 540 × 750 | 87 Ko | a-propos.html |
+| `couloir-07.jpg` | 540 × 750 | 56 Ko | a-propos.html |
+| `couloir-08.jpg` | 540 × 750 | 74 Ko | a-propos.html |
+| `couloir-09.jpg` | 540 × 750 | 85 Ko | a-propos.html |
+| `couloir-10.jpg` | 540 × 750 | 88 Ko | a-propos.html |
+| `couloir-11.jpg` | 540 × 750 | 58 Ko | a-propos.html |
+| `couloir-12.jpg` | 540 × 750 | 91 Ko | a-propos.html |
+| `cta-fond.jpg` | 1600 × 720 | 132 Ko | a-propos.html, accompagnements.html, approche.html, index.html, ressource-3-effets.html, ressources.html |
 | `hero-a-propos.jpg` | 1600 × 900 | 171 Ko | a-propos.html |
 | `hero-accompagnements.jpg` | 1600 × 900 | 316 Ko | accompagnements.html |
 | `hero-accueil.jpg` | 1600 × 900 | 191 Ko | index.html |
-| `hero-approche.jpg` | 1600 × 900 | 173 Ko | approche.html |
+| `hero-approche.jpg` | 1600 × 900 | 136 Ko | approche.html |
 | `hero-contact.jpg` | 1600 × 900 | 109 Ko | contact.html |
 | `hero-diagnostic.jpg` | 1600 × 900 | 177 Ko | diagnostic.html |
-| `hero-mentions.jpg` | 1600 × 720 | 146 Ko | confidentialite.html, mentions-legales.html |
+| `hero-mentions.jpg` | 1600 × 720 | 145 Ko | confidentialite.html, mentions-legales.html |
 | `hero-ressources.jpg` | 1600 × 900 | 198 Ko | ressource-3-effets.html, ressources.html |
-| `paris-01.jpg` | 660 × 880 | 82 Ko | a-propos.html, index.html |
-| `paris-02.jpg` | 660 × 880 | 77 Ko | a-propos.html, index.html |
-| `paris-03.jpg` | 660 × 880 | 80 Ko | a-propos.html, index.html |
-| `paris-04.jpg` | 660 × 880 | 117 Ko | a-propos.html, index.html |
+| `parcours-paris.jpg` | 620 × 775 | 69 Ko | a-propos.html |
+| `parcours-vietnam.jpg` | 620 × 775 | 119 Ko | a-propos.html |
+| `paris-01.jpg` | 660 × 880 | 82 Ko | index.html |
+| `paris-02.jpg` | 660 × 880 | 76 Ko | index.html |
+| `paris-03.jpg` | 660 × 880 | 113 Ko | index.html |
+| `paris-04.jpg` | 660 × 880 | 118 Ko | index.html |
 | `paris.mp4` | à venir | à venir | index.html |
-| `portrait-amelie-large.jpg` | 960 × 1200 | 161 Ko | a-propos.html |
+| `portrait-amelie-large.jpg` | 960 × 1200 | 157 Ko | a-propos.html |
 | `portrait-amelie.jpg` | 860 × 1075 | 137 Ko | index.html |
 | `ressource-3-effets.jpg` | 1300 × 731 | 145 Ko | ressource-3-effets.html, ressources.html |
-| `ressource-couverture.jpg` | 1300 × 731 | 194 Ko | ressources.html |
+| `ressource-couverture.jpg` | 1300 × 731 | 128 Ko | ressources.html |
 
 Trois fichiers ne figurent pas dans ce tableau :
 
@@ -134,6 +148,19 @@ disposez d’une version vectorielle (`.svg`), elle sera plus nette sur les
 
 Le fichier fourni sert de référence : `logo.png` est aussi la source de
 `favicon.png`.
+
+## Le couloir de photographies
+
+La section « Paris, au quotidien » de `a-propos.html` fait remonter douze
+vues parisiennes vers le lecteur, `couloir-01.jpg` à `couloir-12.jpg`. Elles
+sont recadrées au rapport des cartes, 540 × 750, et tiennent chacune sous
+95 Ko : le couloir en affiche vingt-quatre à la fois.
+
+Pour en ajouter ou en retirer, modifier la liste passée à `couloir(...)` dans
+la page. Le rail de gauche part six vues plus loin que celui de droite, de
+sorte que les deux côtés ne montrent jamais la même image à la même
+profondeur : gardez donc un nombre de vues au moins égal au nombre de cartes
+par rail, sinon des répétitions apparaissent.
 
 ## Le parcours de la fondatrice
 
