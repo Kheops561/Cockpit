@@ -654,3 +654,154 @@
     initProcessus();
   }
 })();
+
+/* ==========================================================================
+   Les temoignages en pile.
+   Une carte devant, les suivantes derriere. On avance au doigt, a la
+   souris, au clavier ou par les reperes. Sans ce script, les huit
+   temoignages restent affiches en grille : la pile est un confort de
+   lecture, jamais une condition d'acces. Rien ne defile tout seul, il n'y
+   a donc rien a mettre en pause.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  var SEUIL = 90;   // deplacement, en pixels, au-dela duquel la carte part
+
+  function initPile() {
+    var bloc = document.querySelector('[data-pile]');
+    if (!bloc) return;
+
+    var liste = bloc.querySelector('.pile__cartes');
+    var cartes = bloc.querySelectorAll('[data-pile-carte]');
+    if (cartes.length < 2) return;
+
+    var courant = 0;
+
+    // --- Hauteur figee : la pile ne doit pas sauter d'une carte a l'autre.
+    function figerHauteur() {
+      liste.style.removeProperty('--pile-h');
+      bloc.classList.remove('est-empilee');
+      // Mesurer les cartes a la largeur qu'elles auront une fois empilees :
+      // la grille a trois colonnes les rendrait bien plus hautes.
+      bloc.classList.add('est-mesure');
+      var h = 0;
+      for (var k = 0; k < cartes.length; k++) {
+        h = Math.max(h, cartes[k].getBoundingClientRect().height);
+      }
+      bloc.classList.remove('est-mesure');
+      bloc.classList.add('est-empilee');
+      liste.style.setProperty('--pile-h', Math.ceil(h) + 'px');
+    }
+
+    // --- Commandes : deux chevrons et un repere par temoignage.
+    var chevron = function (d) {
+      return '<svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none"'
+           + ' aria-hidden="true" focusable="false"><path d="M' + (d < 0 ? '10 3L5 8l5 5' : '6 3l5 5-5 5')
+           + '" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>';
+    };
+
+    var commandes = document.createElement('div');
+    commandes.className = 'pile__commandes';
+
+    var avant = document.createElement('button');
+    avant.type = 'button';
+    avant.className = 'pile__fleche';
+    avant.innerHTML = chevron(-1) + '<span class="sr-only">Témoignage précédent</span>';
+
+    var reperes = document.createElement('ul');
+    reperes.className = 'pile__reperes';
+
+    var apres = document.createElement('button');
+    apres.type = 'button';
+    apres.className = 'pile__fleche';
+    apres.innerHTML = chevron(1) + '<span class="sr-only">Témoignage suivant</span>';
+
+    var boutons = [];
+    Array.prototype.forEach.call(cartes, function (carte, i) {
+      var li = document.createElement('li');
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'pile__repere';
+      b.innerHTML = '<span class="sr-only">Témoignage ' + (i + 1) + ' sur ' + cartes.length + '</span>';
+      b.addEventListener('click', function () { montrer(i); });
+      li.appendChild(b);
+      reperes.appendChild(li);
+      boutons.push(b);
+    });
+
+    commandes.appendChild(avant);
+    commandes.appendChild(reperes);
+    commandes.appendChild(apres);
+    liste.parentNode.insertBefore(commandes, liste.nextSibling);
+
+    avant.addEventListener('click', function () { montrer(courant - 1); });
+    apres.addEventListener('click', function () { montrer(courant + 1); });
+
+    // --- Placement : trois cartes visibles, les autres retirees du plan.
+    function montrer(i) {
+      courant = (i + cartes.length) % cartes.length;
+      for (var k = 0; k < cartes.length; k++) {
+        var rang = (k - courant + cartes.length) % cartes.length;
+        cartes[k].setAttribute('data-rang', rang > 2 ? '-1' : String(rang));
+        cartes[k].style.transform = '';
+        // Les huit temoignages restent lus par les technologies
+        // d'assistance : la pile est un effet visuel, pas un filtre.
+        boutons[k].setAttribute('aria-current', String(k === courant));
+      }
+    }
+
+    // --- Saisie : la carte de devant suit le doigt ou la souris.
+    var depart = null;
+    liste.addEventListener('pointerdown', function (e) {
+      var carte = cartes[courant];
+      if (!carte.contains(e.target)) return;
+      depart = e.clientX;
+      carte.classList.add('est-saisie');
+      carte.setPointerCapture(e.pointerId);
+    });
+    liste.addEventListener('pointermove', function (e) {
+      if (depart === null) return;
+      var d = e.clientX - depart;
+      cartes[courant].style.transform = 'translateX(' + d + 'px) rotate(' + (d / 22) + 'deg)';
+    });
+    function relacher(e) {
+      if (depart === null) return;
+      var d = e.clientX - depart;
+      var carte = cartes[courant];
+      depart = null;
+      carte.classList.remove('est-saisie');
+      carte.style.transform = '';
+      if (Math.abs(d) > SEUIL) montrer(courant + (d < 0 ? 1 : -1));
+    }
+    liste.addEventListener('pointerup', relacher);
+    liste.addEventListener('pointercancel', relacher);
+
+    // --- Clavier : les fleches parcourent la pile.
+    bloc.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      montrer(courant + d);
+    });
+
+    figerHauteur();
+    montrer(0);
+
+    var attente = null;
+    window.addEventListener('resize', function () {
+      window.clearTimeout(attente);
+      attente = window.setTimeout(function () { figerHauteur(); montrer(courant); }, 150);
+    });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { figerHauteur(); montrer(courant); });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPile);
+  } else {
+    initPile();
+  }
+})();

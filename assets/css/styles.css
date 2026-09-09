@@ -2197,3 +2197,256 @@ html:not(.js) .booking__confirm { display: none; }
   95.83% { transform: translate3d(-44.00cqw, 0, 11.62cqw) rotateY(27.08deg); }
   100.00% { transform: translate3d(-44.00cqw, 0, 13.70cqw) rotateY(28.00deg); }
 }
+
+/* ==========================================================================
+   32 · Les témoignages en pile
+   Une carte devant, les suivantes derrière, légèrement décalées et
+   inclinées : la parole d'un investisseur à la fois, sans que le reste
+   disparaisse. On avance à la souris, au doigt, au clavier ou par les
+   repères sous la pile.
+
+   Sans JavaScript, les huit témoignages s'affichent en grille, tous
+   lisibles : la pile est un confort de lecture, jamais une condition
+   d'accès. Rien ne défile tout seul, il n'y a donc rien à mettre en pause.
+   ========================================================================== */
+
+.temoignages-duo { display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
+@media (min-width: 1100px) {
+  .temoignages-duo {
+    grid-template-columns: minmax(0, 1fr) 34rem;
+    gap: clamp(3rem, 6vw, 6rem);
+    align-items: center;
+  }
+}
+.pile { margin-top: 0; }
+
+.pile__cartes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 700px) { .pile__cartes { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .pile__cartes { grid-template-columns: repeat(3, 1fr); } }
+
+.pile__carte {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+
+.pile__contexte {
+  margin: 0;
+  font-size: .6875rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--lavender-dark);
+  line-height: 1.5;
+}
+.pile__texte {
+  margin: 0;
+  flex: 1 1 auto;
+  font-size: clamp(1rem, 1.6vw, 1.0625rem);
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.pile__signature {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  margin: 0;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--line);
+}
+.pile__portrait { flex: none; width: 2.75rem; }
+.pile__portrait svg { display: block; width: 100%; height: auto; }
+.pile__plaque { fill: var(--paper-soft); }
+.pile__buste, .pile__tete { fill: var(--lavender); }
+.pile__cheveux { fill: var(--lavender-dark); }
+.pile__nom { display: block; font-weight: 600; color: var(--ink); }
+.pile__role { display: block; font-size: .8125rem; color: var(--muted); margin-top: .15rem; }
+
+.pile__note { margin-top: clamp(1.5rem, 3vw, 2rem); }
+
+/* --------------------------------------------------------------- la pile */
+/* Le script pose `est-empilee` : la grille devient alors une pile. */
+
+/* Mode de mesure : les cartes restent dans le flux, mais a la largeur
+   qu'elles auront une fois empilees. Mesurer la grille a trois colonnes
+   donnerait une hauteur bien trop grande. */
+.js .pile.est-mesure .pile__cartes {
+  display: block;
+  max-width: 34rem;
+  margin-inline: auto;
+}
+.js .pile.est-mesure .pile__carte { position: static; height: auto; }
+
+.js .pile.est-empilee .pile__cartes {
+  position: relative;
+  display: block;
+  /* Hauteur figée par le script sur la plus haute des huit cartes : sans
+     cela la pile sauterait d'un témoignage à l'autre. */
+  min-height: var(--pile-h, 24rem);
+  max-width: 34rem;
+  margin-inline: auto;
+  /* Les cartes en retrait dépassent : il leur faut de la place. */
+  padding-bottom: 2.5rem;
+}
+.js .pile.est-empilee .pile__carte {
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--pile-h, 24rem);
+  transform-origin: 50% 100%;
+  transition: transform .55s cubic-bezier(.22, .61, .36, 1),
+              opacity .55s var(--ease);
+  box-shadow: 0 18px 40px rgba(18, 40, 60, .08);
+}
+/* Rang 0 : la carte lue. Rangs 1 et 2 : celles qui attendent derrière. */
+.js .pile.est-empilee .pile__carte[data-rang="0"] { transform: none; opacity: 1; z-index: 3; }
+.js .pile.est-empilee .pile__carte[data-rang="1"] {
+  transform: translateY(.85rem) scale(.955) rotate(-1.4deg);
+  opacity: .6;
+  z-index: 2;
+}
+.js .pile.est-empilee .pile__carte[data-rang="2"] {
+  transform: translateY(1.7rem) scale(.91) rotate(-2.8deg);
+  opacity: .3;
+  z-index: 1;
+}
+.js .pile.est-empilee .pile__carte[data-rang="-1"] {
+  transform: translateY(-1.5rem) scale(1.02);
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+/* Seule la carte de devant se laisse saisir. */
+.js .pile.est-empilee .pile__carte[data-rang="0"] { cursor: grab; }
+.js .pile.est-empilee .pile__carte.est-saisie { cursor: grabbing; transition: none; }
+
+/* Commandes : deux chevrons et huit repères, tous atteignables au clavier. */
+.pile__commandes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(.75rem, 2vw, 1.5rem);
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+.pile__fleche {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: none;
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color .3s var(--ease), color .3s var(--ease);
+}
+.pile__fleche:hover { background: var(--ink); color: var(--white); }
+.pile__reperes { display: flex; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.pile__repere {
+  width: .5rem;
+  height: .5rem;
+  padding: 0;
+  background: var(--line-strong);
+  border: 0;
+  cursor: pointer;
+  transition: background-color .3s var(--ease), transform .3s var(--ease);
+}
+.pile__repere:hover { background: var(--lavender-dark); }
+.pile__repere[aria-current="true"] { background: var(--rust); transform: scale(1.4); }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .pile.est-empilee .pile__carte { transition: none; }
+  .pile__fleche, .pile__repere { transition: none; }
+}
+
+/* ==========================================================================
+   33 · La carte de tarif
+   Un prix, ce qu'il comprend, une seule action. Pas de compte a rebours,
+   pas de remise inventee, pas de rarete artificielle : le prix est un fait
+   et la liste dit ce que l'on recoit. La carte s'adapte a son fond, clair
+   ou bleu nuit.
+   ========================================================================== */
+
+.tarif {
+  --tarif-texte: var(--text);
+  --tarif-titre: var(--ink);
+  --tarif-filet: var(--line);
+  --tarif-appui: var(--rust);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.35rem);
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  color: var(--tarif-texte);
+}
+.tarif--sombre {
+  --tarif-texte: rgba(255, 255, 255, .78);
+  --tarif-titre: var(--white);
+  --tarif-filet: var(--line-light);
+  --tarif-appui: var(--lavender);
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.tarif__eyebrow {
+  margin: 0;
+  font-size: .6875rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--tarif-appui);
+}
+.tarif__prix {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  margin: 0;
+}
+.tarif__montant {
+  font-family: var(--font-editorial);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  line-height: 1;
+  color: var(--tarif-titre);
+}
+.tarif__unite {
+  font-size: .875rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--tarif-texte);
+}
+.tarif__mention { margin: 0; font-size: .875rem; color: var(--tarif-texte); }
+
+.tarif__filet { display: block; height: 1px; background: var(--tarif-filet); }
+
+.tarif__titre {
+  margin: 0;
+  font-size: .8125rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--tarif-titre);
+}
+.tarif__liste { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.tarif__liste li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .7rem;
+  align-items: start;
+  font-size: .9375rem;
+  line-height: 1.55;
+}
+/* La coche se cale sur la premiere ligne du texte. */
+.tarif__liste .icon { color: var(--tarif-appui); margin-top: .28rem; }
+
+.tarif__action { margin-top: .25rem; }
+.tarif__action .btn { width: 100%; justify-content: center; }
+.tarif__note { margin: 0; font-size: .75rem; line-height: 1.6; color: var(--tarif-texte); opacity: .8; }
