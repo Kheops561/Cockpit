@@ -1,4 +1,4 @@
-# Amélie & Partners — site amelie-invest.com
+# Amélie & Partners · site amelie-invest.com
 
 Site statique, en français, pour un cabinet de conseil en stratégie
 d’investissement immobilier.
@@ -34,7 +34,7 @@ Points à régler côté hébergeur :
 index.html                 Accueil
 approche.html              Notre approche (schéma des 4 étapes + méthode)
 accompagnements.html       Les quatre accompagnements
-diagnostic.html            Diagnostic Stratégique — 450 € HT
+diagnostic.html            Diagnostic Stratégique · 450 € HT
 ressources.html            La bibliothèque
 ressource-3-effets.html    Ressource « Les 3 effets dans l’immobilier »
 a-propos.html              La fondatrice, la carte du parcours, le fil de lecture
@@ -47,8 +47,8 @@ assets/css/styles.css      Toute la mise en forme, commentée et numérotée
 assets/css/fonts.css       Déclaration des polices locales
 assets/js/site.js          Menu, apparitions, témoignages, vidéos, fil, schéma
 assets/fonts/              Inter, Source Serif 4, Caveat + licences OFL
-assets/images/             Photographies et logo — voir GUIDE-VISUELS.md
-assets/videos/             Vidéos d’ambiance (à déposer — voir le LISEZ-MOI)
+assets/images/             Photographies et logo, voir GUIDE-VISUELS.md
+assets/videos/             Vidéos d’ambiance (à déposer, voir le LISEZ-MOI)
 
 outils/verifier-site.py    Vérifie liens, ancres, ressources, invariants
 outils/donnees-structurees.py  Régénère le JSON-LD de l’accueil et du diagnostic

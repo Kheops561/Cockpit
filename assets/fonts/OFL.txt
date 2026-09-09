@@ -1,7 +1,7 @@
-SIL OPEN FONT LICENSE Version 1.1 — polices utilisées par ce site
+SIL OPEN FONT LICENSE Version 1.1 : polices utilisees par ce site
 
 ==============================================================================
-Inter — assets/fonts/inter-latin.woff2, inter-latin-ext.woff2
+Inter : assets/fonts/inter-latin.woff2, inter-latin-ext.woff2
 ==============================================================================
 
 Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)
@@ -98,7 +98,7 @@ FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
 
 ==============================================================================
-Source Serif 4 — assets/fonts/source-serif-4-latin.woff2, source-serif-4-latin-ext.woff2
+Source Serif 4 : assets/fonts/source-serif-4-latin.woff2, source-serif-4-latin-ext.woff2
 ==============================================================================
 
 Copyright 2014-2023 Adobe (http://www.adobe.com/), with Reserved Font Name
@@ -109,7 +109,7 @@ This Font Software is licensed under the SIL Open Font License, Version 1.1.
 Le texte complet de la licence est identique a celui reproduit ci-dessus.
 
 ==============================================================================
-Caveat — assets/fonts/caveat-latin.woff2, caveat-latin-ext.woff2
+Caveat : assets/fonts/caveat-latin.woff2, caveat-latin-ext.woff2
 ==============================================================================
 
 Copyright 2014 The Caveat Project Authors (https://github.com/googlefonts/caveat)

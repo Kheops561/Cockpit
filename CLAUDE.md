@@ -1,4 +1,4 @@
-# Instructions permanentes — Amélie & Partners
+# Instructions permanentes · Amélie & Partners
 
 Site de conseil en stratégie d’investissement immobilier, publié sur
 `amelie-invest.com`. Lire `README.md`, `DESIGN-SYSTEM.md`, `GUIDE-VISUELS.md`
@@ -47,7 +47,7 @@ calme, précision, indépendance, méthode et décision.
   `De la stratégie à la mise en œuvre, Amélie & Partners accompagne les
   investisseurs pour financer, acquérir et piloter leur patrimoine
   immobilier.`
-- Portrait : `Amélie-Thu DUONG — Fondatrice & Investisseuse à Paris depuis
+- Portrait : `Amélie-Thu DUONG · Fondatrice & Investisseuse à Paris depuis
   2014`.
 - Ne jamais copier l’identité graphique ou les textes d’un site de référence.
 
@@ -68,7 +68,7 @@ reste retiré de l’affichage en attendant une définition, une base et une
 période auditées. La réussite est une destination recherchée, jamais une
 garantie. Les méthodes non lancées restent confidentielles.
 
-## Preuve sociale — ne pas dégrader
+## Preuve sociale · ne pas dégrader
 
 - Le titre de la section est `Témoignages`, jamais `Décisions clients`.
 - Conserver les huit témoignages et leur bandeau horizontal animé, textes et
@@ -110,6 +110,8 @@ vectoriels monochromes : aucun émoji, aucune flèche Unicode.
 2. **`prefers-reduced-motion`** neutralise toutes les animations et empêche le
    chargement des vidéos.
 3. Toute animation en boucle a une commande d’arrêt visible et au clavier.
+   Celle du couloir de photographies est une case à cocher masquée pilotée
+   par son étiquette : elle fonctionne donc sans JavaScript.
 4. Aucune information n’existe uniquement dans une image ou une animation.
 5. Les vidéos sont muettes, facultatives et retombent sur une photographie si
    le fichier est absent ou illisible.
@@ -123,7 +125,7 @@ vectoriels monochromes : aucun émoji, aucune flèche Unicode.
 - Pages : les onze fichiers `.html` à la racine.
 - Mise en forme : `assets/css/styles.css`, sections numérotées.
 - Comportements : `assets/js/site.js`.
-- Visuels : `assets/images/` et `assets/videos/` — voir `GUIDE-VISUELS.md`.
+- Visuels : `assets/images/` et `assets/videos/`, voir `GUIDE-VISUELS.md`.
 
 L’en-tête et le pied de page sont **répétés dans chaque page**. Une
 modification de navigation doit être reportée dans les onze fichiers.
@@ -133,7 +135,7 @@ modification de navigation doit être reportée dans les onze fichiers.
 1. Faire un état des lieux des fichiers concernés avant d’éditer.
 2. Annoncer précisément ce qui sera modifié et ce qui sera conservé.
 3. Implémenter sans réécrire les contenus validés hors périmètre.
-4. Lancer `python3 outils/verifier-site.py` — il doit renvoyer « Aucune
+4. Lancer `python3 outils/verifier-site.py` : il doit renvoyer « Aucune
    erreur ».
 5. Relancer `python3 outils/donnees-structurees.py` si `index.html` ou
    `diagnostic.html` ont été régénérés, et

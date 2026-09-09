@@ -37,7 +37,7 @@ chargement. S’ils sont faux, la page sursaute sous les yeux du visiteur.
 ### Texte alternatif
 
 Chaque image porte un attribut `alt`. Les images purement décoratives ont un
-`alt` vide — c’est volontaire et correct. Si vous remplacez une image
+`alt` vide, c’est volontaire et correct. Si vous remplacez une image
 décorative par une image porteuse de sens, décrivez-la dans son `alt`.
 
 ## Vidéos
@@ -78,12 +78,12 @@ toujours pouvoir être arrêtée.
 
 | Fichier | Dimensions | Poids | Pages |
 |---|---|---|---|
-| `a-propos.mp4` | — | — | a-propos.html |
+| `a-propos.mp4` | à venir | à venir | a-propos.html |
 | `accompagnement-diagnostic.jpg` | 1100 × 733 | 96 Ko | accompagnements.html, diagnostic.html, index.html |
 | `accompagnement-financement.jpg` | 1100 × 733 | 193 Ko | accompagnements.html, index.html |
 | `accompagnement-recherche.jpg` | 1100 × 733 | 99 Ko | accompagnements.html, index.html |
 | `accompagnement-trajectoire.jpg` | 1100 × 733 | 81 Ko | accompagnements.html, index.html |
-| `accueil.mp4` | — | — | index.html |
+| `accueil.mp4` | à venir | à venir | index.html |
 | `approche-capital.jpg` | 1080 × 810 | 90 Ko | approche.html, index.html |
 | `approche-methode.jpg` | 1080 × 810 | 101 Ko | approche.html, index.html |
 | `approche-principes.jpg` | 1080 × 810 | 108 Ko | a-propos.html |
@@ -100,7 +100,7 @@ toujours pouvoir être arrêtée.
 | `paris-02.jpg` | 660 × 880 | 77 Ko | a-propos.html, index.html |
 | `paris-03.jpg` | 660 × 880 | 80 Ko | a-propos.html, index.html |
 | `paris-04.jpg` | 660 × 880 | 117 Ko | a-propos.html, index.html |
-| `paris.mp4` | — | — | index.html |
+| `paris.mp4` | à venir | à venir | index.html |
 | `portrait-amelie-large.jpg` | 960 × 1200 | 161 Ko | a-propos.html |
 | `portrait-amelie.jpg` | 860 × 1075 | 137 Ko | index.html |
 | `ressource-3-effets.jpg` | 1300 × 731 | 145 Ko | ressource-3-effets.html, ressources.html |
@@ -108,11 +108,11 @@ toujours pouvoir être arrêtée.
 
 Trois fichiers ne figurent pas dans ce tableau :
 
-- `assets/images/logo.png` — le logo de la marque, tel que fourni : trois
+- `assets/images/logo.png` : le logo de la marque, tel que fourni : trois
   boucles entrelacées en lavande, sur fond transparent.
-- `assets/images/favicon.png` (180 × 180) — icône de l’onglet du navigateur :
+- `assets/images/favicon.png` (180 × 180) : icône de l’onglet du navigateur :
   le logo sur le bleu nuit de la marque.
-- `assets/images/og-image.jpg` (1200 × 630) — image affichée quand un lien du
+- `assets/images/og-image.jpg` (1200 × 630) : image affichée quand un lien du
   site est partagé sur les réseaux ou dans une messagerie : le bloc marine
   fourni avec le logo, recadré au format des réseaux.
 
@@ -120,7 +120,7 @@ Trois fichiers ne figurent pas dans ce tableau :
 
 Le logo est le **fichier fourni par la marque**, employé tel quel : un
 entrelacs de trois boucles, en lavande, sur fond transparent. Il apparaît
-deux fois par page — en-tête et pied de page — plus une fois sur
+deux fois par page (en-tête et pied de page), plus une fois sur
 `approche.html`, à côté du schéma des quatre étapes.
 
 La lavande se détache aussi bien sur l’ivoire que sur le bleu nuit : un seul
@@ -150,12 +150,12 @@ forme est déjà prête.
 
 Par ordre d’importance, si vous ne changez que quelques images :
 
-1. `portrait-amelie.jpg` — le portrait de la fondatrice, présent dès le
+1. `portrait-amelie.jpg` : le portrait de la fondatrice, présent dès le
    premier écran de l’accueil.
-2. `hero-accueil.jpg` — le bandeau du premier écran.
-3. `hero-diagnostic.jpg` et `hero-accompagnements.jpg` — les deux pages qui
+2. `hero-accueil.jpg` : le bandeau du premier écran.
+3. `hero-diagnostic.jpg` et `hero-accompagnements.jpg` : les deux pages qui
    mènent à la prise de rendez-vous.
-4. `paris-01` à `paris-04.jpg` — la mosaïque et la galerie parisiennes.
+4. `paris-01` à `paris-04.jpg` : la mosaïque et la galerie parisiennes.
 
 ## Après tout remplacement
 

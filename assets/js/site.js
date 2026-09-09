@@ -1,5 +1,5 @@
 /* ==========================================================================
-   AMÉLIE & PARTNERS — comportements du site
+   AMÉLIE & PARTNERS · comportements du site
    Amélioration progressive : sans JavaScript, toutes les pages restent
    lisibles, navigables et utilisables (menu déplié, contenus visibles,
    FAQ native, témoignages défilables à la main).
@@ -248,7 +248,7 @@
 })();
 
 /* ==========================================================================
-   Bloc « Travaillons ensemble » — révélation du créneau en deux temps.
+   Bloc « Travaillons ensemble » : révélation du créneau en deux temps.
    Sans ce script, le titre reste un lien direct vers la réservation.
    ========================================================================== */
 
@@ -445,7 +445,7 @@
 })();
 
 /* ==========================================================================
-   Fil du parcours — repère vertical qui se remplit au fil du défilement.
+   Fil du parcours : repère vertical qui se remplit au fil du défilement.
    Entièrement construit ici : sans JavaScript, la page se lit normalement,
    sans repère. Il double la structure des titres et ne porte aucune
    information qui n'y figure pas déjà.
@@ -576,5 +576,192 @@
     document.addEventListener('DOMContentLoaded', initSchema);
   } else {
     initSchema();
+  }
+})();
+
+/* ==========================================================================
+   Le processus qui defile.
+   Les cinq etapes de la methode passent l'une apres l'autre. Sans ce script,
+   elles restent toutes affichees a la suite : le defilement est un confort
+   de lecture, pas une condition d'acces. Sous mouvement reduit, il ne
+   s'enclenche pas du tout et la liste complete demeure.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  var DUREE = 5500;
+
+  function initProcessus() {
+    var bloc = document.querySelector('[data-processus]');
+    if (!bloc) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var etapes = bloc.querySelectorAll('.step');
+    if (etapes.length < 2) return;
+
+    // --- Construction de la frise de reperes
+    var nav = document.createElement('div');
+    nav.className = 'processus__nav';
+    nav.setAttribute('role', 'tablist');
+    nav.setAttribute('aria-label', 'Les \u00e9tapes de la m\u00e9thode');
+
+    var curseur = document.createElement('span');
+    curseur.className = 'processus__curseur';
+    curseur.setAttribute('aria-hidden', 'true');
+    nav.appendChild(curseur);
+
+    var stops = [];
+    Array.prototype.forEach.call(etapes, function (etape, i) {
+      var num = etape.querySelector('.step__num');
+      var titre = etape.querySelector('h3');
+      var stop = document.createElement('button');
+      stop.type = 'button';
+      stop.className = 'processus__stop';
+      stop.setAttribute('role', 'tab');
+      stop.id = 'etape-onglet-' + i;
+      stop.innerHTML = '<span class="processus__num"></span>'
+                     + '<span class="processus__label"></span>'
+                     + '<span class="processus__jauge" aria-hidden="true"></span>';
+      stop.querySelector('.processus__num').textContent = num ? num.textContent : String(i + 1);
+      stop.querySelector('.processus__label').textContent = titre ? titre.textContent : '';
+      stop.style.setProperty('--duree', (DUREE / 1000) + 's');
+
+      etape.id = 'etape-panneau-' + i;
+      etape.setAttribute('role', 'tabpanel');
+      etape.setAttribute('aria-labelledby', stop.id);
+
+      nav.appendChild(stop);
+      stops.push(stop);
+    });
+
+    var liste = bloc.querySelector('.steps');
+    // La barre occupe toute la largeur : elle se place en tête du bloc,
+    // hors du conteneur de lecture qui enveloppe le panneau.
+    bloc.insertBefore(nav, bloc.firstChild);
+
+    // --- Hauteur figee : sans cela le panneau saute d'une etape a l'autre.
+    function figerHauteur() {
+      liste.style.minHeight = '';
+      bloc.classList.add('est-defilant');
+      var h = 0;
+      Array.prototype.forEach.call(etapes, function (e) {
+        // Mesurer l'etape telle qu'elle s'affichera : le mode defilant
+        // retire bordures et marges, la mesurer sans lui reserverait trop.
+        var avant = e.style.cssText;
+        e.style.display = 'grid';
+        e.style.animation = 'none';
+        e.style.position = 'absolute';
+        e.style.visibility = 'hidden';
+        e.style.width = '100%';
+        h = Math.max(h, e.getBoundingClientRect().height);
+        e.style.cssText = avant;
+      });
+      liste.style.minHeight = Math.ceil(h) + 'px';
+    }
+
+    var courant = 0;
+    var minuteur = null;
+
+    function placerCurseur() {
+      var actif = stops[courant];
+      if (!actif) return;
+      curseur.style.width = actif.offsetWidth + 'px';
+      curseur.style.transform = 'translateX(' + (actif.offsetLeft - nav.clientLeft) + 'px)';
+    }
+
+    function afficher(i) {
+      courant = (i + etapes.length) % etapes.length;
+      Array.prototype.forEach.call(etapes, function (e, k) {
+        e.classList.toggle('est-active', k === courant);
+        e.hidden = false;
+      });
+      stops.forEach(function (s, k) {
+        s.setAttribute('aria-selected', String(k === courant));
+        s.setAttribute('tabindex', k === courant ? '0' : '-1');
+        s.setAttribute('aria-controls', 'etape-panneau-' + k);
+        s.classList.toggle('est-passe', k < courant);
+        // Redemarrer la jauge de l'etape active.
+        if (k === courant) {
+          var j = s.querySelector('.processus__jauge');
+          j.style.animation = 'none';
+          void j.offsetWidth;
+          j.style.animation = '';
+        }
+      });
+      placerCurseur();
+    }
+
+    function lancer() {
+      arreter();
+      if (bloc.classList.contains('est-en-pause')) return;
+      minuteur = window.setInterval(function () { afficher(courant + 1); }, DUREE);
+    }
+    function arreter() {
+      if (minuteur) { window.clearInterval(minuteur); minuteur = null; }
+    }
+
+    stops.forEach(function (s, k) {
+      s.addEventListener('click', function () { afficher(k); lancer(); });
+    });
+
+    nav.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      afficher(courant + d);
+      stops[courant].focus();
+      lancer();
+    });
+
+    // --- Commande d'arret, obligatoire des qu'une animation tourne en boucle.
+    var commandes = document.createElement('div');
+    commandes.className = 'processus__commandes';
+    var bouton = document.createElement('button');
+    bouton.type = 'button';
+    bouton.className = 'marquee-btn';
+    bouton.setAttribute('aria-pressed', 'false');
+    bouton.innerHTML = '<svg class="icon" width="12" height="12" viewBox="0 0 12 12" fill="none"'
+                     + ' aria-hidden="true" focusable="false"><path d="M4 2v8M8 2v8" stroke="currentColor"'
+                     + ' stroke-width="1.4" stroke-linecap="square"/></svg><span>Mettre en pause</span>';
+    commandes.appendChild(bouton);
+    var note = document.createElement('p');
+    note.className = 'note';
+    note.textContent = 'Les cinq \u00e9tapes d\u00e9filent. Cliquez un rep\u00e8re pour aller directement \u00e0 une \u00e9tape.';
+    commandes.appendChild(note);
+    liste.parentNode.insertBefore(commandes, liste.nextSibling);
+
+    bouton.addEventListener('click', function () {
+      var enPause = bloc.classList.toggle('est-en-pause');
+      bouton.setAttribute('aria-pressed', String(enPause));
+      bouton.querySelector('span').textContent = enPause ? 'Reprendre' : 'Mettre en pause';
+      if (enPause) arreter(); else lancer();
+    });
+
+    bloc.addEventListener('mouseenter', arreter);
+    bloc.addEventListener('mouseleave', function () { lancer(); });
+    bloc.addEventListener('focusin', arreter);
+    bloc.addEventListener('focusout', function (e) {
+      if (!bloc.contains(e.relatedTarget)) lancer();
+    });
+
+    figerHauteur();
+    afficher(0);
+    lancer();
+    window.addEventListener('resize', function () {
+      figerHauteur();
+      placerCurseur();
+    });
+    // Les polices arrivent apres le premier calcul : on replace le curseur.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(placerCurseur);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProcessus);
+  } else {
+    initProcessus();
   }
 })();

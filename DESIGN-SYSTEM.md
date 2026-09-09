@@ -1,4 +1,4 @@
-# Design system — Amélie & Partners
+# Design system · Amélie & Partners
 
 Territoire de marque : un cabinet d’investissement et une maison éditoriale
 parisienne. Calme, précision, indépendance, méthode, décision. Angles francs,
@@ -57,7 +57,7 @@ couleur plus bas et ne l’employez pas sous 14 px.
 Le logo est un **entrelacs de trois boucles**, en lavande, fourni par la
 marque et employé tel quel : `assets/images/logo.png`. Il n’est ni
 recomposé ni recoloré. Sur `approche.html`, il se pose à l’apparition comme
-un cachet — une rotation courte, puis plus rien. Jamais d’animation continue.
+un cachet, une rotation courte, puis plus rien. Jamais d’animation continue.
 
 La lavande se détache aussi bien sur l’ivoire que sur le bleu nuit, si bien
 qu’un seul fichier sert dans tous les contextes.
@@ -78,9 +78,9 @@ qui figure sur le site. Voir `A-VALIDER-AVANT-LIVE.md`.
 
 ## Typographie
 
-- **Source Serif 4** — grands titres uniquement (`h1` à `h4`, `.pull`).
-- **Inter** — corps de texte, cartes, boutons, témoignages, navigation.
-- **Caveat** — exception unique et volontaire : la note manuscrite de la
+- **Source Serif 4** : grands titres uniquement (`h1` à `h4`, `.pull`).
+- **Inter** : corps de texte, cartes, boutons, témoignages, navigation.
+- **Caveat** : exception unique et volontaire : la note manuscrite de la
   fondatrice et sa signature, sur `a-propos.html`. Jamais un titre, jamais un
   bouton, jamais un contenu informatif.
 
@@ -96,8 +96,8 @@ polices externe, donc aucun traceur tiers de ce fait.
 | Titre de section | `--type-title` | `clamp(2rem, 3.6vw, 3.125rem)` |
 | Sous-titre | `--type-heading` | `clamp(1.5rem, 2.4vw, 2.125rem)` |
 | Titre de carte | `--type-card` | `clamp(1.1875rem, 1.8vw, 1.4375rem)` |
-| Corps | — | `1.0625rem`, interligne 1,65 |
-| Surtitre (`.eyebrow`) | — | `0.75rem`, majuscules, interlettrage `.16em` |
+| Corps | aucune | `1.0625rem`, interligne 1,65 |
+| Surtitre (`.eyebrow`) | aucune | `0.75rem`, majuscules, interlettrage `.16em` |
 
 ## Rythme
 
@@ -152,7 +152,9 @@ jamais d’information seule.
 | Réservation en deux temps | Bloc « Parlons de… » |
 | Parcours : trajet tracé et avion qui le suit | `a-propos.html` |
 | Fil de lecture vertical | `a-propos.html` |
-| Frise des quatre étapes et cachet du logo | `approche.html` |
+| Les cinq étapes qui défilent, onglets et curseur glissant | `approche.html` |
+| Couloir de photographies en perspective | `a-propos.html` |
+| Chiffres : pictogrammes, décompte, réaction au survol | `index.html`, `a-propos.html` |
 | Vidéos en boucle, muettes | Bandeaux équipés |
 
 ### Règles non négociables

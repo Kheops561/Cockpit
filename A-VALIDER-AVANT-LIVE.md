@@ -12,18 +12,18 @@ confirmés par Amélie avant de considérer la publication comme définitive.
       dans ce script, puis reprendre `sitemap.xml`, `robots.txt` et les
       `<link rel="canonical">` des treize pages.
 
-## Identité et conversion — priorité haute
+## Identité et conversion · priorité haute
 
-- [ ] Adresse e-mail publique : `contact@amelie-invest.com` — boîte créée et
+- [ ] Adresse e-mail publique : `contact@amelie-invest.com` : boîte créée et
       relevée ?
-- [ ] Lien Calendly : `https://calendly.com/amelie-partners` — compte actif,
+- [ ] Lien Calendly : `https://calendly.com/amelie-partners` : compte actif,
       créneau de **30 minutes** publié ?
 - [ ] Durée du premier échange : 30 minutes.
 - [ ] Prix du Diagnostic Stratégique : `450 € HT / diagnostic`.
 - [ ] Zone d’intervention : Paris pour la recherche ; France au cas par cas
       pour la stratégie et l’arbitrage.
 
-## Preuves sociales — priorité haute
+## Preuves sociales · priorité haute
 
 - [ ] Autorisation de publication pour chacun des huit témoignages.
 - [ ] Validation des prénoms, initiales, âges, métiers, entreprises, villes et
@@ -35,7 +35,7 @@ confirmés par Amélie avant de considérer la publication comme définitive.
 Le taux de 98 % n’est affiché nulle part, en attente d’une définition, d’une
 base et d’une période auditées.
 
-## Identité — à trancher
+## Identité · à trancher
 
 - [ ] **Signature du logo.** Le bloc fourni porte `PARTENAIRE STRATÉGIQUE DES
       INVESTISSEURS IMMOBILIERS`. Les instructions de marque retiennent
@@ -61,7 +61,7 @@ base et d’une période auditées.
 - [ ] Valider la carte du parcours de `a-propos.html` : elle est stylisée et
       décorative, elle ne prétend pas être une carte géographique.
 
-## Mentions légales et données — obligatoire avant live
+## Mentions légales et données · obligatoire avant live
 
 - [ ] Dénomination sociale exacte.
 - [ ] Forme juridique et capital social.
@@ -93,7 +93,7 @@ pas des conseils juridiques.
       ce choix n’est pas fait, la page propose la réservation Calendly et
       l’adresse e-mail, sans formulaire qui perdrait les messages.
 
-## Référencement et mesure — recommandé
+## Référencement et mesure · recommandé
 
 - [ ] Connecter Google Search Console ou un équivalent.
 - [ ] Envoyer `https://amelie-invest.com/sitemap.xml`.
@@ -120,7 +120,7 @@ pas des conseils juridiques.
   attributs `alt` vérifiés par `outils/verifier-site.py`.
 - Huit témoignages présents, textes et attributions identiques à ceux de la
   version d’origine, mention sur la variabilité des résultats conservée.
-- Contrastes calculés selon WCAG 2.1 — voir `DESIGN-SYSTEM.md`.
+- Contrastes calculés selon WCAG 2.1, voir `DESIGN-SYSTEM.md`.
 - Comportement sans JavaScript vérifié dans le code : contenus visibles, menu
   déplié, FAQ native, réservation accessible par lien direct.
 
