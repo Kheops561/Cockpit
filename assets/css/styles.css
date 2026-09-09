@@ -139,6 +139,9 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 
 .section { padding-block: var(--section-y); }
 .section--tight { padding-block: clamp(3rem, 6vw, 5.5rem); }
+/* Le bandeau de chiffres suit immédiatement le premier écran : il se serre
+   contre lui, et laisse la section suivante fournir seule la respiration. */
+.section--chiffres { padding-block: clamp(2.5rem, 4.5vw, 4rem) 0; }
 .section--paper-soft { background: var(--paper-soft); }
 .section--ink { background: var(--ink); color: rgba(255, 255, 255, .78); }
 .section--ink h1, .section--ink h2, .section--ink h3, .section--ink h4 { color: var(--white); }
@@ -472,7 +475,13 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 }
 .hero__inner > * { max-width: 46rem; }
 @media (min-width: 1024px) {
-  /* Le portrait occupe la droite du bandeau : le texte lui laisse la place. */
+  /* Le portrait occupe la droite du bandeau : le texte lui laisse la place.
+     Entre 1024 et 1280 px, la fenêtre est plus étroite que la colonne de
+     contenu et le portrait se rapproche : la largeur de lecture se resserre
+     d'autant, sans quoi le titre passerait dessous. */
+  .hero__inner > * { max-width: 34rem; }
+}
+@media (min-width: 1280px) {
   .hero__inner > * { max-width: 40rem; }
 }
 .hero h1 { color: var(--white); font-size: var(--type-display); }
@@ -497,7 +506,11 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   .hero__portrait {
     display: block;
     position: absolute;
-    right: var(--gutter);
+    /* Le portrait appartient à la colonne de contenu, pas au bord de la
+       fenêtre : sans cela, il s'éloigne du texte à mesure que l'écran
+       s'élargit. Il s'aligne donc sur le bord droit du conteneur, comme le
+       texte s'aligne sur son bord gauche. */
+    right: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
     bottom: clamp(2.5rem, 6vw, 5rem);
     z-index: 2;
     width: min(23rem, 30vw);
@@ -720,23 +733,67 @@ a.card:hover,
   border: 1px solid var(--line);
 }
 @media (min-width: 860px) { .stats { grid-template-columns: repeat(4, 1fr); } }
-.stat { background: var(--paper); padding: clamp(1.5rem, 2.6vw, 2.25rem); }
+.stat { background: var(--paper); padding: clamp(1.35rem, 2.2vw, 1.85rem); }
 .section--ink .stats { background: rgba(255, 255, 255, .14); border-color: rgba(255, 255, 255, .14); }
 .section--ink .stat { background: var(--ink); }
+
+.stat__icon {
+  display: block;
+  color: var(--lavender-dark);
+  margin-bottom: .95rem;
+}
+.section--ink .stat__icon { color: var(--lavender); }
+
 .stat__value {
+  margin: 0;                 /* sans quoi le paragraphe garde sa marge basse,
+                                soit près de cinquante pixels de vide */
   font-family: var(--font-editorial);
   font-size: clamp(1.75rem, 3.2vw, 2.5rem);
   line-height: 1;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 .section--ink .stat__value { color: var(--white); }
+
+/* Filet qui se trace sous la valeur, au rythme du décompte. */
+.stat__rule {
+  display: block;
+  width: 1.75rem;
+  height: 1px;
+  margin-top: .85rem;
+  background: var(--lavender-dark);
+  transform-origin: left;
+}
+.section--ink .stat__rule { background: var(--lavender); }
+
 .stat__label {
-  margin-top: .7rem;
+  margin-top: .8rem;
   font-size: .8125rem;
   line-height: 1.5;
   color: var(--muted);
 }
 .section--ink .stat__label { color: rgba(255, 255, 255, .66); }
+
+/* Apparition en cascade : le pictogramme monte, puis le filet se trace.
+   Le décompte du nombre est piloté par le script. */
+.js .stats .stat__icon { opacity: 0; transform: translateY(10px); }
+.js .stats .stat__rule { transform: scaleX(0); }
+.js .stats.is-visible .stat__icon {
+  animation: fadeUp .7s var(--ease) var(--stat-delay, 0s) both;
+}
+.js .stats.is-visible .stat__rule {
+  transform: scaleX(1);
+  transition: transform .9s var(--ease) calc(var(--stat-delay, 0s) + .2s);
+}
+.stats .stat:nth-child(1) { --stat-delay: .05s; }
+.stats .stat:nth-child(2) { --stat-delay: .17s; }
+.stats .stat:nth-child(3) { --stat-delay: .29s; }
+.stats .stat:nth-child(4) { --stat-delay: .41s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .stats .stat__icon { opacity: 1; transform: none; animation: none; }
+  .js .stats .stat__rule { transform: scaleX(1); transition: none; }
+}
 
 /* --------------------------------------------------------- 14 témoignages */
 
