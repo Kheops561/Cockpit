@@ -1351,56 +1351,131 @@ html:not(.js) .booking__confirm { display: none; }
 }
 
 /* ==========================================================================
-   26 · Le parcours de la fondatrice
-   Une carte stylisée, un tracé qui se dessine au fil du défilement et des
-   étapes qui apparaissent l'une après l'autre. La carte est décorative :
-   les mêmes étapes sont énoncées en toutes lettres dans le texte de la
-   section, si bien que l'information ne dépend jamais de l'animation.
+   26 · Le parcours de la fondatrice — carte postale
+   Une carte postale du Viêt Nam à Paris : deux vignettes photographiques,
+   un itinéraire pointillé que l'avion parcourt, des mentions manuscrites.
+   La carte est décorative : les quatre étapes sont écrites en toutes lettres
+   juste en dessous, et le texte de la section les reprend. Rien ne se perd
+   sans image, sans animation ni sans JavaScript.
    ========================================================================== */
 
-.journey {
+.carte {
   position: relative;
-  background: var(--paper-soft);
-  border: 1px solid var(--line);
-  padding: clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: .4rem;
+  background:
+    repeating-linear-gradient(45deg,
+      var(--ink) 0 6px, var(--paper) 6px 13px,
+      var(--rust) 13px 19px, var(--paper) 19px 26px);
+  box-shadow: var(--shadow-soft);
 }
+.carte__interieur { background: var(--paper); padding: clamp(1.1rem, 2.2vw, 1.75rem); }
 
-.journey__map { position: relative; width: 100%; }
-.journey__map svg { display: block; width: 100%; height: auto; }
+.carte__scene { position: relative; }
+.carte__scene svg { display: block; width: 100%; height: auto; }
 
-/* Fond de carte : trame très pâle, jamais concurrente du texte */
-.journey__grid line { stroke: var(--line); stroke-width: .5; }
-.journey__land { fill: rgba(203, 181, 223, .16); stroke: rgba(117, 80, 143, .25); stroke-width: .8; }
+/* Fond de carte : graticule et masses de terre, très pâles. */
+.carte__grille line { stroke: var(--line); stroke-width: .5; }
+.carte__terre { fill: rgba(203, 181, 223, .22); stroke: rgba(117, 80, 143, .3); stroke-width: .8; }
 
-/* Tracé du parcours. Sans JavaScript, il est entièrement dessiné. */
-.journey__path {
+/* L'itinéraire prévu, en pointillé constant. */
+.carte__itineraire {
   fill: none;
-  stroke: var(--lavender-dark);
-  stroke-width: 2;
+  stroke: var(--rust);
+  stroke-width: 1.6;
+  stroke-dasharray: 6 6;
   stroke-linecap: round;
-  stroke-dasharray: 7 6;
+  opacity: .38;
 }
-.js .journey__path {
-  stroke-dasharray: var(--len, 1200);
-  stroke-dashoffset: var(--len, 1200);
+
+/* Le chemin parcouru, qui se trace au défilement. */
+.carte__trace {
+  fill: none;
+  stroke: var(--rust);
+  stroke-width: 2.2;
+  stroke-linecap: round;
 }
-.js .journey__path.is-drawn { stroke-dashoffset: 0; transition: stroke-dashoffset 1.6s var(--ease); }
+.js .carte__trace {
+  stroke-dasharray: var(--len, 900);
+  stroke-dashoffset: var(--len, 900);
+}
+.js .carte.is-visible .carte__trace {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 2.4s cubic-bezier(.32, .1, .2, 1) .35s;
+}
+
+/* L'avion suit exactement le même tracé. */
+.carte__avion { fill: var(--ink); offset-rotate: auto; offset-distance: 0%; }
+.js .carte.is-visible .carte__avion {
+  animation: vol 2.4s cubic-bezier(.32, .1, .2, 1) .35s forwards;
+}
+@keyframes vol { to { offset-distance: 100%; } }
+
+.carte__repere { fill: var(--rust); }
+.carte__lieu {
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 25px;
+  fill: var(--ink);
+}
+
+/* Vignettes photographiques, posées sur la carte comme des instantanés. */
+.carte__vignette {
+  position: absolute;
+  width: 17.5%;
+  padding: .4rem .4rem .75rem;
+  background: var(--white);
+  box-shadow: 0 8px 24px rgba(18, 40, 60, .16);
+}
+.carte__vignette img { aspect-ratio: 1 / 1; object-fit: cover; width: 100%; }
+.carte__vignette--depart  { right: 1%; bottom: 1%; transform: rotate(2.5deg); }
+.carte__vignette--arrivee { left: 1%;  bottom: 1%; transform: rotate(-2deg); }
+.js .carte .carte__vignette { opacity: 0; }
+.js .carte.is-visible .carte__vignette { animation: fadeUp .8s var(--ease) both; }
+.js .carte.is-visible .carte__vignette--arrivee { animation-delay: 2.3s; }
+.js .carte.is-visible .carte__vignette--depart { animation-delay: .15s; }
+
+/* Mention manuscrite, en tête de carte. */
+.carte__mot {
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: clamp(1.5rem, 3vw, 2.125rem);
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: .75rem;
+}
+.carte__mot span { color: var(--lavender-dark); }
+.carte__timbre {
+  position: absolute;
+  top: .2rem;
+  right: .2rem;
+  width: clamp(3.25rem, 7vw, 4.5rem);
+  opacity: .5;
+}
+.carte__timbre svg { width: 100%; height: auto; }
+.carte__timbre text {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: .1em;
+  fill: var(--ink);
+}
+.carte__timbre circle, .carte__timbre path { stroke: var(--ink); fill: none; stroke-width: 1.2; }
+
+.carte__entete { position: relative; padding-right: clamp(3.75rem, 8vw, 5.25rem); }
 
 /* Étapes */
 .journey__steps {
   list-style: none;
-  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+  margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
   padding: 0;
   display: grid;
-  gap: .85rem;
+  gap: .75rem;
 }
 @media (min-width: 720px) { .journey__steps { grid-template-columns: repeat(2, 1fr); } }
 
 .journey__step {
   display: flex;
   align-items: flex-start;
-  gap: .85rem;
-  padding: .85rem 1rem;
+  gap: .8rem;
+  padding: .8rem .95rem;
   background: var(--white);
   border: 1px solid var(--line);
   opacity: 1;
@@ -1417,8 +1492,8 @@ html:not(.js) .booking__confirm { display: none; }
 .journey__marker {
   flex: none;
   position: relative;
-  width: .7rem;
-  height: .7rem;
+  width: .65rem;
+  height: .65rem;
   margin-top: .4rem;
   border-radius: 50%;
   background: var(--lavender-dark);
@@ -1438,20 +1513,31 @@ html:not(.js) .booking__confirm { display: none; }
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--lavender-dark);
-  margin-bottom: .25rem;
+  margin-bottom: .2rem;
 }
 .journey__what { font-size: .9375rem; color: var(--text); line-height: 1.5; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .carte__trace { stroke-dasharray: 6 6; stroke-dashoffset: 0; }
+  .js .carte .carte__avion { offset-distance: 62%; animation: none; }
+  .js .carte .carte__vignette { opacity: 1; animation: none; }
+  .js .journey__step { opacity: 1; transform: none; }
+  .journey__step--now .journey__marker::after { animation: none; }
+}
 
 /* --------------------------------------------------------- note manuscrite */
 
 .handnote {
   position: relative;
   font-family: 'Caveat', 'Segoe Script', cursive;
-  font-size: clamp(1.5rem, 3.2vw, 2.25rem);
-  line-height: 1.45;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1.4;
   color: var(--ink);
-  max-width: 22ch;
+  /* Les retours à la ligne sont écrits dans le texte : la largeur ne doit
+     pas en imposer d'autres. */
+  max-width: 34ch;
 }
+.handnote__line > span { white-space: nowrap; }
 .handnote__line { display: block; overflow: hidden; }
 .handnote__line > span {
   display: inline-block;
@@ -1590,9 +1676,9 @@ html:not(.js) .booking__confirm { display: none; }
 
 /* ==========================================================================
    28 · Schéma des quatre étapes
-   Vue d'ensemble placée avant le détail : le trait se dessine, les étapes
-   s'allument l'une après l'autre. Le texte de chaque étape reste lisible
-   sans animation et sans JavaScript.
+   Vue d'ensemble placée avant le détail. Le trait avance d'une étape à la
+   suivante et allume chaque repère à son passage. Le texte de chaque étape
+   reste lisible sans animation et sans JavaScript.
    ========================================================================== */
 
 .schema { position: relative; }
@@ -1600,13 +1686,13 @@ html:not(.js) .booking__confirm { display: none; }
 .schema__row {
   position: relative;
   display: grid;
-  gap: clamp(1.5rem, 3vw, 2.25rem);
+  gap: clamp(1.1rem, 2vw, 1.75rem);
   grid-template-columns: 1fr;
 }
 @media (min-width: 560px) { .schema__row { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 960px) { .schema__row { grid-template-columns: repeat(4, 1fr); } }
 
-/* Le trait qui relie les étapes n'existe que sur une seule ligne. */
+/* La frise ne relie les étapes que lorsqu'elles tiennent sur une ligne. */
 .schema__rail {
   display: none;
   position: absolute;
@@ -1624,10 +1710,17 @@ html:not(.js) .booking__confirm { display: none; }
   background: var(--lavender-dark);
   transform-origin: left;
 }
-.js .schema__rail span { transform: scaleX(0); transition: transform 1.5s var(--ease); }
+.js .schema__rail span { transform: scaleX(0); transition: transform 2.2s linear; }
 .js .schema.is-visible .schema__rail span { transform: scaleX(1); }
 
-.schema__step { position: relative; padding-top: 1.5rem; }
+.schema__step {
+  position: relative;
+  padding-top: 1.25rem;
+  /* Les textes n'ont pas la même longueur : les liens sont poussés en bas
+     pour qu'ils s'alignent d'une colonne à l'autre. */
+  display: flex;
+  flex-direction: column;
+}
 .schema__step::before {
   content: "";
   position: absolute;
@@ -1637,17 +1730,36 @@ html:not(.js) .booking__confirm { display: none; }
   height: .55rem;
   margin-top: .025rem;
   border-radius: 50%;
+  background: var(--line-strong);
+  transition: background-color .4s var(--ease), transform .4s var(--ease);
+}
+/* Le repère s'allume quand la frise l'atteint : les délais suivent la
+   progression du trait, un quart de course par étape. */
+.js .schema.is-visible .schema__step::before {
   background: var(--lavender-dark);
+  transform: scale(1.25);
+  transition-delay: var(--jalon, 0s);
 }
+.schema__step:nth-child(1) { --jalon: .05s; }
+.schema__step:nth-child(2) { --jalon: .78s; }
+.schema__step:nth-child(3) { --jalon: 1.5s; }
+.schema__step:nth-child(4) { --jalon: 2.15s; }
+
 @media (max-width: 959px) {
-  .schema__step { padding-top: 0; padding-left: 1.6rem; }
-  .schema__step::before { top: .55rem; }
+  .schema__step { padding-top: 0; padding-left: 1.5rem; }
+  .schema__step::before { top: .5rem; }
 }
-.js .schema__step { opacity: 0; transform: translateY(14px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
-.js .schema.is-visible .schema__step { opacity: 1; transform: none; }
-.js .schema.is-visible .schema__step:nth-child(2) { transition-delay: .22s; }
-.js .schema.is-visible .schema__step:nth-child(3) { transition-delay: .44s; }
-.js .schema.is-visible .schema__step:nth-child(4) { transition-delay: .66s; }
+
+.js .schema__step {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .6s var(--ease), transform .6s var(--ease);
+}
+.js .schema.is-visible .schema__step {
+  opacity: 1;
+  transform: none;
+  transition-delay: var(--jalon, 0s);
+}
 
 .schema__num {
   display: block;
@@ -1655,15 +1767,23 @@ html:not(.js) .booking__confirm { display: none; }
   font-size: .8125rem;
   letter-spacing: .12em;
   color: var(--lavender-dark);
-  margin-bottom: .7rem;
+  margin-bottom: .5rem;
 }
-.schema__step h3 { font-size: var(--type-card); margin-bottom: .6rem; }
-.schema__step p { font-size: .9375rem; color: var(--muted); }
-.schema__step .linkarrow { margin-top: 1.1rem; border-bottom: 0; }
+.schema__step h3 { font-size: 1.1875rem; margin-bottom: .45rem; }
+.schema__step p { font-size: .875rem; line-height: 1.55; color: var(--muted); }
+.schema__step .linkarrow {
+  margin-top: auto;
+  padding-top: .95rem;
+  padding-bottom: 0;
+  border-bottom: 0;
+  font-size: .875rem;
+  align-self: flex-start;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .js .schema__rail span { transform: scaleX(1); }
+  .js .schema__rail span { transform: scaleX(1); transition: none; }
   .js .schema__step { opacity: 1; transform: none; }
+  .js .schema.is-visible .schema__step::before { transition: none; }
 }
 
 /* ==========================================================================
@@ -1677,6 +1797,21 @@ html:not(.js) .booking__confirm { display: none; }
 .mark { display: block; width: 100%; height: auto; }
 .logo__mark { flex: none; width: 2.15rem; }
 
+/* Le logo du schéma se pose comme un cachet : une rotation courte, une
+   mise à l'échelle, puis plus rien. Il n'est pas animé en continu. */
+.js .mark-figure .mark { opacity: 0; transform: rotate(-14deg) scale(.86); }
+.js .schema-tete.is-visible .mark-figure .mark {
+  animation: cachet 1s cubic-bezier(.2, .8, .3, 1) .15s both;
+}
+@keyframes cachet {
+  from { opacity: 0; transform: rotate(-14deg) scale(.86); }
+  60%  { opacity: 1; transform: rotate(3deg) scale(1.04); }
+  to   { opacity: 1; transform: rotate(0deg) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .mark-figure .mark { opacity: 1; transform: none; animation: none; }
+}
+
 .logo {
   display: inline-flex;
   flex-direction: row;
@@ -1685,5 +1820,5 @@ html:not(.js) .booking__confirm { display: none; }
 }
 .logo__text { display: flex; flex-direction: column; gap: .3rem; }
 
-.mark-figure { max-width: 12rem; margin-inline: auto; }
+.mark-figure { max-width: 10.5rem; margin-inline: auto; }
 

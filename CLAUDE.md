@@ -24,7 +24,7 @@ calme, précision, indépendance, méthode et décision.
 - Nom : `AMÉLIE & PARTNERS`.
 - Marque : le fichier fourni `assets/images/logo.png`, un entrelacs de
   **trois boucles** en lavande. L’employer tel quel : ne pas le redessiner,
-  ne pas le recolorer, ne pas l’animer, ne pas faire varier son nombre de
+  ne pas le recolorer, ne pas faire varier son nombre de
   boucles. Voir `DESIGN-SYSTEM.md`.
 - Signature du logo : `Investir avec méthode · Décider avec clarté`.
 - Promesse principale : `Votre partenaire stratégique pour réussir vos projets

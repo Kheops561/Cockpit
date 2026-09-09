@@ -56,7 +56,8 @@ couleur plus bas et ne l’employez pas sous 14 px.
 
 Le logo est un **entrelacs de trois boucles**, en lavande, fourni par la
 marque et employé tel quel : `assets/images/logo.png`. Il n’est ni
-recomposé, ni recoloré, ni animé.
+recomposé ni recoloré. Sur `approche.html`, il se pose à l’apparition comme
+un cachet — une rotation courte, puis plus rien. Jamais d’animation continue.
 
 La lavande se détache aussi bien sur l’ivoire que sur le bleu nuit, si bien
 qu’un seul fichier sert dans tous les contextes.
@@ -149,9 +150,9 @@ jamais d’information seule.
 | Filet qui se dessine | Cadres `.frame--underline` |
 | Bandeau des témoignages | Section Témoignages |
 | Réservation en deux temps | Bloc « Parlons de… » |
-| Tracé et étapes du parcours | `a-propos.html` |
+| Carte postale : itinéraire tracé, avion, vignette | `a-propos.html` |
 | Fil de lecture vertical | `a-propos.html` |
-| Trait et étapes du schéma | `approche.html` |
+| Frise des quatre étapes et cachet du logo | `approche.html` |
 | Vidéos en boucle, muettes | Bandeaux équipés |
 
 ### Règles non négociables

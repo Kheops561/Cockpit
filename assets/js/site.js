@@ -378,10 +378,11 @@
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   function initJourney() {
+    var carte = document.querySelector('[data-carte]');
     var path = document.querySelector('[data-journey-path]');
     var steps = document.querySelectorAll('[data-journey-step]');
     var note = document.querySelector('[data-handnote]');
-    if (!path && !steps.length && !note) return;
+    if (!carte && !path && !steps.length && !note) return;
 
     if (path) {
       // La longueur réelle du tracé sert de motif de pointillés : le trait
@@ -391,14 +392,15 @@
     }
 
     if (reduced.matches || !('IntersectionObserver' in window)) {
-      if (path) path.classList.add('is-drawn');
+      if (carte) carte.classList.add('is-visible');
       Array.prototype.forEach.call(steps, function (s) { s.classList.add('is-visible'); });
       if (note) note.classList.add('is-visible');
       return;
     }
 
     var cibles = [];
-    if (path) cibles.push([path, 'is-drawn']);
+    // La carte porte l'état : le tracé, l'avion et les vignettes en découlent.
+    if (carte) cibles.push([carte, 'is-visible']);
     Array.prototype.forEach.call(steps, function (s, i) {
       s.style.setProperty('--step-delay', (0.45 + i * 0.22).toFixed(2) + 's');
       cibles.push([s, 'is-visible']);
@@ -409,7 +411,6 @@
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         entry.target.classList.add(entry.target.getAttribute('data-reveal-class') || 'is-visible');
-        if (entry.target === path) entry.target.classList.add('is-drawn');
         io.unobserve(entry.target);
       });
     }, { rootMargin: '0px 0px -12% 0px', threshold: 0 });
