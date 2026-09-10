@@ -784,6 +784,32 @@
       window.requestAnimationFrame(etat);
     }
 
+    // Des liens ailleurs dans la page peuvent viser une carte. Le saut natif
+    // est peu fiable dans un conteneur defilant : quand la carte est deja
+    // visible dans la piste, le navigateur ne fait rien du tout, pas meme
+    // descendre la page. On mene donc le saut nous-memes.
+    var entete = document.querySelector('.header');
+    Array.prototype.forEach.call(items, function (item, i) {
+      if (!item.id) return;
+      var liens = document.querySelectorAll('a[href="#' + item.id + '"]');
+      Array.prototype.forEach.call(liens, function (a) {
+        a.addEventListener('click', function (e) {
+          e.preventDefault();
+          var marge = (entete ? entete.offsetHeight : 0) + 32;
+          var y = window.pageYOffset + bloc.getBoundingClientRect().top - marge;
+          try {
+            window.scrollTo({ top: y, behavior: doux ? 'smooth' : 'auto' });
+          } catch (err) {
+            window.scrollTo(0, y);
+          }
+          aller(i);
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, '', '#' + item.id);
+          }
+        });
+      });
+    });
+
     piste.addEventListener('scroll', planifier, { passive: true });
     window.addEventListener('resize', planifier);
     etat();

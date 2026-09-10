@@ -2147,34 +2147,79 @@ html:not(.js) .booking__confirm { display: none; }
 
 
 /* ==========================================================================
-   30 · Le processus : le récapitulatif complet
-   Les cinq étapes restent toutes affichées, comme un schéma récapitulatif :
-   le lecteur les embrasse d'un regard, en quatre colonnes réglées dès que
-   la place le permet, empilées en dessous. Aucune barre d'onglets, aucun
-   défilement : rien à commander, rien à mettre en pause.
+   30 · Le feuillet d'étape
+   Chaque étape de la méthode tient sur un feuillet, et les feuillets
+   défilent. Ils sont posés en léger désordre, comme des feuilles sur une
+   table ; celui qu'on survole ou qu'on atteint au clavier se redresse.
+
+   La piste défile déjà seule, sans script. Rien ne défile tout seul, il n'y
+   a donc rien à mettre en pause. Sous mouvement réduit, les feuillets sont
+   droits et ne bougent plus.
    ========================================================================== */
 
-.steps--recap .step {
-  grid-template-columns: auto minmax(0, 1fr);
-  padding-inline: clamp(.75rem, 1.5vw, 1.25rem);
-  /* L'en-tête reste au-dessus du contenu : l'ancre doit s'arrêter en dessous. */
-  scroll-margin-top: calc(var(--header-h) + 2rem);
+.feuillet {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 30px rgba(18, 40, 60, .05);
+  transition: transform .45s var(--ease), box-shadow .45s var(--ease);
 }
-.steps--recap .step__num { grid-column: 1; grid-row: 1 / span 3; }
-.steps--recap .step__name,
-.steps--recap .step__desc,
-.steps--recap .step__out { grid-column: 2; }
+/* Un léger désordre : les feuillets pairs et impairs penchent en sens
+   inverse, de moins d'un degré. */
+.carrousel--feuillets .carrousel__item:nth-child(odd) .feuillet { transform: rotate(-.5deg); }
+.carrousel--feuillets .carrousel__item:nth-child(even) .feuillet { transform: rotate(.5deg); }
+.carrousel--feuillets .carrousel__item:hover .feuillet,
+.carrousel--feuillets .carrousel__item:focus-within .feuillet {
+  transform: none;
+  box-shadow: 0 18px 45px rgba(18, 40, 60, .1);
+}
+/* La piste laisse respirer l'ombre et l'inclinaison. */
+.carrousel--feuillets .carrousel__piste { padding-block: 1rem; align-items: stretch; }
 
-@media (min-width: 900px) {
-  .steps--recap .step {
-    grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1.5fr);
-    gap: .35rem clamp(1.25rem, 2.4vw, 2.5rem);
-    align-items: start;
+.feuillet__num {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: .875rem;
+  letter-spacing: .12em;
+  color: var(--lavender-dark);
+}
+.feuillet__nom {
+  margin: 1.25rem 0 0;
+  font-size: var(--type-heading);
+  line-height: 1.15;
+}
+.feuillet__texte {
+  margin: 1.15rem 0 0;
+  flex: 1 1 auto;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.feuillet__tag { margin: 1.75rem 0 0; align-self: flex-start; }
+
+.feuillet__out {
+  margin: 1.75rem 0 0;
+  align-self: flex-start;
+  font-size: .8125rem;
+  color: var(--rust);
+  border-left: 2px solid var(--rust-soft);
+  padding-left: .8rem;
+}
+
+/* Les feuillets sont aussi les cibles du schéma : l'ancre doit s'arrêter
+   sous l'en-tête. */
+.carrousel--feuillets .carrousel__item { scroll-margin-top: calc(var(--header-h) + 2rem); }
+
+@media (prefers-reduced-motion: reduce) {
+  .feuillet,
+  .carrousel--feuillets .carrousel__item:nth-child(odd) .feuillet,
+  .carrousel--feuillets .carrousel__item:nth-child(even) .feuillet {
+    transform: none;
+    transition: none;
   }
-  .steps--recap .step__num { grid-column: 1; grid-row: 1; }
-  .steps--recap .step__name { grid-column: 2; margin-bottom: 0; }
-  .steps--recap .step__desc { grid-column: 3; }
-  .steps--recap .step__out { grid-column: 4; margin-top: 0; }
 }
 
 
