@@ -24,13 +24,14 @@ basculé sur Vercel, la marche à suivre est au point 4.
 ## 1. Créer la clé Resend
 
 1. Sur [resend.com](https://resend.com), ajouter le domaine
-   `amelie-invest.com` et suivre la procédure de vérification : Resend donne
-   des enregistrements DNS (SPF, DKIM) à créer dans la zone DNS **OVH**, où
-   le domaine est géré. Tant que le domaine n'est pas vérifié, l'envoi est
-   refusé.
+   `amelie-invest.com`, région **Europe (Ireland) · `eu-west-1`**. Resend
+   donne trois enregistrements DNS à créer dans la zone **OVH**, où le
+   domaine est géré : la marche à suivre, champ par champ, est dans
+   **`CONFIGURATION-DNS.md`**. Tant que le domaine n'est pas vérifié,
+   l'envoi est refusé.
 2. Créer une clé d'API avec le **droit d'envoi seulement**.
-3. Choisir la région de traitement dans le compte Resend. Ce choix a des
-   conséquences sur la page « Données personnelles » : voir le point 5.
+3. Ne pas activer le suivi d'ouverture ni le suivi des clics : ils
+   réécrivent les liens et déposent des mouchards, ce que le site s'interdit.
 
 Tant que le domaine n'est pas vérifié, il est possible de tester avec le
 domaine d'essai fourni par Resend (`onboarding@resend.dev`) : les messages
@@ -72,21 +73,16 @@ volontaire : il ne doit rien apprendre de la configuration.
 
 ## 4. Le jour où le domaine bascule sur Vercel
 
-1. Dans le projet Vercel : **Settings → Domains**, ajouter
-   `amelie-invest.com` et `www.amelie-invest.com`.
-2. Dans la zone DNS OVH, remplacer l'enregistrement `A` de l'apex et le
-   `CNAME` du `www` par les valeurs que Vercel indique.
-3. **Ne pas toucher aux enregistrements `MX`, `SPF`, `DKIM` et `DMARC`** :
-   les boîtes aux lettres restent chez OVH, et ces enregistrements portent
-   aussi la vérification Resend. Les supprimer casserait à la fois la
-   réception du courrier et l'envoi du formulaire.
-4. Mettre à jour la mention de l'hébergeur dans `mentions-legales.html`.
+La marche à suivre détaillée, enregistrement par enregistrement, avec le
+retour en arrière : **`CONFIGURATION-DNS.md`**.
 
 ## 5. Ce qui reste à trancher
 
-- **La région de traitement Resend.** Si elle est hors Union européenne, la
-  page « Données personnelles » doit citer le mécanisme de transfert
-  applicable. La mention est en attente sur cette page.
+- **La région de traitement Resend.** `eu-west-1`, en Irlande, est la région
+  recommandée et celle déjà retenue pour l'autre domaine du compte : le
+  traitement reste alors dans l'Union européenne. Une fois le domaine créé,
+  la page « Données personnelles » peut l'écrire, et la mention
+  « à compléter » qui l'accompagne disparaît.
 - **L'adresse d'expédition.** `site@amelie-invest.com` est une proposition ;
   toute adresse du domaine vérifié convient.
 
