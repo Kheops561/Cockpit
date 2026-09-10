@@ -190,14 +190,42 @@ n'est pas une panne du formulaire.
 Dans le projet Vercel → **Settings** → **Environment Variables**, pour
 *Production*, *Preview* et *Development* :
 
-| Nom | Valeur |
-|---|---|
-| `RESEND_API_KEY` | la clé Resend, avec le **droit d'envoi seulement** |
-| `CONTACT_FROM` | `Amélie & Partners <site@amelie-invest.com>` |
-| `CONTACT_TO` | `contact@amelie-invest.com` |
+| Nom | Type | Valeur |
+|---|---|---|
+| `RESEND_API_KEY` | `Secret` | la clé Resend, avec le **droit d'envoi seulement** |
+| `CONTACT_FROM` | `Config` | `Amélie & Partners <site@amelie-invest.com>` |
+| `CONTACT_TO` | `Config` | `contact@amelie-invest.com` |
+| `CONTACT_CC` | `Config` | facultative, voir ci-dessous |
+
+Cochez les trois environnements — *Production*, *Preview* et *Development* —
+sans quoi seuls les déploiements de production auront la configuration.
 
 Puis **redéployer** : les variables ne sont lues qu'au démarrage de la
 fonction.
+
+### Écrire à plusieurs
+
+`CONTACT_TO` et `CONTACT_CC` acceptent **plusieurs adresses**, séparées par
+une virgule ou un point-virgule :
+
+```
+CONTACT_TO = contact@amelie-invest.com, amelie@amelie-invest.com
+CONTACT_CC = assistante@amelie-invest.com
+```
+
+Les espaces autour des adresses sont ignorés, une entrée qui n'est pas une
+adresse valable est écartée, et la liste est bornée à dix. Si `CONTACT_TO`
+finit vide, la fonction retombe sur `contact@amelie-invest.com` : le message
+n'est jamais envoyé dans le vide.
+
+Les personnes en copie se voient entre elles — c'est l'usage attendu entre
+collaborateurs. Le visiteur, lui, ne voit jamais cette liste : il envoie le
+message, il ne le reçoit pas.
+
+> **La liste réelle n'est pas recopiée ici**, et c'est volontaire : elle
+> contient des adresses personnelles, et ce dépôt peut un jour être ouvert.
+> Sa seule source est la variable `CONTACT_CC` du projet Vercel. Pour savoir
+> qui est en copie, c'est là qu'il faut regarder.
 
 `site@amelie-invest.com` n'a pas besoin d'être une vraie boîte aux lettres :
 c'est une adresse d'expédition. Les réponses partent vers l'adresse du

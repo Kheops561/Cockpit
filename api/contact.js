@@ -13,7 +13,32 @@
  * Installation : voir INSTALLATION-FORMULAIRE.md.
  */
 
-const DESTINATAIRE = process.env.CONTACT_TO || 'contact@amelie-invest.com';
+/**
+ * Les destinataires. `CONTACT_TO` et `CONTACT_CC` acceptent plusieurs
+ * adresses séparées par une virgule ou un point-virgule :
+ *
+ *   CONTACT_TO = contact@amelie-invest.com, amelie@amelie-invest.com
+ *   CONTACT_CC = assistante@amelie-invest.com
+ *
+ * Les adresses en copie voient le message et se voient entre elles ; c'est
+ * l'usage attendu ici, entre collaborateurs. Le visiteur, lui, ne voit
+ * jamais cette liste : il ne reçoit pas ce message, il l'envoie.
+ */
+const ADRESSE = /^[^@\s,;]+@[^@\s,;]+\.[A-Za-z]{2,}$/;
+
+function adresses(brut, defaut = '') {
+  return String(brut || defaut)
+    .split(/[,;]/)
+    .map((a) => a.trim())
+    .filter((a) => ADRESSE.test(a))
+    .slice(0, 10);
+}
+
+const DESTINATAIRES = adresses(process.env.CONTACT_TO, 'contact@amelie-invest.com');
+const COPIES = adresses(process.env.CONTACT_CC);
+// Une seule adresse suffit à écrire « écrivez-nous directement à… ».
+const DESTINATAIRE = DESTINATAIRES[0] || 'contact@amelie-invest.com';
+
 const EXPEDITEUR = process.env.CONTACT_FROM
   || 'Amélie & Partners <site@amelie-invest.com>';
 
@@ -94,7 +119,8 @@ module.exports = async function handler(req, res) {
       fonction: 'contact',
       cle: Boolean(process.env.RESEND_API_KEY),
       expediteur: Boolean(process.env.CONTACT_FROM),
-      destinataire: Boolean(process.env.CONTACT_TO),
+      destinataires: DESTINATAIRES.length,
+      copies: COPIES.length,
     });
   }
 
@@ -181,7 +207,8 @@ module.exports = async function handler(req, res) {
       },
       body: JSON.stringify({
         from: EXPEDITEUR,
-        to: [DESTINATAIRE],
+        to: DESTINATAIRES.length ? DESTINATAIRES : [DESTINATAIRE],
+        ...(COPIES.length ? { cc: COPIES } : {}),
         reply_to: courriel,
         subject: `Formulaire de contact · ${prenom} ${nom}`,
         text: texte,
