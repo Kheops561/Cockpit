@@ -19,6 +19,9 @@
   --lavender-dark: #75508f;
   --rust: #a05234;
   --rust-soft: #ead4c6;
+  /* La rouille de marque ne se lit pas sur le bleu nuit (2,7:1). Cette
+     version eclaircie garde le signal chaud et passe le contraste (5,4:1). */
+  --rust-light: #d08a63;
   --text: #273744;
   --muted: #52616c;
   --line: rgba(18, 40, 60, .16);
@@ -733,6 +736,15 @@ a:focus-visible .frame--zoom img { transform: scale(1.06); }
   .split--reverse > :first-child { order: 2; }
 }
 
+/* --------------------------------------------------- réglages par page */
+
+/* « À propos » se lit comme un récit : sa colonne se resserre pour que les
+   lignes gardent une longueur confortable. La carte postale, elle, reste en
+   pleine largeur d'écran. L'identifiant sert à l'aperçu en un seul fichier,
+   où toutes les pages partagent le même corps de document. */
+.page-a-propos,
+#page-a-propos { --wrap: 1180px; }
+
 /* ------------------------------------------------------------- 10 cartes */
 
 .card {
@@ -762,6 +774,25 @@ a.card:hover,
   border-color: transparent;
 }
 
+/* Survol en groupe : la carte visee s'avance, ses voisines s'effacent.
+   L'effet est decoratif, aucune information n'y est cachee : les cartes
+   restent lisibles sans souris et le texte ne bouge pas. */
+.grid--survol .card { transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .5s var(--ease), opacity .5s var(--ease); }
+.grid--survol:hover .card,
+.grid--survol:focus-within .card { opacity: .55; }
+.grid--survol .card:hover,
+.grid--survol .card:focus-within {
+  opacity: 1;
+  transform: translateY(-6px);
+  box-shadow: var(--shadow);
+  border-color: transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  .grid--survol .card { transition: none; }
+  .grid--survol .card:hover,
+  .grid--survol .card:focus-within { transform: none; }
+}
+
 .card--flat { background: transparent; border: 0; padding: 0; }
 .card--flat + .card--flat { padding-top: 0; }
 .card--ink { background: var(--ink-soft); border-color: rgba(255, 255, 255, .12); }
@@ -771,6 +802,15 @@ a.card:hover,
 /* Carte visuelle : image en tête, contenu en dessous */
 .card--media { padding: 0; overflow: hidden; }
 .card--media .card__body { padding: clamp(1.6rem, 2.4vw, 2.25rem); display: flex; flex-direction: column; flex: 1; }
+
+/* Carte vedette : sur une pleine largeur, une image en tete deviendrait
+   demesuree. Elle passe donc a gauche, sur un peu moins de la moitie, et
+   se cale sur la hauteur du texte. */
+@media (min-width: 900px) {
+  .card--vedette { display: grid; grid-template-columns: 0.85fr 1fr; align-items: stretch; }
+  .card--vedette .frame { aspect-ratio: auto; height: 100%; min-height: 22rem; }
+  .card--vedette .card__body { padding: clamp(2rem, 3.2vw, 3.25rem); justify-content: center; }
+}
 
 /* Puces d'étiquettes, sur fond clair */
 .taglist {
@@ -1762,11 +1802,23 @@ html:not(.js) .booking__confirm { display: none; }
   position: absolute;
   top: 76.7%;
   transform: translate(-50%, .5rem);
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
   font-family: 'Caveat', 'Segoe Script', cursive;
   font-size: clamp(1.1rem, 1.9vw, 1.6rem);
   line-height: 1;
   color: var(--ink);
   white-space: nowrap;
+}
+/* Les deux drapeaux, à la taille d'une vignette de timbre. Leur trait
+   sombre les détache du papier ivoire sans les cerner. */
+.postale__lieu .drapeau {
+  display: block;
+  flex: none;
+  width: 1.5em;
+  height: 1em;
+  border: 1px solid var(--line);
 }
 .postale__lieu--a { left: 13.33%; }
 .postale__lieu--b { left: 86.67%; }
@@ -2819,25 +2871,31 @@ html:not(.js) .booking__confirm { display: none; }
 .promesse {
   display: grid;
   gap: clamp(1.75rem, 3.5vw, 3rem);
-  background: var(--white);
-  border: 1px solid var(--line);
-  padding: clamp(1.75rem, 4vw, 3.5rem);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  padding: clamp(2rem, 4.5vw, 4rem);
 }
 @media (min-width: 900px) {
   .promesse { grid-template-columns: 1fr 1fr; gap: clamp(2.5rem, 5vw, 4.5rem); }
-  .promesse__volet--oui { border-left: 1px solid var(--line); padding-left: clamp(2.5rem, 5vw, 4.5rem); }
+  .promesse__volet--oui { border-left: 1px solid var(--line-light); padding-left: clamp(2.5rem, 5vw, 4.5rem); }
 }
+/* Sur le bleu nuit, la rouille s'eclaircit et le second volet prend la
+   lavande : les deux reperes de marque restent lisibles. */
+.promesse .eyebrow { color: var(--lavender); }
+.promesse .eyebrow::before { background: var(--lavender); }
+.promesse .eyebrow--rust { color: var(--rust-light); }
+.promesse .eyebrow--rust::before { background: var(--rust-light); }
 .promesse__texte {
   margin: 1.25rem 0 0;
   font-family: var(--font-editorial);
   font-size: clamp(1.375rem, 2.6vw, 2rem);
   line-height: 1.35;
-  color: var(--ink);
+  color: var(--white);
   text-wrap: balance;
 }
 /* Ce que l'on ne promet pas s'écrit en retrait : c'est l'autre volet qui
    porte l'engagement. */
-.promesse__volet--non .promesse__texte { color: var(--muted); }
+.promesse__volet--non .promesse__texte { color: rgba(255, 255, 255, .68); }
 
 /* ==========================================================================
    39 · Les accompagnements, en diapositives
@@ -2922,3 +2980,147 @@ html:not(.js) .booking__confirm { display: none; }
   .js .diapos.est-defilante .diapo { transition: none; }
   .diapos__repere { transition: none; }
 }
+
+
+/* ==========================================================================
+   40 · La fiche pédagogique
+   Une ressource se lit comme une fiche : ses repères en tête, ses objectifs
+   annoncés, son programme numéroté, puis les modules eux-mêmes. Rien n'y est
+   caché derrière un survol ou une animation : la fiche entière se lit à plat.
+   ========================================================================== */
+
+/* Les repères : format, durée, niveau, prérequis, mise à jour. Une liste de
+   définitions, la seule structure juste pour des couples nom / valeur. */
+.reperes {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  border: 1px solid var(--line);
+  background: var(--white);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) { .reperes { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1000px) { .reperes { grid-template-columns: repeat(5, 1fr); } }
+.repere {
+  padding: clamp(1.1rem, 2vw, 1.6rem) clamp(1.1rem, 2vw, 1.75rem);
+  border-top: 1px solid var(--line);
+}
+.repere:first-child { border-top: 0; }
+@media (min-width: 640px) {
+  .repere { border-left: 1px solid var(--line); }
+  .repere:nth-child(-n+2) { border-top: 0; }
+  .repere:nth-child(odd) { border-left: 0; }
+}
+@media (min-width: 1000px) {
+  .repere { border-top: 0; }
+  .repere:nth-child(odd) { border-left: 1px solid var(--line); }
+  .repere:first-child { border-left: 0; }
+}
+.repere dt {
+  font-size: .6875rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: .55rem;
+}
+.repere dd {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: 1.0625rem;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+/* Les objectifs : ce que la fiche permet de faire, une fois lue. */
+.objectifs {
+  display: grid;
+  gap: clamp(1.1rem, 2.2vw, 1.75rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 760px) { .objectifs { grid-template-columns: 1fr 1fr; } }
+.objectif {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .9rem;
+  align-items: start;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+.objectif svg { margin-top: .35rem; color: var(--lavender-dark); flex: none; }
+
+/* Le programme : trois modules annoncés, chacun mène à sa section. */
+.programme { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.programme__lien {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: .35rem clamp(1.25rem, 3vw, 2.5rem);
+  align-items: center;
+  padding-block: clamp(1.35rem, 2.6vw, 2rem);
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color .4s var(--ease), padding-inline .4s var(--ease);
+}
+.programme__lien:hover,
+.programme__lien:focus-visible { background: var(--white); padding-inline: clamp(.75rem, 1.6vw, 1.5rem); }
+.programme__num {
+  grid-column: 1;
+  grid-row: 1;
+  font-family: var(--font-body);
+  font-size: .75rem;
+  letter-spacing: .14em;
+  color: var(--rust);
+}
+.programme__titre {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: start;
+  font-family: var(--font-editorial);
+  font-size: var(--type-card);
+  color: var(--ink);
+}
+.programme__quoi { grid-column: 2; grid-row: 2; font-size: .9375rem; color: var(--muted); }
+.programme__lien .icon {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  color: var(--lavender-dark);
+  transform: rotate(-90deg);
+}
+@media (prefers-reduced-motion: reduce) { .programme__lien { transition: none; } }
+
+/* Un module : son numéro, sa notion clé, puis le développement. */
+.module { scroll-margin-top: 7rem; }
+.module + .module { margin-top: clamp(3rem, 5.5vw, 4.5rem); }
+.module__cle {
+  border-left: 2px solid var(--rust);
+  background: var(--white);
+  padding: clamp(1rem, 2vw, 1.35rem) clamp(1.1rem, 2.2vw, 1.6rem);
+  margin-bottom: 1.75rem;
+}
+.module__cle dt {
+  font-size: .6875rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: .5rem;
+}
+.module__cle dd { margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text); }
+
+/* Les points de vigilance : ce que la fiche ne laisse pas sous silence. */
+.vigilance { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; }
+.vigilance li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: start;
+  padding-block: clamp(1.1rem, 2.2vw, 1.6rem);
+  border-top: 1px solid var(--line);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--text);
+}
+.vigilance li:last-child { border-bottom: 1px solid var(--line); }
+.vigilance svg { margin-top: .35rem; color: var(--rust); flex: none; }

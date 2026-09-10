@@ -22,6 +22,7 @@ Palette reprise du site d’origine. Ne pas la modifier sans validation.
 | Lavande sombre (accent) | `--lavender-dark` | `#75508f` |
 | Rouille | `--rust` | `#a05234` |
 | Rouille claire | `--rust-soft` | `#ead4c6` |
+| Rouille éclaircie (fond sombre) | `--rust-light` | `#d08a63` |
 | Texte courant | `--text` | `#273744` |
 | Texte secondaire | `--muted` | `#52616c` |
 
@@ -43,6 +44,7 @@ plus bas). Tous atteignent au moins le niveau AA pour du texte courant.
 | Lavande sombre sur ivoire secondaire | 5,35:1 | AA |
 | Rouille sur ivoire secondaire | 4,71:1 | AA |
 | Lavande `#cbb5df` sur bleu nuit | 8,04:1 | AAA |
+| Rouille éclaircie `#d08a63` sur bleu nuit | 5,38:1 | AA |
 
 La lavande claire `#cbb5df` ne sert de couleur de texte **que sur fond bleu
 nuit** (surtitres, libellés). Sur ivoire, elle est réservée aux filets, aux
@@ -51,6 +53,10 @@ fonds et aux repères.
 Le rapport le plus juste du site est la rouille sur ivoire secondaire
 (4,71:1) : il tient pour du texte courant, mais ne descendez pas cette
 couleur plus bas et ne l’employez pas sous 14 px.
+
+La rouille de marque `#a05234` ne se lit **pas** sur le bleu nuit (2,69:1).
+Sur fond sombre, employez `--rust-light` `#d08a63` : c’est la même couleur
+éclaircie, et elle passe le niveau AA.
 
 ## La marque
 
@@ -128,7 +134,22 @@ bandeau de tête (7), cadres et visuels (8), duo texte + image (9), cartes
 bandeau d’appel (16), mises en avant (17), formulaire (18), pied de page
 (19), fil d’ariane (20), article (21), page 404 (22), mouvement réduit (23),
 bloc de réservation (24), vidéos (25), parcours de la fondatrice (26), fil du
-parcours (27), schéma des quatre étapes (28).
+parcours (27), schéma des quatre étapes (28), page témoignages (29),
+feuillets du processus (30), carte de témoignage (32), carte de tarif (33),
+carrousel (34), voile de transition (35), citation pleine largeur (36),
+schéma des étapes (37), promesse en deux volets (38), accompagnements en
+diapositives (39), fiche pédagogique (40).
+
+Trois compléments récents :
+
+- `.grid--survol` : sur un groupe de cartes, celle que l’on vise s’avance et
+  ses voisines s’effacent. L’effet est purement décoratif, aucune information
+  n’y est cachée, et il disparaît sous `prefers-reduced-motion`.
+- `.card--vedette` : une carte visuelle dont l’image passe à gauche plutôt
+  qu’en tête, pour ne pas devenir démesurée sur une pleine largeur.
+- `.page-<nom>` : chaque page porte sa classe sur `<body>`, ce qui permet de
+  régler une page seule. `a-propos` s’en sert pour resserrer sa colonne à
+  1180 px.
 
 ### Icônes
 

@@ -54,6 +54,13 @@ base et d’une période auditées.
       à plusieurs endroits : voir le tableau de `GUIDE-VISUELS.md`.
 - [ ] Confirmer les droits d’usage commercial de chaque photographie.
 - [ ] Confirmer que le portrait de la fondatrice est celui à publier.
+- [ ] Confirmer les deux photographies de la carte postale de `a-propos.html` :
+      la tour Eiffel vue de la Seine et la tour de la Tortue sur le lac Hoan
+      Kiem. Le texte alternatif nomme le monument vietnamien ; le dire
+      autrement si ce rapprochement n’est pas souhaité.
+- [ ] Valider la présence des deux drapeaux, France et Viêt Nam, sur le trajet
+      de la carte postale. Ce sont les deux seules touches de couleur hors
+      palette du site.
 - [ ] Déposer les vidéos d’ambiance dans `assets/videos/` (`accueil.mp4`,
       `paris.mp4`, `a-propos.mp4`). Tant qu’elles sont absentes, la
       photographie s’affiche et le navigateur enregistre une requête sans

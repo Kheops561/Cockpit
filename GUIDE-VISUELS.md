@@ -108,8 +108,8 @@ toujours pouvoir être arrêtée.
 | `hero-diagnostic.jpg` | 1600 × 900 | 177 Ko | diagnostic.html |
 | `hero-mentions.jpg` | 1600 × 720 | 145 Ko | confidentialite.html, mentions-legales.html |
 | `hero-ressources.jpg` | 1600 × 900 | 198 Ko | ressource-3-effets.html, ressources.html |
-| `parcours-paris.jpg` | 620 × 775 | 69 Ko | a-propos.html |
-| `parcours-vietnam.jpg` | 620 × 775 | 119 Ko | a-propos.html |
+| `parcours-paris.jpg` | 620 × 775 | 146 Ko | a-propos.html |
+| `parcours-vietnam.jpg` | 620 × 775 | 131 Ko | a-propos.html |
 | `paris-01.jpg` | 660 × 880 | 82 Ko | index.html |
 | `paris-02.jpg` | 660 × 880 | 76 Ko | index.html |
 | `paris-03.jpg` | 660 × 880 | 113 Ko | index.html |
@@ -168,10 +168,15 @@ Le bloc « parcours » de `a-propos.html` accepte **une ou deux**
 photographies. Avec une seule, elle occupe toute la largeur du cadre ; avec
 deux, le bloc devient un diptyque Viêt Nam / Paris, en format portrait.
 
-Aujourd’hui il n’y a qu’une photographie, `parcours-paris.jpg`, faute d’une
-vue du Viêt Nam. Pour passer au diptyque, déposer la seconde sous le nom
-`parcours-vietnam.jpg` et le signaler : le bloc bascule tout seul, la mise en
-forme est déjà prête.
+Les deux photographies sont en place : `parcours-paris.jpg`, la tour Eiffel
+vue depuis la Seine, et `parcours-vietnam.jpg`, la tour de la Tortue sur le
+lac Hoan Kiem. Elles sont recadrées en 620 × 775, centrées un peu au-dessus
+du milieu pour garder le monument entier.
+
+Deux drapeaux, France et Viêt Nam, marquent les extrémités du trajet dessiné
+au centre. Ils sont vectoriels, écrits dans la page, et décoratifs : le nom du
+lieu est écrit juste à côté. Ce sont les deux seules touches de couleur hors
+palette du site.
 
 ## Ce qui est le plus visible
 
