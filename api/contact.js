@@ -26,10 +26,32 @@
  */
 const ADRESSE = /^[^@\s,;]+@[^@\s,;]+\.[A-Za-z]{2,}$/;
 
+/**
+ * On colle rarement une liste d'adresses toute propre. Cette lecture accepte
+ * donc ce qui sort d'un carnet d'adresses ou d'un copier-coller :
+ *
+ *   contact@x.fr, amelie@x.fr          séparateurs virgule, point-virgule
+ *   AMELIE DUONG <anhthu@gmail.com>    la forme « Nom <adresse> »
+ *   Eric Boileau eric@joytalents.com   un nom collé devant, sans chevrons
+ *   une adresse par ligne              retours à la ligne
+ *
+ * Seule l'adresse est retenue, jamais le nom : une adresse nue ne peut rien
+ * injecter dans les en-têtes du courrier, et le destinataire voit de toute
+ * façon le nom que son propre carnet lui donne.
+ */
 function adresses(brut, defaut = '') {
   return String(brut || defaut)
-    .split(/[,;]/)
-    .map((a) => a.trim())
+    .split(/[,;\n\r]+/)
+    .map((morceau) => {
+      const t = morceau.trim();
+      if (!t) return '';
+      // « Nom <adresse> » : on ne garde que ce qui est entre chevrons.
+      const chevrons = t.match(/<([^<>]+)>/);
+      if (chevrons) return chevrons[1].trim();
+      // « Nom adresse » sans chevrons : l'adresse est le dernier mot.
+      if (/\s/.test(t)) return t.split(/\s+/).pop();
+      return t;
+    })
     .filter((a) => ADRESSE.test(a))
     .slice(0, 10);
 }

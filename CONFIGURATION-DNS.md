@@ -213,10 +213,24 @@ CONTACT_TO = contact@amelie-invest.com, amelie@amelie-invest.com
 CONTACT_CC = assistante@amelie-invest.com
 ```
 
-Les espaces autour des adresses sont ignorés, une entrée qui n'est pas une
-adresse valable est écartée, et la liste est bornée à dix. Si `CONTACT_TO`
-finit vide, la fonction retombe sur `contact@amelie-invest.com` : le message
-n'est jamais envoyé dans le vide.
+La lecture est tolérante, parce qu'on colle rarement une liste toute propre.
+Sont acceptés, et mélangeables :
+
+| Ce que vous collez | Ce qui est retenu |
+|---|---|
+| `a@x.fr, b@y.fr` | les deux |
+| `a@x.fr; b@y.fr` | les deux |
+| une adresse par ligne | toutes |
+| `AMELIE DUONG <anhthu@gmail.com>` | `anhthu@gmail.com` |
+| `Eric Boileau eric@joytalents.com` | `eric@joytalents.com` |
+
+Seule l'adresse est retenue, jamais le nom : une adresse nue ne peut rien
+injecter dans les en-têtes du courrier, et le destinataire voit de toute
+façon le nom que son propre carnet lui donne.
+
+Une entrée qui ne contient aucune adresse est écartée, et la liste est bornée
+à dix. Si `CONTACT_TO` finit vide, la fonction retombe sur
+`contact@amelie-invest.com` : le message n'est jamais envoyé dans le vide.
 
 Les personnes en copie se voient entre elles — c'est l'usage attendu entre
 collaborateurs. Le visiteur, lui, ne voit jamais cette liste : il envoie le

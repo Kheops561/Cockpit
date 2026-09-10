@@ -49,10 +49,12 @@ variables, à cocher pour *Production*, *Preview* et *Development* :
 | `CONTACT_FROM` | `Amélie & Partners <site@amelie-invest.com>` | non, c'est la valeur par défaut |
 | `CONTACT_CC` | une ou plusieurs adresses en copie | non |
 
-`CONTACT_TO` et `CONTACT_CC` acceptent plusieurs adresses séparées par une
-virgule ou un point-virgule. Les espaces sont ignorés, une entrée qui n'est
-pas une adresse valable est écartée, la liste est bornée à dix, et si
-`CONTACT_TO` finit vide la fonction retombe sur son adresse par défaut.
+`CONTACT_TO` et `CONTACT_CC` acceptent plusieurs adresses, séparées par une
+virgule, un point-virgule ou un retour à la ligne. La forme
+`Nom <adresse@exemple.fr>` et le nom simplement collé devant l'adresse sont
+acceptés aussi ; seule l'adresse est retenue. Une entrée sans adresse est
+écartée, la liste est bornée à dix, et si `CONTACT_TO` finit vide la fonction
+retombe sur son adresse par défaut.
 
 **La clé ne doit jamais être versionnée.** Si elle a été exposée, la
 révoquer dans Resend et en créer une autre.
