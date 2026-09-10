@@ -3670,26 +3670,41 @@ html:not(.js) .booking__confirm { display: none; }
   padding: 0;
   list-style: none;
 }
-/* Chaque seance est un bloc a part entiere, pose sur l'ivoire : deux
-   formats se comparent mieux dans deux cadres que dans une liste de filets.
-   Un bandeau de couleur porte le nom — lavande pour l'appel offert, rouille
-   pour la seance payante : on distingue les deux avant meme de lire. */
-.seances { gap: clamp(1rem, 2vw, 1.25rem); }
+/* Chaque seance est un bloc a part entiere. La couleur n'y est plus un
+   aplat sature : une teinte claire, surmontee d'un filet franc. Le repere se
+   lit d'un coup d'oeil sans que la carte hausse le ton — lavande pour
+   l'appel offert, rouille pour la seance payante.
+
+   Le nom reste en bleu nuit sur teinte claire. C'est plus lisible que du
+   blanc sur aplat, et plus proche du territoire de la marque : une maison
+   d'edition, pas une promotion. */
+.seances { gap: clamp(1rem, 2vw, 1.5rem); }
 .seance {
   display: flex;
   flex-direction: column;
-  /* Aucun retrait ici : le bandeau doit toucher les bords du cadre. */
+  /* Aucun retrait ici : la tete doit toucher les bords du cadre. */
   padding: 0;
-  overflow: hidden;
-  background: var(--paper);
+  background: var(--white);
   border: 1px solid var(--line);
+}
+.seance__tete {
+  padding: clamp(1.15rem, 2.3vw, 1.6rem) clamp(1.2rem, 2.4vw, 1.7rem)
+           clamp(1rem, 2vw, 1.35rem);
+  border-top: 2px solid var(--line-strong);
+}
+.seance--offert .seance__tete {
+  background: var(--lavender-soft);
+  border-top-color: var(--lavender-dark);
+}
+.seance--paye .seance__tete {
+  background: var(--rust-soft);
+  border-top-color: var(--rust);
 }
 .seance__corps {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: clamp(1rem, 2vw, 1.3rem) clamp(1.1rem, 2.2vw, 1.4rem)
-           clamp(1.1rem, 2.2vw, 1.4rem);
+  padding: clamp(1.15rem, 2.3vw, 1.6rem) clamp(1.2rem, 2.4vw, 1.7rem);
 }
 @container (min-width: 30rem) {
   .seances { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
@@ -3700,51 +3715,50 @@ html:not(.js) .booking__confirm { display: none; }
   }
 }
 /* `.card p` (0,1,1) l'emporterait sur une classe seule : le nom vit dans une
-   carte, il faut donc au moins autant de poids pour lui rendre son blanc.
-   Meme piege que pour le numero des cartes de l'accueil. */
+   carte, il faut donc au moins autant de poids. Meme piege que pour le
+   numero des cartes de l'accueil. */
 .card .seance__nom,
 .seance__nom {
   margin: 0;
-  padding: .75rem clamp(1.1rem, 2.2vw, 1.4rem);
-  background: var(--ink);
-  color: var(--white);
   font-family: var(--font-editorial);
-  font-size: var(--type-card);
-  line-height: 1.25;
+  font-size: 1.375rem;
+  line-height: 1.2;
+  color: var(--ink);
 }
-/* Ces deux-la pesent autant que la regle ci-dessus : c'est l'ordre qui
-   decide, ils doivent donc venir apres elle.
-   Blanc sur lavande sombre : 5,9 pour 1. Blanc sur rouille : 5,6 pour 1.
-   Les deux passent le seuil AA du texte courant. */
-.card .seance--offert .seance__nom,
-.seance--offert .seance__nom { background: var(--lavender-dark); }
-.card .seance--paye .seance__nom,
-.seance--paye .seance__nom { background: var(--rust); }
+/* La duree et le prix se lisent ensemble, poses sur la meme ligne de base :
+   c'est le couple qu'on vient chercher. */
 .seance__meta {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: .5rem .9rem;
+  gap: .4rem .9rem;
+  /* Premiere ligne du corps : rien au-dessus. Un filet fin la separe de la
+     description, comme une legende separee de son texte. */
   margin: 0;
+  padding-bottom: clamp(.9rem, 1.8vw, 1.15rem);
+  border-bottom: 1px solid var(--line);
 }
-/* La duree et le prix sont ce qu'on vient chercher : ils passent devant la
-   description, qui se resserre pour leur laisser la place. */
 .seance__duree {
-  font-size: .9375rem;
-  letter-spacing: .1em;
+  font-size: .8125rem;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--muted);
 }
 .seance__prix {
   font-family: var(--font-editorial);
   font-size: 1.5rem;
-  line-height: 1.1;
+  line-height: 1;
   color: var(--rust);
 }
 /* Ce qui est offert se dit en toutes lettres, jamais par un prix barre. */
 .seance__prix--offert { color: var(--lavender-dark); }
-.seance__quoi { margin: 1rem 0 0; font-size: .875rem; line-height: 1.65; color: var(--muted); }
+.seance__quoi {
+  margin: clamp(.9rem, 1.8vw, 1.15rem) 0 0;
+  font-size: .875rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
 
 /* Le telechargement de la fiche. Le PDF est un fichier du depot, fabrique
    par `outils/fiche-pdf.py` : le site ne calcule rien au clic et n'appelle
