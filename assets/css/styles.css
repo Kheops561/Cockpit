@@ -3404,7 +3404,16 @@ html:not(.js) .booking__confirm { display: none; }
   max-width: none;
   text-align: left;
 }
-.citation__bloc--panneau blockquote { margin: 0; }
+/* La phrase d'Amelie prend l'ecriture manuscrite de la carte postale posee
+   a cote : les deux se lisent comme une meme main, la sienne. C'est le seul
+   autre endroit du site ou cette police apparait. Elle est plus large que le
+   serif d'origine, d'ou une taille et un interligne repris pour elle. */
+.citation__bloc--panneau blockquote {
+  margin: 0;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: clamp(1.65rem, 3.4vw, 2.5rem);
+  line-height: 1.35;
+}
 .citation__bloc--panneau figcaption { margin-top: 1.5rem; }
 /* En element de grille, les marges automatiques de la carte la faisaient
    se retracter sur son contenu minimal. Dans ce duo, elle occupe sa
@@ -4195,10 +4204,40 @@ html:not(.js) .booking__confirm { display: none; }
 .cta__seconde a:hover { color: var(--lavender); border-color: var(--lavender); }
 
 
+/* Les langues dans lesquelles l'echange peut se tenir. Le drapeau precede
+   la langue ecrite : il aide a reperer, il ne remplace rien. */
+.langues {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem 1.1rem;
+  margin: 0;
+  padding-top: clamp(1rem, 2vw, 1.35rem);
+  border-top: 1px solid var(--line);
+  font-size: .875rem;
+  color: var(--muted);
+}
+.langues__mot { color: var(--muted); }
+.langue {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: var(--ink);
+}
+.langue .drapeau {
+  display: block;
+  width: 1.15rem;
+  height: auto;
+  border: 1px solid var(--line);
+}
+
 /* La bande « nous suivre » de la page contact : une troisieme voie, plus
    legere que reserver ou ecrire. Une bande, pas une carte : on n'attend pas
    de reponse d'un abonnement. */
 .suivre {
+  /* Elle vit dans la section des deux cartes : c'est cette marge-la, et
+     elle seule, qui l'en separe. */
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
   display: flex;
   flex-wrap: wrap;
   align-items: center;

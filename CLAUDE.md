@@ -102,8 +102,10 @@ garantie. Les méthodes non lancées restent confidentielles.
 Palette, typographie, échelle, points de rupture et composants : voir
 `DESIGN-SYSTEM.md`. Points essentiels : bleu nuit `#12283c`, ivoire `#f8f5ef`,
 lavande `#cbb5df` / `#75508f`, rouille `#a05234` ; Source Serif 4 pour les
-grands titres, Inter pour le reste, Caveat pour la seule carte postale de
-`a-propos.html`, son titre et ses noms de lieu. Angles francs, peu d’ombres, grands espaces. Chevrons
+grands titres, Inter pour le reste, Caveat pour la carte postale de
+`a-propos.html` — son titre et ses noms de lieu — et pour la phrase d’Amélie
+posée à côté d’elle. Ces deux blocs, et eux seuls : l’écriture manuscrite
+reste rare, c’est ce qui lui donne son poids. Angles francs, peu d’ombres, grands espaces. Chevrons
 vectoriels monochromes : aucun émoji, aucune flèche Unicode.
 
 ## Règles techniques non négociables
