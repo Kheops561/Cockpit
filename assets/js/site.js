@@ -783,6 +783,7 @@
       var corps = [
         'Nom : ' + nom,
         'Adresse e-mail : ' + valeur('courriel'),
+        'Téléphone : ' + (valeur('telephone') || 'non communiqué'),
         'Où j’en suis : ' + valeur('profil'),
         '',
         valeur('message'),

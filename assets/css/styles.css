@@ -40,7 +40,7 @@
   /* Hauteur de l'en-tête collant : les ancres et les barres collées
      doivent s'arrêter en dessous. */
   --header-h: 5.0625rem;
-  --section-y: clamp(4rem, 9vw, 8.5rem);
+  --section-y: clamp(3rem, 6vw, 6rem);
   --shadow: 0 24px 70px rgba(18, 40, 60, .11);
   --shadow-soft: 0 12px 40px rgba(18, 40, 60, .07);
 
@@ -141,7 +141,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 .wrap--narrow { max-width: calc(var(--wrap-narrow) + 2 * var(--gutter)); }
 
 .section { padding-block: var(--section-y); }
-.section--tight { padding-block: clamp(3rem, 6vw, 5.5rem); }
+.section--tight { padding-block: clamp(2.25rem, 4.5vw, 4rem); }
 /* Le bandeau de chiffres suit immédiatement le premier écran : il se serre
    contre lui, et laisse la section suivante fournir seule la respiration. */
 .section--chiffres { padding-block: clamp(2.5rem, 4.5vw, 4rem) 0; }
@@ -151,16 +151,30 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 .section--lavender { background: var(--lavender-soft); }
 
 .eyebrow {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: .85rem;
   font-family: var(--font-body);
   font-size: .75rem;
   font-weight: 600;
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--lavender-dark);
+  color: var(--rust);
   margin-bottom: 1.1rem;
 }
-.section--ink .eyebrow { color: var(--lavender); }
+/* Un filet court ouvre le surtitre, comme un tiret de rubrique. */
+.eyebrow::before {
+  content: "";
+  flex: none;
+  width: clamp(1.5rem, 2.5vw, 2.5rem);
+  height: 1px;
+  background: currentColor;
+}
+/* Sur fond bleu nuit, la rouille ne tiendrait pas : le surtitre repasse en
+   lavande, seule teinte de la palette lisible sur ce fond. */
+.section--ink .eyebrow,
+.cta .eyebrow,
+.citation .eyebrow { color: var(--lavender); }
 .eyebrow--rust { color: var(--rust); }
 
 .display { font-size: var(--type-display); }
@@ -183,15 +197,43 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 }
 .section--ink .note { color: rgba(255, 255, 255, .6); }
 
-.section-head { max-width: 46rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+.section-head { max-width: 46rem; margin-bottom: clamp(1.75rem, 3vw, 2.75rem); }
 .section-head--center { margin-inline: auto; text-align: center; }
 .section-head .lead { margin-top: 1.4rem; }
 .section-head--center .lead { margin-inline: auto; }
 
+/* Le nom de la partie passe a gauche, en caracteres editoriaux : il tient
+   la colonne comme un titre courant, et le titre lui repond a droite. La
+   mise en page ne s'enclenche que la ou les deux colonnes respirent ; en
+   dessous, le nom reste le petit surtitre habituel, au-dessus du titre. */
+@media (min-width: 1080px) {
+  /* Seuls les chapeaux qui portent un nom de partie passent sur deux
+     colonnes : sans lui, la colonne de gauche resterait vide et le texte
+     paraitrait decale sans raison. */
+  .section-head:not(.section-head--center):has(> .eyebrow) {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: start;
+    max-width: none;
+  }
+  .section-head:not(.section-head--center):has(> .eyebrow) > * { grid-column: 2; }
+  .section-head:not(.section-head--center) > .eyebrow {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    align-items: flex-start;
+    line-height: 1.6;
+  }
+  /* Dans le rail, le filet se cale sur la premiere ligne du texte. */
+  .section-head:not(.section-head--center) > .eyebrow::before { margin-top: .55rem; }
+  .section-head:not(.section-head--center):has(> .eyebrow) > .lead { max-width: 46rem; }
+}
+
 .rule { height: 1px; background: var(--line); border: 0; }
 .stack > * + * { margin-top: 1.15rem; }
 
-.grid { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
+.grid { display: grid; gap: clamp(1.25rem, 2.2vw, 2rem); }
 .grid--2 { grid-template-columns: 1fr; }
 .grid--3 { grid-template-columns: 1fr; }
 .grid--4 { grid-template-columns: 1fr; }
@@ -649,7 +691,7 @@ a:focus-visible .frame--zoom img { transform: scale(1.06); }
 
 /* ----------------------------------------------------------- 9 duo texte + image */
 
-.split { display: grid; gap: clamp(2.5rem, 5vw, 4.5rem); align-items: center; }
+.split { display: grid; gap: clamp(2rem, 3.5vw, 3.25rem); align-items: center; }
 @media (min-width: 900px) {
   .split { grid-template-columns: 1fr 1fr; }
   .split--wide-media { grid-template-columns: 1fr 1.15fr; }
@@ -1092,6 +1134,14 @@ a.card:hover,
 .field input:focus,
 .field select:focus,
 .field textarea:focus { border-color: var(--lavender-dark); }
+.field__note {
+  font-weight: 400;
+  letter-spacing: .04em;
+  text-transform: lowercase;
+  color: var(--muted);
+}
+.field__note::before { content: "\00b7"; margin-inline: .35rem; }
+
 .field--inline { display: flex; align-items: flex-start; gap: .75rem; }
 .field--inline input { margin-top: .3rem; }
 .field--inline label { font-weight: 400; color: var(--muted); font-size: .8125rem; line-height: 1.6; }
@@ -1786,7 +1836,9 @@ html:not(.js) .booking__confirm { display: none; }
   position: absolute;
   top: 0;
   bottom: 0;
-  left: clamp(.75rem, calc((100vw - var(--wrap)) / 2 - 9rem), 3rem);
+  /* Le fil longe la colonne de lecture : il se place juste a gauche du
+     texte, et non contre le bord de la fenetre. */
+  left: max(.75rem, calc((100vw - var(--wrap)) / 2 + var(--gutter) - 2.75rem));
   width: 1px;
   z-index: 5;
   pointer-events: none;
@@ -1813,7 +1865,6 @@ html:not(.js) .booking__confirm { display: none; }
   left: 0;
   display: flex;
   align-items: center;
-  gap: .85rem;
   transform: translateY(-50%);
   white-space: nowrap;
 }
@@ -1839,8 +1890,14 @@ html:not(.js) .booking__confirm { display: none; }
 }
 
 .timeline__label {
-  /* Le fil longe maintenant des blocs pleine largeur : sans ce coussin
-     ivoire, le libellé se perdrait sur une photographie. */
+  /* Le libellé se pose à gauche du repère, dans la marge : à droite, il
+     viendrait buter contre le texte. Le coussin ivoire le garde lisible
+     lorsque le fil longe une photographie. */
+  position: absolute;
+  right: 1.1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: right;
   background: var(--paper);
   box-shadow: 0 0 0 .3rem var(--paper);
   display: none;
@@ -1851,7 +1908,9 @@ html:not(.js) .booking__confirm { display: none; }
   transition: color .45s var(--ease), opacity .45s var(--ease);
   opacity: .55;
 }
-@media (min-width: 1400px) { .timeline__label { display: block; } }
+/* Le libellé ne paraît que là où la marge peut vraiment l'accueillir :
+   en dessous, il sortirait de l'écran par la gauche. */
+@media (min-width: 1800px) { .timeline__label { display: block; } }
 .timeline__step.is-passed .timeline__label { opacity: 1; }
 .timeline__step.is-current .timeline__label { color: var(--ink); opacity: 1; }
 
@@ -2599,4 +2658,36 @@ html:not(.js) .booking__confirm { display: none; }
     visibility: hidden;
   }
   .js.premiere-visite .voile__marque { animation: none; }
+}
+
+/* ==========================================================================
+   36 · La citation pleine largeur
+   Une phrase d'Amelie, posee sur toute la largeur, sur fond bleu nuit. Les
+   paroles gardent sa voix : le texte est repris tel quel, avec son
+   attribution.
+   ========================================================================== */
+
+.citation {
+  background: var(--ink);
+  color: var(--white);
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+  margin-block: clamp(2.5rem, 5vw, 4.5rem);
+}
+.citation__bloc { margin: 0; }
+.citation blockquote {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(1.5rem, 3.1vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--white);
+  max-width: 34ch;
+  text-wrap: balance;
+}
+.citation figcaption {
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: .75rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .62);
 }
