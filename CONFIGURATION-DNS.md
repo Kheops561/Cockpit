@@ -372,5 +372,13 @@ c'est un arbitrage, pas un obstacle technique.
   « à compléter » qui l'accompagne disparaître.
 - **Le bureau d'enregistrement du domaine**, cité dans les mentions légales :
   OVH, à confirmer.
-- **La région de diffusion Vercel**, également citée dans les mentions
-  légales et sur la page « Données personnelles ».
+- **La région de la fonction est arrêtée** : Paris (`cdg1`), fixée dans
+  `vercel.json`. Les pages, elles, restent distribuées par le réseau mondial
+  de l'hébergeur — ce sont des fichiers publics, sans donnée personnelle, et
+  cette distribution ne se choisit pas : c'est le principe d'un réseau de
+  diffusion.
+
+  Attention : ce réglage prend effet **au déploiement suivant**. Si l'offre du
+  projet ne permettait pas de choisir la région, le déploiement le signalerait
+  et la fonction resterait dans la région par défaut, `iad1`, aux États-Unis —
+  auquel cas les mentions légales devraient être corrigées.
