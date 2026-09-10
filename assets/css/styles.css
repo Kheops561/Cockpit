@@ -184,6 +184,8 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 .cta .eyebrow,
 .citation .eyebrow { color: var(--lavender); }
 .eyebrow--rust { color: var(--rust); }
+/* Lavande sombre : 5,85:1 sur l'ivoire, 5,35:1 sur l'ivoire secondaire. */
+.eyebrow--lavande { color: var(--lavender-dark); }
 
 .display { font-size: var(--type-display); }
 .title { font-size: var(--type-title); }
@@ -1559,11 +1561,48 @@ a.card:hover,
   .frame--zoom:hover img { transform: none; }
 }
 
-/* Impression : contenu lisible, décors retirés */
+/* Impression : contenu lisible, décors retirés.
+   Ces règles servent deux usages : l'impression par le visiteur, et la
+   fabrication du PDF de la fiche pédagogique (`outils/fiche-pdf.py`), qui
+   imprime la page dans un navigateur sans en-tête ni pied de site. */
 @media print {
-  .header, .footer, .drawer, .marquee-controls, .hero__media, .cta__media { display: none !important; }
+  .header, .footer, .drawer, .marquee-controls,
+  .hero__media, .cta__media, .voile, .skip,
+  .cta, .booking, .modale,
+  .telechargement, .diapos__commandes, .carrousel__commandes,
+  .videobtn, .apercu-note { display: none !important; }
+
+  html { font-size: 92%; }
   body { background: #fff; color: #000; }
-  .reveal { opacity: 1; transform: none; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+
+  /* Les fonds colorés ne s'impriment pas : le papier fait le fond. */
+  .section, .section--paper-soft, .section--ink { background: #fff; color: #000; }
+  .section { padding-block: 1.25rem; }
+  .hero { background: #fff; color: #000; padding-block: 0 1.5rem; min-height: 0; }
+  .hero h1, .section--ink h1, .section--ink h2, .section--ink h3 { color: #000; }
+  .wrap { width: 100%; max-width: none; padding-inline: 0; }
+
+  /* Le duo texte + aside repasse en une colonne : l'aside répète ce que
+     les modules disent déjà, il ne va pas au papier. */
+  .split { display: block; }
+  .prose { max-width: none; }
+  aside { display: none !important; }
+
+  /* Rien ne doit se couper au milieu d'une idée. */
+  .repere, .objectif, .module, .module__cle, .callout,
+  .programme__lien, .vigilance li { break-inside: avoid; }
+  .module { break-before: auto; }
+  h1, h2, h3 { break-after: avoid; }
+
+  /* Le programme mène à des ancres : sur papier, il reste une table des
+     matières, sans le décor du lien. */
+  .programme__lien { color: #000; text-decoration: none; }
+  .programme__lien .icon { display: none; }
+
+  .reperes { border-color: #999; }
+  .repere { border-color: #999; }
+  .prix, .card, .callout, .module__cle { background: #fff; }
 }
 
 /* ==========================================================================
@@ -3096,7 +3135,16 @@ html:not(.js) .booking__confirm { display: none; }
    l'autre, sans qu'aucune mesure soit nécessaire.
    ========================================================================== */
 
-.diapo { margin-top: clamp(3.5rem, 7vw, 6rem); scroll-margin-top: calc(var(--header-h) + 2rem); }
+/* Chaque format est posé dans son propre encadré : d'un coup d'œil, on voit
+   où commence et où finit une prestation. */
+.diapo {
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+  scroll-margin-top: calc(var(--header-h) + 2rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  align-items: center;
+}
 .diapos__piste > .diapo:first-child { margin-top: clamp(2rem, 4vw, 3rem); }
 /* Un format sur deux inverse image et texte, tant qu'ils se suivent. */
 .diapos:not(.est-defilante) .diapos__piste > .diapo:nth-child(even) > :first-child { order: 2; }
@@ -3234,6 +3282,53 @@ html:not(.js) .booking__confirm { display: none; }
   line-height: 1.4;
   color: var(--ink);
 }
+
+/* Les seances ouvertes a la reservation : leur duree, leur prix, ce qu'elles
+   couvrent. Une liste de definitions serait plus juste encore, mais chaque
+   entree porte trois informations de nature differente : la liste simple
+   reste la lecture la plus claire. */
+.seances { margin: clamp(1.5rem, 3vw, 2rem) 0 0; padding: 0; list-style: none; }
+.seance { padding-block: clamp(1.1rem, 2.2vw, 1.5rem); border-top: 1px solid var(--line); }
+.seance:last-child { border-bottom: 1px solid var(--line); }
+.seance__nom {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: var(--type-card);
+  color: var(--ink);
+}
+.seance__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .5rem .9rem;
+  margin: .55rem 0 0;
+}
+.seance__duree {
+  font-size: .75rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.seance__prix {
+  font-family: var(--font-editorial);
+  font-size: 1.125rem;
+  color: var(--rust);
+}
+/* Ce qui est offert se dit en toutes lettres, jamais par un prix barre. */
+.seance__prix--offert { color: var(--lavender-dark); }
+.seance__quoi { margin: .7rem 0 0; font-size: .9375rem; color: var(--muted); }
+
+/* Le telechargement de la fiche. Le PDF est un fichier du depot, fabrique
+   par `outils/fiche-pdf.py` : le site ne calcule rien au clic et n'appelle
+   aucun service. Le lien fonctionne donc sans JavaScript. */
+.telechargement {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .9rem clamp(1.25rem, 2.5vw, 2rem);
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+.telechargement .note { margin: 0; max-width: 42ch; }
 
 /* Les objectifs : ce que la fiche permet de faire, une fois lue. */
 .objectifs {

@@ -48,6 +48,21 @@ base et d’une période auditées.
 - [ ] Fournir une version vectorielle du logo (`.svg`) si elle existe : plus
       nette sur les écrans à forte densité, et plus légère.
 
+## Tarifs et durées · écart relevé avec Calendly
+
+- [ ] **Le prix du Diagnostic Stratégique.** Le site affiche `450 € HT`, chiffre
+      de `CLAUDE.md` et de l’offre de référence. La page Calendly fournie
+      affiche `432 € EUR`. Les deux ne se recoupent pas : 450 € HT font 540 €
+      TTC, et 432 € TTC correspondent à 360 € HT. Le site n’a pas été modifié :
+      dire lequel fait foi.
+- [ ] **La durée du Diagnostic Stratégique.** Le site annonce
+      `75 minutes` ; Calendly annonce `1 h`. Le site n’a pas été modifié.
+- [ ] Confirmer que la mention `HT` est la bonne pour une clientèle de
+      particuliers, qui raisonne d’ordinaire en TTC.
+- [ ] Relire les conditions générales de vente (`cgv.html`) avec un
+      professionnel du droit. Le modèle fourni parlait du « mentor » ; le texte
+      est repris au nom d’Amélie & Partners, sans changer la substance.
+
 ## Visuels et vidéos
 
 - [ ] Valider le choix et le cadrage des photographies fournies. Chacune sert

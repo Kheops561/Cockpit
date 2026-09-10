@@ -124,13 +124,13 @@ vectoriels monochromes : aucun émoji, aucune flèche Unicode.
 
 ## Où modifier
 
-- Pages : les douze fichiers `.html` à la racine.
+- Pages : les treize fichiers `.html` à la racine.
 - Mise en forme : `assets/css/styles.css`, sections numérotées.
 - Comportements : `assets/js/site.js`.
 - Visuels : `assets/images/` et `assets/videos/`, voir `GUIDE-VISUELS.md`.
 
 L’en-tête et le pied de page sont **répétés dans chaque page**. Une
-modification de navigation doit être reportée dans les douze fichiers.
+modification de navigation doit être reportée dans les treize fichiers.
 
 ## Méthode obligatoire avant livraison
 
