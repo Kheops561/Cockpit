@@ -68,8 +68,11 @@ base et d’une période auditées.
 - [x] Dénomination sociale : **AMÉLIE ET PARTNERS**, nom commercial
       **AMÉLIE & PARTNERS**.
 - [x] SIREN : **940 688 377**.
-- [x] Hébergeur : **Vercel Inc.**, 440 N Barranca Ave #4133, Covina,
-      CA 91723, États-Unis.
+- [x] Hébergeur : **OVH**.
+- [ ] Raison sociale exacte, adresse du siège et numéro d’immatriculation
+      d’OVH, à recopier depuis la page légale d’OVHcloud : je n’ai pas pu
+      les vérifier, l’accès au web est bloqué depuis cet environnement.
+- [ ] Centre de données retenu, pour pouvoir écrire où sont les serveurs.
 - [ ] Forme juridique et capital social.
 - [ ] Adresse du siège.
 - [ ] SIRET du siège, greffe du RCS et date d’immatriculation.
@@ -90,7 +93,8 @@ toutes les autres lignes restent marquées « à compléter » dans la page.
 - [ ] Médiateur de la consommation, si l’activité y est soumise.
 - [ ] Politique de confidentialité complétée.
 - [x] Calendly : prestataire déclaré, avec un lien vers sa politique.
-- [x] Hébergeur : Vercel, déclaré.
+- [x] Hébergeur : OVH, déclaré. Serveurs dans l’Union européenne, donc
+      aucun transfert hors UE à déclarer de ce fait.
 - [ ] Reste à déclarer : messagerie, mesure d’audience, CRM éventuel.
 - [ ] Durées de conservation et base légale des données.
 - [ ] Bandeau de consentement installé **avant** tout traceur non essentiel.
