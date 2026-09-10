@@ -34,7 +34,7 @@ Points à régler côté hébergeur :
 index.html                 Accueil
 approche.html              Notre approche (récapitulatif des 5 étapes)
 accompagnements.html       Les quatre accompagnements
-diagnostic.html            Diagnostic Stratégique · 450 € HT
+diagnostic.html            Diagnostic Stratégique · 432 € TTC
 ressources.html            La bibliothèque
 ressource-3-effets.html    Ressource « Les 3 effets dans l’immobilier »
 temoignages.html           Les huit témoignages, en pile de cartes

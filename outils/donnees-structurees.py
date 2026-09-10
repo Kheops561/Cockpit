@@ -36,9 +36,9 @@ ORGANISATION = {
         "name": "Diagnostic Stratégique",
         "description": "Questionnaire préparatoire, session stratégique de 75 minutes "
                        "et Note de Diagnostic & Décision.",
-        "price": "450",
+        "price": "432",
         "priceCurrency": "EUR",
-        "valueAddedTaxIncluded": False,
+        "valueAddedTaxIncluded": True,
         "url": SITE + "/diagnostic.html",
     }],
 }
@@ -55,9 +55,9 @@ SERVICE = {
                    "session de 75 minutes et Note de Diagnostic & Décision.",
     "offers": {
         "@type": "Offer",
-        "price": "450",
+        "price": "432",
         "priceCurrency": "EUR",
-        "valueAddedTaxIncluded": False,
+        "valueAddedTaxIncluded": True,
         "url": SITE + "/diagnostic.html",
     },
 }

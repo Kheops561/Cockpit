@@ -21,7 +21,9 @@ confirmés par Amélie avant de considérer la publication comme définitive.
       politique de confidentialité est citée sur la page « Données
       personnelles » et dans les mentions légales.
 - [ ] Durée du premier échange : 30 minutes.
-- [ ] Prix du Diagnostic Stratégique : `450 € HT / diagnostic`.
+- [x] Prix du Diagnostic Stratégique : **432 € TTC**, validé par Amélie le
+      10 septembre 2026. Repris sur toutes les pages et dans les données
+      structurées, qui déclarent désormais la TVA comprise.
 - [ ] Zone d’intervention : Paris pour la recherche ; France au cas par cas
       pour la stratégie et l’arbitrage.
 
@@ -48,17 +50,18 @@ base et d’une période auditées.
 - [ ] Fournir une version vectorielle du logo (`.svg`) si elle existe : plus
       nette sur les écrans à forte densité, et plus légère.
 
-## Tarifs et durées · écart relevé avec Calendly
+## Tarifs et durées
 
-- [ ] **Le prix du Diagnostic Stratégique.** Le site affiche `450 € HT`, chiffre
-      de `CLAUDE.md` et de l’offre de référence. La page Calendly fournie
-      affiche `432 € EUR`. Les deux ne se recoupent pas : 450 € HT font 540 €
-      TTC, et 432 € TTC correspondent à 360 € HT. Le site n’a pas été modifié :
-      dire lequel fait foi.
-- [ ] **La durée du Diagnostic Stratégique.** Le site annonce
-      `75 minutes` ; Calendly annonce `1 h`. Le site n’a pas été modifié.
-- [ ] Confirmer que la mention `HT` est la bonne pour une clientèle de
-      particuliers, qui raisonne d’ordinaire en TTC.
+- [x] **Le prix du Diagnostic Stratégique** est arrêté à **432 € TTC**
+      (Amélie, 10 septembre 2026). Le site affichait `450 € HT` ; tout est
+      aligné, mention `TTC` comprise.
+- [ ] **La durée du Diagnostic Stratégique reste à trancher.** Le site annonce
+      `75 minutes`, Calendly annonce `1 h`. Le site n’a **pas** été modifié :
+      dire laquelle fait foi. Elle apparaît sur `diagnostic.html`,
+      `accompagnements.html`, `contact.html` et dans la description de
+      référencement.
+- [ ] Vérifier que `432 € TTC` correspond bien à `360 € HT` dans votre
+      comptabilité, et si le montant HT doit figurer à côté.
 - [ ] Relire les conditions générales de vente (`cgv.html`) avec un
       professionnel du droit. Le modèle fourni parlait du « mentor » ; le texte
       est repris au nom d’Amélie & Partners, sans changer la substance.
@@ -68,17 +71,16 @@ base et d’une période auditées.
 - [ ] **Le portrait ajouté sur `diagnostic.html`** (`portrait-amelie-jardin.jpg`)
       doit-il aussi remplacer le portrait principal de l’accueil et de la page
       « À propos » ? Aujourd’hui les deux coexistent.
-- [ ] **La photographie « I LOVE YOU » proposée pour les témoignages n’a pas
-      été installée**, pour deux raisons à trancher :
-      son sujet est une œuvre de Mr Brainwash, signée et numérotée 55/100,
-      qui occupe tout le cadre : la publier sur un site commercial est une
-      question de droits à valider ; et le registre de la marque est « calme,
-      précision, méthode », alors que la mention imprimée sur l’œuvre,
-      « Terms and conditions may vary », se lirait comme une réserve ironique
-      sur une page de témoignages.
-- [ ] Le bandeau de la page témoignages emploie des vues de rue où des
-      passants figurent. La mention précise qu’elles ne représentent pas les
-      personnes citées. Confirmer que cette formulation convient.
+- [ ] **Droits sur la photographie « I Love You »** (`temoignages-vitrine.jpg`).
+      Elle est installée à votre demande, après réserve de ma part. Son sujet
+      est une œuvre de Mr Brainwash, signée et numérotée 55/100, qui occupe
+      tout le cadre : ce n’est pas un décor incident. La publier sur un site
+      commercial demande de vérifier les droits de reproduction. L’œuvre est
+      créditée en légende ; une mention n’est pas une autorisation.
+- [ ] **Lisibilité de la mention imprimée sur l’œuvre.** On y lit
+      « Terms and conditions may vary ». Sur une page de témoignages, à côté
+      de résultats rapportés, cette phrase peut se lire comme une réserve
+      ironique. À relire à l’écran avant la mise en ligne.
 
 - [ ] Valider le choix et le cadrage des photographies fournies. Chacune sert
       à plusieurs endroits : voir le tableau de `GUIDE-VISUELS.md`.
