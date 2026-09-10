@@ -90,7 +90,20 @@
     
     
   </div>
+
+  <!-- Descendre au contenu. C'est un lien vers une ancre, rien d'autre :
+       il fonctionne sans JavaScript, et le chevron est un trace vectoriel,
+       pas un caractere. Son libelle est lu par les lecteurs d'ecran ; il
+       reste hors du parcours de lecture au clavier une fois passe, puisqu'il
+       vient apres le titre du bandeau. -->
+  <a class="hero__suite" href="#suite">
+    <span class="sr-only">Descendre au contenu</span>
+    <span class="hero__suite-rond" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" focusable="false"><path d="M6 9.5 12 15.5 18 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg>
+    </span>
+  </a>
 </section>
+<span class="ancre-suite" id="suite" aria-hidden="true"></span>
 <section class="section">
   <div class="wrap">
     <p class="lead reveal" style="margin-bottom:clamp(2.5rem,5vw,4rem)">La bibliothèque rassemble progressivement des analyses, des réflexes terrain et des outils simples autour d&rsquo;un même sujet&nbsp;: la maîtrise du capital immobilier.</p>
@@ -202,6 +215,9 @@
         <h2>Votre capital est-il encore placé au bon endroit&nbsp;?</h2>
         <p class="lead">Le Diagnostic Stratégique applique cette lecture à votre situation, avec vos chiffres et vos contraintes.</p>
         <div class="btn-row"><a class="btn btn--light" href="diagnostic.html"><span>Découvrir le Diagnostic Stratégique</span><svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="square"/></svg></a></div>
+        <!-- La seconde voie, ecrite en toutes lettres plutot qu'en second
+             bouton : le bandeau garde une seule action principale. -->
+        <p class="cta__seconde">Vous préférez écrire&nbsp;? <a href="formulaire.html">Passez par le formulaire</a>.</p>
       </div>
       
     </div>

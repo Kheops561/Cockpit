@@ -90,7 +90,20 @@
     
     
   </div>
+
+  <!-- Descendre au contenu. C'est un lien vers une ancre, rien d'autre :
+       il fonctionne sans JavaScript, et le chevron est un trace vectoriel,
+       pas un caractere. Son libelle est lu par les lecteurs d'ecran ; il
+       reste hors du parcours de lecture au clavier une fois passe, puisqu'il
+       vient apres le titre du bandeau. -->
+  <a class="hero__suite" href="#suite">
+    <span class="sr-only">Descendre au contenu</span>
+    <span class="hero__suite-rond" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" focusable="false"><path d="M6 9.5 12 15.5 18 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg>
+    </span>
+  </a>
 </section>
+<span class="ancre-suite" id="suite" aria-hidden="true"></span>
 <section class="section formulaire-fond">
   <!-- La photographie est un decor : elle ne porte aucune information, d'ou
        le texte alternatif vide et l'`aria-hidden`. Un voile ivoire passe

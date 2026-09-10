@@ -353,21 +353,22 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
    cercle jusqu'a couvrir le bouton entier ; le cadre etant a angles
    francs, le disque y est retaille. Le mouvement remplace le volet qui
    montait par le bas. */
+/* La pastille n'est plus un petit disque qu'on agrandit : c'etait un facteur
+   d'echelle fixe, calcule pour un bouton de largeur ordinaire, et il laissait
+   la droite d'un bouton large — celui du Diagnostic, sur toute la colonne —
+   sans remplissage. Le fond couvre desormais tout le bouton, et c'est sa
+   decoupe qui s'ouvre : un rayon de 150 % couvre n'importe quelle largeur. */
 .btn::after {
   content: "";
   position: absolute;
-  left: 1.4rem;
-  top: 50%;
-  width: .4375rem;
-  height: .4375rem;
-  border-radius: 50%;
+  inset: 0;
   background: var(--btn-fill, var(--lavender-dark));
-  transform: translate(-50%, -50%);
-  transition: transform .55s cubic-bezier(.22, .61, .36, 1);
+  clip-path: circle(.22rem at 1.4rem 50%);
+  transition: clip-path .55s cubic-bezier(.22, .61, .36, 1);
   z-index: 0;
 }
 .btn:hover::after,
-.btn:focus-visible::after { transform: translate(-50%, -50%) scale(120); }
+.btn:focus-visible::after { clip-path: circle(150% at 1.4rem 50%); }
 .btn:hover,
 .btn:focus-visible { color: var(--white); border-color: var(--btn-fill, var(--lavender-dark)); }
 .btn:active { transform: translateY(1px); }
@@ -388,15 +389,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   .btn::after { transition: none; }
   .btn:hover::after,
-  .btn:focus-visible::after {
-    transform: none;
-    inset: 0;
-    left: 0;
-    top: 0;
-    width: auto;
-    height: auto;
-    border-radius: 0;
-  }
+  .btn:focus-visible::after { clip-path: none; }
   .btn .icon { transition: none; }
 }
 
@@ -1488,7 +1481,16 @@ a.card:hover,
   padding: .35rem .7rem;
 }
 .tag--rust { color: var(--rust); }
-.tag--soon { color: var(--muted); }
+/* « En préparation » n'est pas une mention de service : c'est une promesse
+   de lecture a venir. L'etiquette prend donc la lavande de la marque, sur
+   son fond clair, au lieu du gris ou elle se perdait — d'autant qu'elle est
+   posee sur une photographie. */
+.tag--soon {
+  color: var(--lavender-dark);
+  background: var(--lavender-soft);
+  border-color: var(--lavender-dark);
+  font-weight: 500;
+}
 
 .disclaimer {
   border-left: 2px solid var(--line-strong);
@@ -4118,4 +4120,84 @@ html:not(.js) .booking__confirm { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .js .recu[open] { animation: none; }
+}
+
+
+/* La seconde voie du bandeau de fin : ecrite, discrete, sur fond bleu nuit. */
+.cta__seconde {
+  margin: 1.25rem 0 0;
+  font-size: .875rem;
+  color: rgba(255, 255, 255, .72);
+}
+.cta__seconde a {
+  color: var(--white);
+  border-bottom: 1px solid var(--lavender);
+}
+.cta__seconde a:hover { color: var(--lavender); border-color: var(--lavender); }
+
+
+/* ==========================================================================
+   46 · Descendre au contenu
+   Un chevron au bas du bandeau, qui mene a la premiere section. C'est un
+   lien vers une ancre : il fonctionne sans JavaScript, et le defilement doux
+   est celui du site, deja neutralise en mouvement reduit.
+   ========================================================================== */
+
+/* L'ancre est posee juste apres le bandeau. Elle ne porte pas de retrait
+   propre : `html` a deja un `scroll-padding-top` qui degage l'en-tete
+   collant, et les deux s'additionneraient. */
+.ancre-suite { display: block; }
+
+.hero__suite {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.1rem, 2.5vw, 1.75rem);
+  z-index: 2;
+  transform: translateX(-50%);
+  display: inline-flex;
+  color: var(--white);
+}
+.hero__suite-rond {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--line-light);
+  border-radius: 50%;
+  background: rgba(18, 40, 60, .28);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: background-color .35s var(--ease), border-color .35s var(--ease),
+              transform .35s var(--ease);
+}
+.hero__suite-rond svg { width: 1.25rem; height: 1.25rem; }
+.hero__suite:hover .hero__suite-rond,
+.hero__suite:focus-visible .hero__suite-rond {
+  background: var(--lavender-dark);
+  border-color: var(--lavender-dark);
+  transform: translateY(3px);
+}
+
+/* Un battement tres lent, arme seulement sous `html.js` : il signale que le
+   chevron invite a descendre, sans jamais reclamer l'attention. */
+.js .hero__suite-rond { animation: suite-respirer 2.8s var(--ease) infinite; }
+@keyframes suite-respirer {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+/* Au survol et au focus, le battement s'arrete : le chevron repond au geste
+   plutot que de continuer sa boucle. */
+.js .hero__suite:hover .hero__suite-rond,
+.js .hero__suite:focus-visible .hero__suite-rond { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .hero__suite-rond { animation: none; }
+  .hero__suite-rond { transition: none; }
+}
+
+/* Sur un ecran bas — un telephone en paysage —, le bandeau n'a plus la place
+   de loger un chevron sous son texte. */
+@media (max-height: 520px) {
+  .hero__suite { display: none; }
 }
