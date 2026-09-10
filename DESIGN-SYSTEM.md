@@ -156,6 +156,27 @@ Trois compléments récents :
 - `.page-<nom>` : chaque page porte sa classe sur `<body>`, ce qui permet de
   régler une page seule. `a-propos` s’en sert pour resserrer sa colonne à
   1180 px.
+- La fiche pédagogique se lit en deux colonnes : le sommaire tient la gauche
+  et suit la lecture (`position: sticky`), le texte défile à droite. Le
+  sommaire vient en premier dans le document, ce qui est aussi son ordre au
+  clavier. Les deux colonnes gardent la même hauteur : sans cela le sommaire,
+  aussi court que son contenu, n’aurait aucune course et son maintien en
+  place serait sans effet.
+- La fiche se télécharge en PDF et se partage par `mailto:` avec un message
+  déjà rédigé. Rien n’est calculé au clic, aucun service n’est appelé : les
+  deux liens fonctionnent sans JavaScript.
+- `overflow-x: clip` plutôt que `hidden` sur le corps du document : le
+  débordement latéral est retenu de la même façon, mais le corps ne devient
+  pas une zone de défilement, ce qui préserve le comportement des éléments
+  collés à l’écran. Repli en `hidden` là où `clip` n’existe pas.
+- Le planning du Diagnostic (`.planning`) : un fil horizontal porte quatre
+  moments datés ; sous 900 px le fil se redresse en colonne. C’est une liste
+  ordonnée, lisible sans la moindre feuille de style.
+- Les verdicts portent un cachet tracé à l’apparition, retracé au survol.
+  Purement ornemental : le nom du verdict et son explication sont écrits
+  juste en dessous. Neutralisé sous `prefers-reduced-motion`.
+- Les liens du pied de page se tiennent comme ceux du menu de tête : pas de
+  trait permanent, un filet lavande qui se déroule au survol et au focus.
 - Le formulaire de contact : chaque champ porte un pictogramme dans sa marge
   gauche, deux champs courts tiennent sur une ligne (`.form__duo`), et le
   champ visé prend un halo lavande. Les messages d’erreur s’écrivent sous

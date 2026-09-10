@@ -76,7 +76,16 @@ body {
   line-height: 1.65;
   font-synthesis-weight: none;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* `clip` plutot que `hidden` : le debordement horizontal est retenu de la
+     meme facon, mais le corps du document ne devient pas une zone de
+     defilement. Avec `hidden`, tout element colle a l'ecran cessait de
+     tenir en place, faute de se reperer sur la fenetre. */
+  overflow-x: clip;
+}
+/* Navigateur sans `overflow: clip` : on retombe sur `hidden`, au prix du
+   maintien en place, mais sans debordement lateral. */
+@supports not (overflow-x: clip) {
+  body { overflow-x: hidden; }
 }
 
 h1, h2, h3, h4 {
@@ -771,7 +780,11 @@ a:focus-visible .frame--zoom img { transform: scale(1.06); }
   padding: clamp(1.75rem, 2.6vw, 2.5rem);
   transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .5s var(--ease);
 }
-.card__num {
+/* Le rang de la carte. La regle est portee par `.card .card__num` : sans
+   cela `.card p`, plus specifique, ramenait ce texte au gris courant, et la
+   lavande voulue ici ne s'appliquait jamais. */
+.card__num,
+.card .card__num {
   font-family: var(--font-editorial);
   font-size: .875rem;
   letter-spacing: .12em;
@@ -1233,6 +1246,167 @@ a.card:hover,
 }
 .verdict p { font-size: .875rem; color: var(--muted); }
 
+/* Le cachet du verdict : un anneau et une coche, tracés quand la carte
+   paraît, puis retracés au survol. C'est un ornement : le nom du verdict
+   et son explication sont écrits juste en dessous, et rien ne dépend de
+   ce dessin. */
+.verdict { position: relative; transition: background-color .4s var(--ease); }
+.verdict:hover { background: var(--white); }
+.verdict__cachet {
+  display: block;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-bottom: 1rem;
+  color: var(--lavender-dark);
+}
+.verdict__cachet svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.verdict__anneau,
+.verdict__coche {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.verdict__anneau { opacity: .45; }
+
+/* Sans JavaScript, ou avant l'apparition, le cachet est simplement dessiné.
+   Le tracé animé n'est armé que sous `html.js`, comme le reste. */
+.js .verdict .verdict__anneau { stroke-dasharray: 107; stroke-dashoffset: 107; }
+.js .verdict .verdict__coche { stroke-dasharray: 22; stroke-dashoffset: 22; }
+.js .verdict.is-visible .verdict__anneau { animation: cachet-tracer .7s var(--ease) forwards; }
+.js .verdict.is-visible .verdict__coche { animation: cachet-tracer .45s var(--ease) .5s forwards; }
+@keyframes cachet-tracer { to { stroke-dashoffset: 0; } }
+.verdict:hover .verdict__cachet,
+.verdict:focus-within .verdict__cachet { color: var(--rust); }
+
+@media (prefers-reduced-motion: reduce) {
+  .verdict { transition: none; }
+  /* Aucun tracé : le cachet est là, entier, dès le départ. */
+  .js .verdict .verdict__anneau,
+  .js .verdict .verdict__coche { stroke-dasharray: none; stroke-dashoffset: 0; animation: none; }
+}
+
+/* Les trois promesses du premier écran, en file. */
+.promesses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem 1.5rem;
+  margin: clamp(1.5rem, 3vw, 2rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.promesses li {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .8125rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.promesses li::before {
+  content: "";
+  flex: none;
+  width: .3125rem;
+  height: .3125rem;
+  border-radius: 50%;
+  background: var(--rust);
+}
+
+/* --------------------------------------------------------- 41 le planning
+   Le déroulé du Diagnostic se lit comme un planning : un fil horizontal
+   porte les quatre moments, chacun daté puis détaillé. Sur petit écran le
+   fil se redresse et devient une colonne. C'est une liste ordonnée : sans
+   la moindre feuille de style, l'ordre reste lisible. */
+.planning {
+  display: grid;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: planning;
+}
+@media (min-width: 900px) { .planning { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; } }
+
+.planning__etape { position: relative; }
+@media (min-width: 900px) {
+  .planning__etape { padding-inline: clamp(1rem, 1.8vw, 1.75rem); }
+  .planning__etape:first-child { padding-left: 0; }
+  .planning__etape:last-child { padding-right: 0; }
+}
+
+/* Le moment : « Avant », « Le jour J », « Après ». Il coiffe le fil. */
+.planning__moment {
+  margin: 0;
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--lavender-dark);
+}
+
+/* Le fil et son point. Le fil court d'un point au suivant, jamais au-delà
+   du premier ni du dernier. */
+.planning__point {
+  position: absolute;
+  top: 2.05rem;
+  left: 0;
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: var(--rust);
+  z-index: 1;
+}
+.planning__etape::before {
+  content: "";
+  position: absolute;
+  top: 2.26rem;
+  left: .25rem;
+  right: 0;
+  height: 1px;
+  background: var(--line-strong);
+}
+.planning__etape:last-child::before { display: none; }
+@media (min-width: 900px) {
+  .planning__point { left: clamp(1rem, 1.8vw, 1.75rem); }
+  .planning__etape:first-child .planning__point { left: 0; }
+  .planning__etape::before { left: calc(clamp(1rem, 1.8vw, 1.75rem) + .25rem); right: 0; }
+  .planning__etape:first-child::before { left: .25rem; }
+}
+/* En colonne, le fil se redresse. */
+@media (max-width: 899px) {
+  .planning__etape { padding-left: 1.6rem; }
+  .planning__point { left: 0; top: 2.05rem; }
+  .planning__etape::before {
+    top: 2.26rem;
+    left: .21rem;
+    right: auto;
+    width: 1px;
+    height: calc(100% - 1rem);
+  }
+}
+
+.planning__quand {
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+  /* Laisse passer le fil entre le moment et le detail. */
+  margin: 2.4rem 0 0;
+  font-size: .75rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.planning__rang { font-family: var(--font-editorial); color: var(--rust); letter-spacing: .08em; }
+.planning__quoi {
+  margin: .6rem 0 0;
+  font-size: var(--type-card);
+  line-height: 1.25;
+}
+.planning__texte { margin: .8rem 0 0; font-size: .9375rem; color: var(--muted); }
+.planning__note { margin-top: .9rem; }
+
 .tag {
   display: inline-block;
   font-size: .6875rem;
@@ -1503,8 +1677,40 @@ a.card:hover,
   margin-bottom: 1.35rem;
 }
 .footer__list li + li { margin-top: .8rem; }
-.footer__list a { font-size: .9375rem; transition: color .3s var(--ease); }
+/* Les liens du pied de page se tiennent comme ceux du menu de tete : pas
+   de trait permanent, un filet lavande qui se deroule au survol et au
+   focus. Ce sont des liens de navigation, groupes sous leur rubrique : leur
+   nature ne repose pas sur le soulignement. */
+.footer__list a,
+.footer__legal a {
+  position: relative;
+  text-decoration: none;
+  padding-block: .12rem;
+  transition: color .3s var(--ease);
+}
+.footer__list a::after,
+.footer__legal a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--lavender);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .35s var(--ease);
+}
+.footer__list a:hover::after,
+.footer__list a:focus-visible::after,
+.footer__legal a:hover::after,
+.footer__legal a:focus-visible::after { transform: scaleX(1); }
+.footer__list a { font-size: .9375rem; }
 .footer__list a:hover { color: var(--white); }
+@media (prefers-reduced-motion: reduce) {
+  .footer__list a::after,
+  .footer__legal a::after { transition: none; }
+}
 .footer__bottom {
   display: flex;
   flex-wrap: wrap;
@@ -1880,6 +2086,9 @@ html:not(.js) .booking__confirm { display: none; }
 .postale {
   margin: 0 auto;
   max-width: 1680px;
+  /* La carte se mesure elle-meme : posee a cote de la citation, elle ne
+     dispose plus de la largeur de l'ecran mais de celle de sa colonne. */
+  container-type: inline-size;
   /* Le bord d'aérogramme : des bandes obliques bleu nuit et rouille. */
   padding: clamp(6px, .8vw, 11px);
   background:
@@ -1928,14 +2137,23 @@ html:not(.js) .booking__confirm { display: none; }
 }
 
 /* Au-delà de cette largeur, la carte prend sa forme d'origine : une vue à
-   gauche, une vue à droite, le champ écrit au milieu. */
-@media (min-width: 1080px) {
+   gauche, une vue à droite, le champ écrit au milieu. La mesure porte sur la
+   carte elle-même, pas sur l'écran. */
+.postale__vue { aspect-ratio: 4 / 5; }
+@container (min-width: 40rem) {
   .postale__grille { grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr) minmax(0, .8fr); }
   .postale__champ { grid-column: 2; grid-row: 1; }
   .postale__vue--droite { grid-column: 3; grid-row: 1; }
+  .postale__vue { aspect-ratio: auto; }
 }
-@media (max-width: 1079.98px) {
-  .postale__vue { aspect-ratio: 4 / 5; }
+/* Navigateur sans requêtes de conteneur : on retombe sur la largeur d'écran. */
+@supports not (container-type: inline-size) {
+  @media (min-width: 1080px) {
+    .postale__grille { grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr) minmax(0, .8fr); }
+    .postale__champ { grid-column: 2; grid-row: 1; }
+    .postale__vue--droite { grid-column: 3; grid-row: 1; }
+    .postale__vue { aspect-ratio: auto; }
+  }
 }
 
 /* Le titre, écrit à la main, se découvre ligne à ligne. */
@@ -2979,6 +3197,33 @@ html:not(.js) .booking__confirm { display: none; }
   padding-block: clamp(3rem, 6vw, 5.5rem);
   margin-block: clamp(2.5rem, 5vw, 4.5rem);
 }
+
+/* La parole de la fondatrice et son trajet, cote a cote. La citation devient
+   un panneau : elle ne barre plus toute la largeur, elle tient la colonne de
+   gauche pendant que la carte postale occupe la droite. */
+.parcours-duo {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: center;
+  margin-block: clamp(2.5rem, 5vw, 4.5rem);
+}
+@media (min-width: 1100px) {
+  .parcours-duo { grid-template-columns: minmax(0, .8fr) minmax(0, 2fr); }
+}
+.citation__bloc--panneau {
+  background: var(--ink);
+  color: var(--white);
+  padding: clamp(1.75rem, 3.5vw, 2.75rem);
+  margin: 0;
+  max-width: none;
+  text-align: left;
+}
+.citation__bloc--panneau blockquote { margin: 0; }
+.citation__bloc--panneau figcaption { margin-top: 1.5rem; }
+/* En element de grille, les marges automatiques de la carte la faisaient
+   se retracter sur son contenu minimal. Dans ce duo, elle occupe sa
+   colonne. */
+.parcours-duo .postale { width: 100%; max-width: none; margin: 0; }
 .citation__bloc { margin: 0; }
 .citation blockquote {
   margin: 0;
@@ -3389,6 +3634,55 @@ html:not(.js) .booking__confirm { display: none; }
   transform: rotate(-90deg);
 }
 @media (prefers-reduced-motion: reduce) { .programme__lien { transition: none; } }
+
+/* Le corps de la fiche : le sommaire tient la colonne de gauche et suit la
+   lecture ; le texte défile à sa droite. Le sommaire vient en premier dans
+   le document : c'est aussi l'ordre au clavier, et l'ordre de lecture sans
+   la moindre feuille de style. */
+/* Les deux colonnes gardent la meme hauteur : sans cela le sommaire, aussi
+   court que son contenu, n'aurait aucune course et son maintien en place
+   n'aurait aucun effet. */
+.fiche-corps { display: grid; gap: clamp(2rem, 4vw, 3.5rem); align-items: stretch; }
+@media (min-width: 1000px) {
+  .fiche-corps { grid-template-columns: minmax(0, .62fr) minmax(0, 2fr); }
+  .fiche-nav__cadre { position: sticky; top: calc(var(--header-h) + 1.75rem); }
+}
+/* Le sommaire ne porte pas d'apparition : une transformation, meme finie,
+   ferait de lui un bloc de reference et son maintien en place n'aurait plus
+   aucun effet. */
+.fiche-nav { transform: none; }
+.fiche-nav__cadre {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  padding: clamp(1.35rem, 2.4vw, 1.85rem);
+}
+.fiche-nav__liste { margin: 0; padding: 0; list-style: none; }
+.fiche-nav__liste li + li { border-top: 1px solid var(--line); }
+.fiche-nav__liste a {
+  display: flex;
+  align-items: baseline;
+  gap: .8rem;
+  padding-block: .8rem;
+  font-family: var(--font-editorial);
+  font-size: 1.0625rem;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color .3s var(--ease);
+}
+.fiche-nav__liste a:hover,
+.fiche-nav__liste a:focus-visible { color: var(--rust); }
+.fiche-nav__rang {
+  flex: none;
+  font-family: var(--font-body);
+  font-size: .6875rem;
+  letter-spacing: .12em;
+  color: var(--lavender-dark);
+}
+.fiche-nav__mot { font-size: 1rem; margin-top: 1.5rem; max-width: none; }
+.fiche-nav__action { margin-top: 1.5rem; }
+/* Le texte de la fiche n'est plus bride par la largeur de lecture par
+   defaut : sa colonne s'en charge. */
+.fiche-corps .prose { max-width: 72ch; }
 
 /* Un module : son numéro, sa notion clé, puis le développement. */
 .module { scroll-margin-top: 7rem; }
