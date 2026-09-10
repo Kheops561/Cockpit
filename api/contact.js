@@ -56,35 +56,67 @@ function champ(corps, nom, max = 500) {
   return v.replace(/\r\n|\r/g, '\n').replace(CONTROLES, '').trim().slice(0, max);
 }
 
-function repondre(req, res, code, message, ok = false) {
+/**
+ * Sans JavaScript, la fonction renvoie le visiteur sur la page d'où il
+ * vient. Cette page est portée par un champ caché du formulaire, mais elle
+ * n'est jamais reprise telle quelle : seules les pages de cette liste sont
+ * acceptées. Sans ce garde-fou, n'importe qui pourrait faire rediriger le
+ * formulaire vers l'adresse de son choix.
+ */
+const PAGES_RETOUR = ['formulaire.html', 'contact.html'];
+const PAGE_DEFAUT = 'formulaire.html';
+
+function pageRetour(corps) {
+  const v = champ(corps, 'retour', 40);
+  return PAGES_RETOUR.includes(v) ? v : PAGE_DEFAUT;
+}
+
+function repondre(req, res, code, message, ok = false, page = PAGE_DEFAUT) {
   if (veutJson(req)) {
     res.status(code).json({ ok, message });
     return;
   }
   // Sans JavaScript : retour sur la page, résultat en paramètre.
-  res.setHeader('Location', `/contact.html?envoi=${ok ? 'ok' : 'erreur'}#formulaire`);
+  res.setHeader('Location', `/${page}?envoi=${ok ? 'ok' : 'erreur'}#formulaire`);
   res.status(303).end();
 }
 
 module.exports = async function handler(req, res) {
+  // Un appel en GET sert de controle d'installation : ouvrir
+  // `/api/contact` dans un navigateur dit si les variables sont en place,
+  // sans rien reveler de leur contenu. C'est la reponse a « le formulaire ne
+  // marche pas » : soit la fonction n'est pas deployee et la page est
+  // introuvable, soit elle repond et l'on voit tout de suite ce qui manque.
+  if (req.method === 'GET') {
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({
+      ok: true,
+      fonction: 'contact',
+      cle: Boolean(process.env.RESEND_API_KEY),
+      expediteur: Boolean(process.env.CONTACT_FROM),
+      destinataire: Boolean(process.env.CONTACT_TO),
+    });
+  }
+
   if (req.method !== 'POST') {
     return repondre(req, res, 405, 'Méthode non autorisée.');
   }
 
   const corps = lireCorps(req);
+  const page = pageRetour(corps);
 
   // Piège à robots : ce champ est masqué et doit rester vide. Aucun service
   // extérieur n'est appelé pour cette vérification. On répond « reçu » sans
   // rien envoyer : un robot ne doit pas apprendre qu'il a été repéré.
   if (champ(corps, 'site_web', 200) !== '') {
-    return repondre(req, res, 200, 'Message reçu.', true);
+    return repondre(req, res, 200, 'Message reçu.', true, page);
   }
 
   // Un formulaire rempli en moins de trois secondes ne l'a pas été par une
   // personne. Sans JavaScript le champ reste vide et le contrôle est ignoré.
   const pose = parseInt(champ(corps, 'pose', 20), 10);
   if (Number.isFinite(pose) && pose > 0 && (Date.now() / 1000 - pose) < 3) {
-    return repondre(req, res, 200, 'Message reçu.', true);
+    return repondre(req, res, 200, 'Message reçu.', true, page);
   }
 
   const prenom = champ(corps, 'prenom', 80);
@@ -109,7 +141,7 @@ module.exports = async function handler(req, res) {
   if (!consent) manques.push('votre accord pour le traitement des informations');
 
   if (manques.length) {
-    return repondre(req, res, 422, `Il manque ${manques.join(', ')}.`);
+    return repondre(req, res, 422, `Il manque ${manques.join(', ')}.`, false, page);
   }
 
   // Les listes ne prennent que les valeurs proposées : on ne fait pas
@@ -137,7 +169,7 @@ module.exports = async function handler(req, res) {
   if (!cle) {
     console.error('[contact] RESEND_API_KEY absente des variables du projet.');
     return repondre(req, res, 500, 'Le formulaire n’est pas encore configuré. '
-      + `Écrivez directement à ${DESTINATAIRE}.`);
+      + `Écrivez directement à ${DESTINATAIRE}.`, false, page);
   }
 
   try {
@@ -161,13 +193,13 @@ module.exports = async function handler(req, res) {
       // ne doit rien apprendre de la configuration.
       console.error('[contact] Resend a répondu', r.status, await r.text());
       return repondre(req, res, 502, 'L’envoi a échoué. Réessayez dans un moment, '
-        + `ou écrivez directement à ${DESTINATAIRE}.`);
+        + `ou écrivez directement à ${DESTINATAIRE}.`, false, page);
     }
   } catch (err) {
     console.error('[contact] appel à Resend impossible :', err);
     return repondre(req, res, 502, 'L’envoi a échoué. Réessayez dans un moment, '
-      + `ou écrivez directement à ${DESTINATAIRE}.`);
+      + `ou écrivez directement à ${DESTINATAIRE}.`, false, page);
   }
 
-  return repondre(req, res, 200, 'Message envoyé. Nous répondons sous un jour ouvré.', true);
+  return repondre(req, res, 200, 'Message envoyé. Nous répondons sous un jour ouvré.', true, page);
 };

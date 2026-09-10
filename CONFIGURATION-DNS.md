@@ -1,10 +1,12 @@
 # Configuration DNS chez OVH
 
-Deux chantiers **indépendants**, à ne pas mélanger :
+Trois chantiers **indépendants**, à ne pas mélanger :
 
-- **A · Le formulaire de contact** (Resend). Aucun effet sur le site
-  actuellement en ligne, ni sur les boîtes aux lettres. Peut se faire tout de
-  suite.
+- **0 · Envoyer dès maintenant.** Aucun réglage DNS. Les essais partent
+  depuis l'adresse de travail, avec un expéditeur provisoire.
+- **A · Le formulaire au nom du domaine** (Resend). Trois enregistrements sur
+  des sous-domaines. Aucun effet sur le site en ligne ni sur les boîtes aux
+  lettres.
 - **B · La bascule du site vers Vercel.** C'est elle, et elle seule, qui
   retire le site de Showit. À faire quand le nouveau site est validé.
 
@@ -34,55 +36,134 @@ Où trouver la zone : `ovh.com` → **Web Cloud** → **Noms de domaine** →
 
 ---
 
+# 0 · Envoyer dès maintenant, sans toucher au DNS
+
+Le site de travail est `https://amelie-invest-phi.vercel.app`. Le formulaire
+y poste sur `/api/contact`, c'est-à-dire sur lui-même : **cette adresse n'a
+besoin d'aucun réglage DNS.**
+
+Le seul obstacle est l'expéditeur. Resend refuse d'écrire au nom d'un domaine
+qu'il n'a pas vérifié. Or `joytalents.com` **est déjà vérifié** sur le compte,
+en `eu-west-1`, avec l'envoi autorisé. Il suffit donc de s'en servir le temps
+des essais.
+
+Dans le projet Vercel → **Settings** → **Environment Variables** :
+
+| Nom | Valeur pour les essais |
+|---|---|
+| `RESEND_API_KEY` | la clé Resend, avec le **droit d'envoi seulement** |
+| `CONTACT_FROM` | `Amélie & Partners <site@joytalents.com>` |
+| `CONTACT_TO` | l'adresse où vous voulez recevoir les essais |
+
+Puis **redéployer** : les variables ne sont lues qu'au démarrage.
+
+Les messages partiront alors vers n'importe quel destinataire, avec le
+visiteur en adresse de réponse. Seul le domaine de l'expéditeur est
+provisoire : c'est ce que le chantier A corrige.
+
+## Contrôler que tout est en place
+
+Ouvrez `https://amelie-invest-phi.vercel.app/api/contact` dans un navigateur.
+La fonction répond en JSON :
+
+```json
+{ "ok": true, "fonction": "contact", "cle": true, "expediteur": true, "destinataire": true }
+```
+
+- **Page introuvable** : la fonction n'est pas déployée. Vérifiez que le
+  projet Vercel est bien relié au dépôt `Kheops561/Cockpit` et que le dernier
+  commit est déployé.
+- **`"cle": false`** : `RESEND_API_KEY` manque, ou le projet n'a pas été
+  redéployé depuis qu'elle a été ajoutée.
+
+Aucune valeur n'est révélée par ce contrôle, seulement leur présence.
+
+---
+
 # A · Le formulaire de contact
 
 Le formulaire de `formulaire.html` envoie le message par **Resend**. Pour que
 Resend ait le droit d'écrire au nom du domaine, il faut lui prouver que le
 domaine vous appartient. C'est tout ce que font ces trois enregistrements.
 
-## A.1 · Déclarer le domaine dans Resend
+## A.1 · Le domaine est déjà déclaré
 
-Sur `resend.com` → **Domains** → **Add Domain** :
-
-- Domaine : `amelie-invest.com`
-- Région : **Europe (Ireland) · `eu-west-1`**
+`amelie-invest.com` a été créé dans Resend le 10 septembre 2026, en région
+**Europe (Ireland) · `eu-west-1`**, suivi d'ouverture et suivi des clics
+désactivés — ils réécrivent les liens et déposent des mouchards, ce que le
+site s'interdit.
 
 La région compte : c'est elle qui décide où les messages sont traités.
 `eu-west-1` garde le traitement dans l'Union européenne, ce qui évite d'avoir
 à citer un mécanisme de transfert sur la page « Données personnelles ». C'est
-déjà la région de votre domaine `joytalents.com`.
+déjà la région de `joytalents.com`.
 
-Ne pas activer *Open tracking* ni *Click tracking* : ils réécrivent les liens
-et déposent des mouchards, ce que le site s'interdit.
+Il reste à poser les trois enregistrements ci-dessous. Tant qu'ils ne sont
+pas en place, le domaine reste au statut `not_started` et l'envoi à son nom
+est refusé.
 
 ## A.2 · Reporter les trois enregistrements chez OVH
 
-Resend affiche alors trois lignes. Dans OVH, **Zone DNS** → **Ajouter une
-entrée**, une par une :
+Dans OVH, **Zone DNS** → **Ajouter une entrée**, une par une. Ce sont les
+valeurs réelles de votre domaine, telles que Resend les a générées :
 
-| Type | Sous-domaine | Valeur | Priorité |
-|---|---|---|---|
-| `MX` | `send` | `feedback-smtp.eu-west-1.amazonses.com.` | `10` |
-| `TXT` | `send` | `v=spf1 include:amazonses.com ~all` | — |
-| `TXT` | `resend._domainkey` | la longue clé `p=MIGfMA0…` affichée par Resend | — |
+**1 · La clé DKIM** — c'est elle qui signe les messages.
+
+| Champ | Valeur |
+|---|---|
+| Type | `TXT` |
+| Sous-domaine | `resend._domainkey` |
+| TTL | par défaut |
+
+```
+p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAuL397Tg17cjRDFajVZtEe+enxrX4MMxjjP11F6DTfXpmgvpJ9n4LqY5hXXprh7V0UAgA8YRTY2O1N5fsUGep3utyORx5srdlM5Tp9SMaEcRSfgrYf7sRRHPC0xfj65mYXQK2Jq6KVEm+VMwo3Y2okepv7Jj3IbCSPVE6r6+tVQIDAQAB
+```
+
+**2 · Le MX des retours d'envoi**
+
+| Champ | Valeur |
+|---|---|
+| Type | `MX` |
+| Sous-domaine | `send` |
+| Cible | `feedback-smtp.eu-west-1.amazonses.com.` |
+| Priorité | `10` |
+
+**3 · Le SPF de ce sous-domaine**
+
+| Champ | Valeur |
+|---|---|
+| Type | `TXT` |
+| Sous-domaine | `send` |
+| Valeur | `v=spf1 include:amazonses.com ~all` |
 
 Trois points d'attention :
 
 1. **Le `MX` est sur `send`, pas sur la racine.** Il crée
    `send.amelie-invest.com`, une adresse technique qui ne sert qu'aux retours
-   d'envoi. Vos `MX` de racine, ceux d'OVH, ne sont pas concernés.
-2. **La clé DKIM est unique à votre domaine.** Copiez-la depuis Resend, ne la
-   recopiez de nulle part ailleurs. Elle est longue : vérifiez qu'elle est
-   complète, sans espace ni retour à la ligne ajouté.
+   d'envoi. Vos `MX` de racine, ceux d'OVH, ne sont pas concernés — c'est
+   toute la différence entre ce réglage et un réglage qui casserait votre
+   courrier.
+2. **La clé DKIM doit être copiée d'un seul tenant**, sans espace ni retour à
+   la ligne ajouté par le copier-coller. C'est la première cause d'échec de
+   vérification.
 3. OVH ajoute parfois le nom du domaine tout seul en fin de champ. Si
    l'interface propose déjà `.amelie-invest.com`, saisissez seulement `send`
    ou `resend._domainkey`.
 
 ## A.3 · Vérifier
 
-Retour dans Resend → **Verify DNS Records**. La propagation prend de quelques
-minutes à quelques heures. Tant que le domaine n'est pas vérifié, l'envoi est
-refusé — c'est normal, ce n'est pas une panne du formulaire.
+Une fois les trois entrées enregistrées chez OVH, dites-le moi : je lance la
+vérification depuis Resend et je vous dis laquelle des trois n'est pas encore
+vue, le cas échéant. Vous pouvez aussi le faire vous-même dans Resend →
+**Verify DNS Records**.
+
+La propagation prend de quelques minutes à quelques heures. Tant que le
+domaine n'est pas vérifié, l'envoi à son nom est refusé — c'est normal, ce
+n'est pas une panne du formulaire, et le chantier 0 vous permet d'envoyer
+entre-temps.
+
+Une fois le domaine vérifié, basculez `CONTACT_FROM` de `joytalents.com` vers
+`Amélie & Partners <site@amelie-invest.com>`, et redéployez.
 
 ## A.4 · DMARC, si vous n'en avez pas déjà un
 
@@ -100,17 +181,13 @@ qu'un, et le vôtre est peut-être déjà réglé plus strictement.
 
 ## A.5 · Côté Vercel
 
-Dans le projet Vercel → **Settings** → **Environment Variables**, pour
-*Production*, *Preview* et *Development* :
+Les variables sont celles du chantier 0. Une fois le domaine vérifié, seul
+`CONTACT_FROM` change :
 
-| Nom | Valeur |
+| Nom | Valeur définitive |
 |---|---|
-| `RESEND_API_KEY` | la clé créée dans Resend, avec le **droit d'envoi seulement** |
 | `CONTACT_FROM` | `Amélie & Partners <site@amelie-invest.com>` |
 | `CONTACT_TO` | `contact@amelie-invest.com` |
-
-Puis **redéployer** : les variables ne sont lues qu'au démarrage de la
-fonction.
 
 `site@amelie-invest.com` n'a pas besoin d'être une vraie boîte aux lettres :
 c'est une adresse d'expédition. Les réponses partent vers l'adresse du
@@ -180,9 +257,9 @@ TTL à 300 s, le site Showit revient en quelques minutes.
 
 # Ce qui reste à faire dire
 
-- **La région Resend.** Une fois le domaine créé en `eu-west-1`, la page
+- **La région Resend est tranchée** : `eu-west-1`, en Irlande. La page
   « Données personnelles » peut l'écrire noir sur blanc, et la mention
-  « à compléter » qui l'accompagne disparaît.
+  « à compléter » qui l'accompagne disparaître.
 - **Le bureau d'enregistrement du domaine**, cité dans les mentions légales :
   OVH, à confirmer.
 - **La région de diffusion Vercel**, également citée dans les mentions

@@ -110,6 +110,10 @@
           <input id="site_web" name="site_web" type="text" tabindex="-1" autocomplete="off">
         </div>
         <input type="hidden" name="pose" value="" data-pose>
+        <!-- Sans JavaScript, la fonction renvoie ici. La valeur est
+             recontrolee cote serveur : elle ne peut designer qu'une page du
+             site. -->
+        <input type="hidden" name="retour" value="formulaire.html">
         <div class="form__duo">
           <div class="field">
             <label for="prenom">Prénom <span class="field__requis" aria-hidden="true">*</span></label>
