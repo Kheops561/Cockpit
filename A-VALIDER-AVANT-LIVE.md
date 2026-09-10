@@ -95,11 +95,11 @@ c’est la règle générale de ce type d’outil.
 - [x] **Le prix du Diagnostic Stratégique** est arrêté à **432 € TTC**
       (Amélie, 10 septembre 2026). Le site affichait `450 € HT` ; tout est
       aligné, mention `TTC` comprise.
-- [ ] **La durée du Diagnostic Stratégique reste à trancher.** Le site annonce
-      `75 minutes`, Calendly annonce `1 h`. Le site n’a **pas** été modifié :
-      dire laquelle fait foi. Elle apparaît sur `diagnostic.html`,
-      `accompagnements.html`, `contact.html` et dans la description de
-      référencement.
+- [x] **La durée du Diagnostic Stratégique est arrêtée à une heure**
+      (Amélie, 10 septembre 2026). Le site annonçait `75 minutes` ; il annonce
+      désormais `1 heure` sur `diagnostic.html`, `accompagnements.html`,
+      `contact.html`, l’accueil et dans les descriptions de référencement.
+      C’est aussi ce que dit Calendly.
 - [ ] Vérifier que `432 € TTC` correspond bien à `360 € HT` dans votre
       comptabilité, et si le montant HT doit figurer à côté.
 - [ ] Relire les conditions générales de vente (`cgv.html`) avec un

@@ -1316,10 +1316,11 @@
     if (!mots.length) return;
 
     var enCours = false;
-    // La plume traverse la phrase en une seconde environ, quelle que soit sa
-    // longueur : une citation courte ne doit pas paraitre plus lente.
-    var pas = Math.max(28, Math.min(85, 1000 / mots.length));
-    var glisse = 380;
+    // La plume traverse la phrase en deux secondes et demie environ, quelle
+    // que soit sa longueur : une citation courte ne doit pas paraitre plus
+    // lente qu'une longue. Chaque mot, lui, se decouvre posement.
+    var pas = Math.max(70, Math.min(190, 2500 / mots.length));
+    var glisse = 620;
 
     function ecrire() {
       if (enCours || reduit.matches) return;

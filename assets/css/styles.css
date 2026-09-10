@@ -459,12 +459,8 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 .header.is-stuck .logo__tag,
 .header.is-stuck .logo__tag span { color: rgba(255, 255, 255, .78); }
 .header.is-stuck .nav__link::after { background: var(--white); }
-/* La pastille garde son fond blanc : sur lavande, elle se voit encore mieux
-   que sur ivoire. Seul son filet passe au blanc pour rester visible. */
-.header.is-stuck .nav__link[aria-current="page"] {
-  color: var(--ink);
-  border-color: var(--white);
-}
+/* La page ouverte reste marquee par son filet, passe au blanc pour se
+   detacher de la lavande. */
 .header.is-stuck .nav__link[aria-current="page"]::after { background: var(--white); }
 /* Le bouton de tete s'inverse : fond ivoire, texte bleu nuit. */
 .header.is-stuck .header__cta {
@@ -521,12 +517,10 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 @media (min-width: 1200px) {
   .nav { display: flex; align-items: center; gap: .7rem; }
   .nav__link { font-size: .875rem; }
-  .nav__link[aria-current="page"] { padding-inline: .55rem; }
 }
 @media (min-width: 1440px) {
   .nav { gap: clamp(.85rem, 1.4vw, 1.6rem); }
   .nav__link { font-size: .9375rem; }
-  .nav__link[aria-current="page"] { padding-inline: .7rem; }
 }
 .nav__link {
   position: relative;
@@ -550,25 +544,16 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 .nav__link:hover::after { transform: scaleX(1); }
 
 /* Page courante : le lecteur doit voir d'un coup d'oeil ou il se trouve.
-   Un filet lavande de 2 px, un texte en bleu nuit appuye et une pastille
-   claire : le repere tient meme sur un ecran peu contraste. La lavande
-   sombre est aussi la couleur du filet qui se deroule au survol : le
-   repere de la page ouverte et celui du lien vise parlent la meme langue. */
+   Un filet lavande de 2 px et un texte en bleu nuit appuye suffisent. La
+   pastille blanche qui l'entourait a ete retiree : sur l'ivoire de la barre
+   elle formait un bloc clair qu'on prenait pour un survol. La lavande sombre
+   est aussi la couleur du filet qui se deroule au survol : le repere de la
+   page ouverte et celui du lien vise parlent la meme langue. */
 .nav__link[aria-current="page"] {
   color: var(--ink);
   font-weight: 600;
-  /* Blanc franc plutot qu'ivoire : sur un en-tete ivoire, une pastille
-     ivoire ne se voit pas. L'onglet se detache, et le filet rouille le
-     rattache a la page ouverte. */
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-bottom: 0;
-  padding: .35rem .7rem 0;
-  margin-inline: -.2rem;
 }
 .nav__link[aria-current="page"]::after {
-  left: -1px;
-  right: -1px;
   height: 2px;
   background: var(--lavender-dark);
   transform: scaleX(1);
@@ -1790,7 +1775,7 @@ a.card:hover,
   .header, .footer, .drawer, .marquee-controls,
   .hero__media, .cta__media, .voile, .skip,
   .cta, .booking,
-  .telechargement, .diapos__commandes, .carrousel__commandes,
+  .emporter, .diapos__commandes, .carrousel__commandes,
   .videobtn, .apercu-note { display: none !important; }
 
   html { font-size: 92%; }
@@ -2359,31 +2344,6 @@ html:not(.js) .booking__confirm { display: none; }
 .postale__lieu--a { left: 13.33%; }
 .postale__lieu--b { left: 86.67%; }
 
-/* Les cachets : deux tampons ronds, discrets, décoratifs. */
-.postale__cachet {
-  position: absolute;
-  top: clamp(1rem, 2vw, 1.75rem);
-  width: clamp(4.25rem, 6vw, 5.5rem);
-  color: var(--ink);
-  opacity: .3;
-  display: none;
-}
-.postale__cachet--a { left: clamp(.5rem, 1.5vw, 1.5rem); transform: rotate(-9deg); }
-.postale__cachet--b { right: clamp(.5rem, 1.5vw, 1.5rem); transform: rotate(7deg); }
-.postale__cachet svg { display: block; width: 100%; height: auto; }
-.postale__cachet circle { fill: none; stroke: currentColor; stroke-width: 1.8; }
-.postale__cachet-avion { fill: currentColor; }
-.postale__cachet text {
-  fill: currentColor;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-anchor: middle;
-}
-/* Ils n'apparaissent que là où ils ne gênent aucun texte. */
-@media (min-width: 1200px) { .postale__cachet { display: block; } }
-
 /* Les quatre étapes : c'est ici que l'information est écrite. */
 .journey__steps {
   list-style: none;
@@ -2786,6 +2746,46 @@ html:not(.js) .booking__confirm { display: none; }
 }
 /* La piste laisse respirer l'ombre et l'inclinaison. */
 .carrousel--feuillets .carrousel__piste { padding-block: 1rem; align-items: stretch; }
+
+/* Un feuillet a fond photographique. La photographie est posee derriere le
+   texte, presque effacee par un voile ivoire : elle donne au feuillet un
+   ancrage parisien sans jamais entamer la lisibilite. Aucune information ne
+   depend d'elle — les trois textes se lisent a l'identique si l'image
+   n'arrive pas. */
+.feuillet--fond { position: relative; overflow: hidden; }
+.feuillet__fond { position: absolute; inset: 0; z-index: 0; }
+.feuillet__fond img { width: 100%; height: 100%; object-fit: cover; }
+.feuillet__fond::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg,
+    rgba(255, 255, 255, .93) 0%,
+    rgba(255, 255, 255, .88) 55%,
+    rgba(248, 245, 239, .82) 100%);
+}
+/* Au survol, le voile s'allege un peu : le feuillet se reveille sans que le
+   texte cesse d'etre net. */
+.carrousel--feuillets .carrousel__item:hover .feuillet__fond::after,
+.carrousel--feuillets .carrousel__item:focus-within .feuillet__fond::after {
+  background: linear-gradient(160deg,
+    rgba(255, 255, 255, .86) 0%,
+    rgba(255, 255, 255, .80) 55%,
+    rgba(248, 245, 239, .74) 100%);
+}
+.feuillet__fond::after { transition: background .45s var(--ease); }
+@media (prefers-reduced-motion: reduce) {
+  .feuillet__fond::after { transition: none; }
+}
+/* Le corps se tient au-dessus du decor, et occupe toute la hauteur pour que
+   l'etiquette reste en bas. */
+.feuillet__corps {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 
 .feuillet__num {
   margin: 0;
@@ -3659,16 +3659,27 @@ html:not(.js) .booking__confirm { display: none; }
   padding: 0;
   list-style: none;
 }
-.seance { padding-block: clamp(1.1rem, 2.2vw, 1.5rem); border-top: 1px solid var(--line); }
-.seance:last-child { border-bottom: 1px solid var(--line); }
+/* Chaque seance est un bloc a part entiere, pose sur l'ivoire : deux
+   formats se comparent mieux dans deux cadres que dans une liste de filets.
+   Un trait de couleur en tete les distingue au premier coup d'oeil — lavande
+   pour l'appel offert, rouille pour la seance payante. */
+.seances { gap: clamp(1rem, 2vw, 1.25rem); }
+.seance {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.1rem, 2.2vw, 1.4rem);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--line-strong);
+}
+.seance--offert { border-top-color: var(--lavender-dark); }
+.seance--paye { border-top-color: var(--rust); }
 @container (min-width: 30rem) {
-  .seances { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.25rem, 2.5vw, 2rem); }
-  .seance { border-bottom: 1px solid var(--line); }
+  .seances { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 @supports not (container-type: inline-size) {
   @media (min-width: 1100px) {
-    .seances { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.25rem, 2.5vw, 2rem); }
-    .seance { border-bottom: 1px solid var(--line); }
+    .seances { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
 }
 .seance__nom {
@@ -3680,9 +3691,12 @@ html:not(.js) .booking__confirm { display: none; }
 .seance__meta {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
+  justify-content: space-between;
   gap: .5rem .9rem;
-  margin: .55rem 0 0;
+  margin: .7rem 0 0;
+  padding-top: .7rem;
+  border-top: 1px solid var(--line);
 }
 .seance__duree {
   font-size: .75rem;
@@ -3697,19 +3711,48 @@ html:not(.js) .booking__confirm { display: none; }
 }
 /* Ce qui est offert se dit en toutes lettres, jamais par un prix barre. */
 .seance__prix--offert { color: var(--lavender-dark); }
-.seance__quoi { margin: .7rem 0 0; font-size: .9375rem; color: var(--muted); }
+.seance__quoi { margin: .85rem 0 0; font-size: .9375rem; color: var(--muted); }
 
 /* Le telechargement de la fiche. Le PDF est un fichier du depot, fabrique
    par `outils/fiche-pdf.py` : le site ne calcule rien au clic et n'appelle
    aucun service. Le lien fonctionne donc sans JavaScript. */
-.telechargement {
+/* Emporter la fiche : un panneau a part entiere, pose sur l'ivoire de la
+   section. Le telechargement porte le poids d'un bouton principal, le
+   partage celui d'un bouton second — ce sont deux gestes, pas une mention
+   de bas de page. */
+.emporter {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: center;
+  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--lavender-dark);
+  box-shadow: 0 14px 40px rgba(18, 40, 60, .07);
+}
+@media (min-width: 860px) {
+  .emporter { grid-template-columns: minmax(0, 1fr) auto; }
+}
+.emporter__titre {
+  margin: .75rem 0 0;
+  font-family: var(--font-editorial);
+  font-size: var(--type-card);
+  line-height: 1.3;
+  color: var(--ink);
+}
+.emporter__mot .note { margin: .85rem 0 0; max-width: 52ch; }
+.emporter__gestes {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: .9rem clamp(1.25rem, 2.5vw, 2rem);
-  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  gap: .9rem;
 }
-.telechargement .note { margin: 0; max-width: 42ch; }
+/* Sur un ecran etroit, les deux boutons prennent toute la largeur : ils se
+   touchent au pouce sans viser. */
+@media (max-width: 559px) {
+  .emporter__gestes { flex-direction: column; align-items: stretch; }
+  .emporter__gestes .btn { justify-content: center; }
+}
 
 /* Les objectifs : ce que la fiche permet de faire, une fois lue. */
 .objectifs {

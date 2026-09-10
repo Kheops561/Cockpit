@@ -61,7 +61,7 @@ Source commerciale prioritaire : `AEP_OFFRE_V3_Amelie_Partners_Reference_2026.pd
 Quatre formats : **Diagnostic Stratégique**, **Stratégie de Financement**,
 **Recherche immobilière à Paris**, **Trajectoire Investisseur**.
 
-Diagnostic : **432 € TTC**, questionnaire préparatoire, session de 75 minutes,
+Diagnostic : **432 € TTC**, questionnaire préparatoire, session d’une heure,
 Note de Diagnostic & Décision, cadrage gratuit de 30 minutes. Verdicts :
 AVANCER, PRÉPARER, RESTRUCTURER, APPROFONDIR, SUSPENDRE.
 

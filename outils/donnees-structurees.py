@@ -34,7 +34,7 @@ ORGANISATION = {
     "makesOffer": [{
         "@type": "Offer",
         "name": "Diagnostic Stratégique",
-        "description": "Questionnaire préparatoire, session stratégique de 75 minutes "
+        "description": "Questionnaire préparatoire, session stratégique d’une heure "
                        "et Note de Diagnostic & Décision.",
         "price": "432",
         "priceCurrency": "EUR",
@@ -52,7 +52,7 @@ SERVICE = {
     "areaServed": {"@type": "Country", "name": "France"},
     "description": "Un regard stratégique pour clarifier la situation, challenger les "
                    "options et déterminer la prochaine étape : questionnaire préparatoire, "
-                   "session de 75 minutes et Note de Diagnostic & Décision.",
+                   "session d’une heure et Note de Diagnostic & Décision.",
     "offers": {
         "@type": "Offer",
         "price": "432",
