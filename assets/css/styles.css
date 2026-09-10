@@ -3661,19 +3661,25 @@ html:not(.js) .booking__confirm { display: none; }
 }
 /* Chaque seance est un bloc a part entiere, pose sur l'ivoire : deux
    formats se comparent mieux dans deux cadres que dans une liste de filets.
-   Un trait de couleur en tete les distingue au premier coup d'oeil — lavande
-   pour l'appel offert, rouille pour la seance payante. */
+   Un bandeau de couleur porte le nom — lavande pour l'appel offert, rouille
+   pour la seance payante : on distingue les deux avant meme de lire. */
 .seances { gap: clamp(1rem, 2vw, 1.25rem); }
 .seance {
   display: flex;
   flex-direction: column;
-  padding: clamp(1.1rem, 2.2vw, 1.4rem);
+  /* Aucun retrait ici : le bandeau doit toucher les bords du cadre. */
+  padding: 0;
+  overflow: hidden;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-top: 3px solid var(--line-strong);
 }
-.seance--offert { border-top-color: var(--lavender-dark); }
-.seance--paye { border-top-color: var(--rust); }
+.seance__corps {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: clamp(1rem, 2vw, 1.3rem) clamp(1.1rem, 2.2vw, 1.4rem)
+           clamp(1.1rem, 2.2vw, 1.4rem);
+}
 @container (min-width: 30rem) {
   .seances { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
@@ -3682,21 +3688,34 @@ html:not(.js) .booking__confirm { display: none; }
     .seances { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
 }
+/* `.card p` (0,1,1) l'emporterait sur une classe seule : le nom vit dans une
+   carte, il faut donc au moins autant de poids pour lui rendre son blanc.
+   Meme piege que pour le numero des cartes de l'accueil. */
+.card .seance__nom,
 .seance__nom {
   margin: 0;
+  padding: .75rem clamp(1.1rem, 2.2vw, 1.4rem);
+  background: var(--ink);
+  color: var(--white);
   font-family: var(--font-editorial);
   font-size: var(--type-card);
-  color: var(--ink);
+  line-height: 1.25;
 }
+/* Ces deux-la pesent autant que la regle ci-dessus : c'est l'ordre qui
+   decide, ils doivent donc venir apres elle.
+   Blanc sur lavande sombre : 5,9 pour 1. Blanc sur rouille : 5,6 pour 1.
+   Les deux passent le seuil AA du texte courant. */
+.card .seance--offert .seance__nom,
+.seance--offert .seance__nom { background: var(--lavender-dark); }
+.card .seance--paye .seance__nom,
+.seance--paye .seance__nom { background: var(--rust); }
 .seance__meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: .5rem .9rem;
-  margin: .7rem 0 0;
-  padding-top: .7rem;
-  border-top: 1px solid var(--line);
+  margin: 0;
 }
 .seance__duree {
   font-size: .75rem;
