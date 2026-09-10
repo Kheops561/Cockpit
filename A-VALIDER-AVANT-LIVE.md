@@ -56,18 +56,34 @@ Le formulaire **prépare un message dans la messagerie du visiteur**, adressé �
 la boîte du domaine chez OVH. Il n’envoie rien lui-même, et aucune donnée
 saisie ne transite par le site.
 
-C’est le choix retenu tant qu’il n’y a pas d’hébergement qui exécute du code :
-`amelie-invest.com` a son domaine et ses boîtes chez OVH, mais le site est
-servi depuis une machine Amazon EC2 (75.101.134.27), constaté par résolution
-inverse le 10 septembre 2026.
+C’est le choix retenu tant qu’il n’y a pas d’hébergement qui exécute du code.
 
-- [ ] **Décider si le site rejoint un hébergement OVH.** Ce serait le plus
-      cohérent : domaine, boîtes et site au même endroit, mentions légales
-      exactes, et le formulaire pourrait alors envoyer directement.
-- [ ] **Tant que le site est servi depuis AWS, les mentions légales sont
-      inexactes** : elles désignent OVH comme hébergeur. C’est une mention
-      obligatoire, elle doit dire vrai. À corriger, ou à rendre vraie en
-      basculant l’hébergement.
+**Situation constatée le 10 septembre 2026.** `amelie-invest.com` a son
+domaine et ses boîtes aux lettres chez OVH. Le site en ligne, lui, est
+construit avec **Showit** et servi depuis une machine Amazon EC2
+(75.101.134.27, résolution inverse `ec2-75-101-134-27.compute-1.amazonaws.com`).
+
+## Où publier le site de ce dépôt
+
+**Le site construit ici ne peut pas être publié sur Showit.** Showit est un
+éditeur fermé : on y compose des pages dans son interface, on n’y dépose pas
+des fichiers HTML, CSS et JavaScript quelconques. Les treize pages doivent
+donc être servies ailleurs. À vérifier auprès de Showit si vous y tenez, mais
+c’est la règle générale de ce type d’outil.
+
+- [ ] **Décider où vit le site de ce dépôt.** Un hébergement OVH mutualisé
+      suffit largement, et rend du même coup possible l’envoi direct du
+      formulaire. C’est la voie la plus cohérente : domaine, boîtes et site
+      au même endroit, mentions légales exactes.
+- [ ] **Décider du sort du site Showit actuel.** Les deux ne peuvent pas
+      répondre à la même adresse. Soit le nouveau site le remplace, soit il
+      faut choisir un sous-domaine, le temps de la transition.
+- [ ] **Les mentions légales déclarent OVH comme hébergeur.** Ce n’est
+      exact que si le site est effectivement servi par OVH. Tant que
+      Showit sert la page, l’hébergeur à déclarer est Showit. Un paragraphe
+      d’avertissement figure sur la page ; il devra être retiré une fois
+      l’hébergement tranché.
+
 - [ ] `contact.php` est écrit, testé et prêt, mais **hors service**. Le
       rebrancher demande un hébergement PHP : voir
       `INSTALLATION-FORMULAIRE.md`. Une variante y est notée : passer par le
