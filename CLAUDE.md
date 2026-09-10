@@ -119,7 +119,10 @@ vectoriels monochromes : aucun émoji, aucune flèche Unicode.
 5. Les vidéos sont muettes, facultatives et retombent sur une photographie si
    le fichier est absent ou illisible.
 6. Aucun appel à un domaine tiers dans les pages : polices, styles et scripts
-   sont hébergés avec le site. Seuls Calendly, LinkedIn et `mailto:` sont des
+   sont hébergés avec le site. La mesure d’audience Vercel fait exception à
+   la règle du fichier, pas à celle du domaine : son script est servi par
+   l’hébergeur sur `/_vercel/insights/script.js`, un chemin du site
+   lui-même, et n’y dépose aucun cookie. Seuls Calendly, LinkedIn et `mailto:` sont des
    liens sortants ; la politique de confidentialité de Calendly est citée
    sur les pages légales. Le formulaire de contact poste sur `/api/contact`,
    c’est-à-dire sur le site lui-même : le navigateur ne s’adresse jamais à

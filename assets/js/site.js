@@ -1051,6 +1051,43 @@
       return lien;
     }
 
+    // ------------------------------------------ la confirmation d'envoi
+    // Une fenetre s'ouvre quand le message est parti. Elle ne remplace pas
+    // le message en clair sous le bouton : elle s'ajoute. Sans JavaScript,
+    // ou si le navigateur ne sait pas ouvrir de fenetre modale, seul le
+    // message reste — et il dit la meme chose.
+    var recu = document.querySelector('[data-recu]');
+    var recuFermer = recu ? recu.querySelector('[data-recu-fermer]') : null;
+    var rendu = null;   // a qui rendre le focus en refermant
+
+    function annoncerRecu() {
+      if (!recu || typeof recu.showModal !== 'function') return;
+      rendu = document.activeElement;
+      recu.showModal();
+      // Le navigateur donne le focus au premier element atteignable, ici le
+      // bouton de reservation : il s'affiche enfonce, et une touche Entree
+      // ouvrirait Calendly sans qu'on l'ait demande. On le pose donc sur le
+      // cadre, d'ou la lecture commence proprement.
+      var cadre = recu.querySelector('[data-recu-cadre]');
+      if (cadre && typeof cadre.focus === 'function') cadre.focus();
+    }
+
+    if (recu) {
+      if (recuFermer) {
+        recuFermer.addEventListener('click', function () { recu.close(); });
+      }
+      // Clic dans le fond, hors du cadre : la fenetre se referme.
+      recu.addEventListener('click', function (e) {
+        if (e.target === recu) recu.close();
+      });
+      // La touche d'echappement est geree par le navigateur ; on se contente
+      // de rendre le focus a l'endroit d'ou l'on venait.
+      recu.addEventListener('close', function () {
+        if (rendu && typeof rendu.focus === 'function') rendu.focus();
+        rendu = null;
+      });
+    }
+
     function dire(message, reussi, secours) {
       if (!etat) return;
       etat.textContent = message;
@@ -1096,6 +1133,7 @@
           form.reset();
           if (pose) pose.value = String(Math.floor(Date.now() / 1000));
           dire(d.message || 'Message envoyé. Nous répondons sous un jour ouvré.', true);
+          annoncerRecu();
         } else {
           dire((d && d.message) || 'L’envoi a échoué. Réessayez dans un moment,'
             + ' ou écrivez-nous directement à ' + ADRESSE + '.', false, true);
@@ -1113,6 +1151,7 @@
     var params = new URLSearchParams(window.location.search);
     if (params.get('envoi') === 'ok') {
       dire('Message envoyé. Nous répondons sous un jour ouvré.', true);
+      annoncerRecu();
     } else if (params.get('envoi') === 'erreur') {
       dire('L’envoi a échoué. Réessayez dans un moment, ou écrivez-nous'
         + ' directement à ' + ADRESSE + '.', false, true);

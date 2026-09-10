@@ -22,6 +22,12 @@
 <link rel="stylesheet" href="assets/css/styles.css">
 <link rel="icon" href="assets/images/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/images/favicon.png">
+<!-- Mesure d'audience Vercel. Le chemin est celui du site lui-meme : le
+     navigateur ne s'adresse a aucun domaine tiers, ni pour charger ce
+     script, ni pour lui envoyer une visite. La regle du cahier des charges
+     tient donc toujours. Aucun cookie n'est depose. Hors Vercel — en local
+     par exemple — le fichier n'existe pas et la page s'en passe. -->
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body class="page-formulaire">
 <div class="voile" data-voile aria-hidden="true">
@@ -251,6 +257,28 @@
           <p class="note">Les informations saisies servent uniquement à traiter votre demande et le suivi commercial qui en découle. Elles sont conservées trois ans à compter du dernier contact et ne sont ni vendues, ni cédées, ni louées. Vous disposez d&rsquo;un droit d&rsquo;accès, de rectification, d&rsquo;effacement et d&rsquo;opposition, que vous pouvez exercer par ce même formulaire. Le détail figure dans les <a href="confidentialite.html">données personnelles</a>.</p>
         </div>
       </form>
+
+      <!-- La confirmation d'envoi. Le `dialog` est ferme dans le document :
+           sans JavaScript il ne s'affiche jamais, et c'est le message en
+           clair sous le bouton qui annonce le resultat. Il ne porte donc
+           aucune information qu'on ne trouve pas ailleurs. -->
+      <dialog class="recu" data-recu aria-labelledby="recu-titre">
+        <div class="recu__cadre" tabindex="-1" data-recu-cadre>
+          <span class="recu__marque" aria-hidden="true">
+            <svg viewBox="0 0 48 48" role="presentation" focusable="false">
+              <circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M15 24.5 21.5 31 33 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>
+            </svg>
+          </span>
+          <p class="recu__titre" id="recu-titre">Votre message est parti.</p>
+          <p class="recu__mot">Nous le lisons et vous répondons sous un jour ouvré, à l&rsquo;adresse que vous avez indiquée.</p>
+          <p class="note">Si votre situation demande d&rsquo;en parler plus tôt, le premier échange de trente minutes est ouvert à la réservation, gratuitement et sans engagement.</p>
+          <div class="recu__gestes">
+            <a class="btn" href="https://calendly.com/amelie-partners" target="_blank" rel="noopener"><svg class="icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><rect x="2.25" y="3.75" width="13.5" height="12" stroke="currentColor" stroke-width="1.2"/><path d="M2.25 7.5h13.5M6 2.25v3M12 2.25v3" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/></svg><span>Réserver un premier échange</span><svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="square"/></svg></a>
+            <button class="btn btn--ghost" type="button" data-recu-fermer><span>Fermer</span></button>
+          </div>
+        </div>
+      </dialog>
     </div>
   </div>
 </section>

@@ -106,6 +106,12 @@ def main():
         for ref in p.ressources:
             if ref.startswith(("http://", "https://", "data:", "mailto:", "#")):
                 continue
+            # `/_vercel/…` n'est pas un fichier du dépôt : l'hébergeur le
+            # sert lui-même, à la racine du site. C'est le cas du script de
+            # mesure d'audience. Le chemin reste celui du site : aucun
+            # domaine tiers n'est appelé, la règle est respectée.
+            if ref.startswith("/_vercel/"):
+                continue
             chemin = os.path.join(RACINE, ref.split("?")[0])
             if not os.path.exists(chemin):
                 erreurs.append(f"{nom} : ressource introuvable → {ref}")

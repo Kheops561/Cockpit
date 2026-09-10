@@ -3728,20 +3728,23 @@ html:not(.js) .booking__confirm { display: none; }
   gap: .5rem .9rem;
   margin: 0;
 }
+/* La duree et le prix sont ce qu'on vient chercher : ils passent devant la
+   description, qui se resserre pour leur laisser la place. */
 .seance__duree {
-  font-size: .75rem;
-  letter-spacing: .12em;
+  font-size: .9375rem;
+  letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--ink);
 }
 .seance__prix {
   font-family: var(--font-editorial);
-  font-size: 1.125rem;
+  font-size: 1.5rem;
+  line-height: 1.1;
   color: var(--rust);
 }
 /* Ce qui est offert se dit en toutes lettres, jamais par un prix barre. */
 .seance__prix--offert { color: var(--lavender-dark); }
-.seance__quoi { margin: .85rem 0 0; font-size: .9375rem; color: var(--muted); }
+.seance__quoi { margin: 1rem 0 0; font-size: .875rem; line-height: 1.65; color: var(--muted); }
 
 /* Le telechargement de la fiche. Le PDF est un fichier du depot, fabrique
    par `outils/fiche-pdf.py` : le site ne calcule rien au clic et n'appelle
@@ -4033,3 +4036,72 @@ html:not(.js) .booking__confirm { display: none; }
   box-shadow: 0 30px 70px rgba(18, 40, 60, .22);
 }
 .formulaire-panneau .form { margin-top: 2rem; }
+
+
+/* ==========================================================================
+   45 · La confirmation d'envoi
+   Une fenetre qui dit que le message est parti, et propose la seule suite
+   utile : reserver un premier echange.
+
+   Le `dialog` est ferme dans le document. Sans JavaScript il n'apparait
+   jamais, et le message en clair sous le bouton fait le travail : la
+   fenetre ne porte aucune information qu'on ne trouve pas ailleurs.
+   ========================================================================== */
+
+.recu {
+  width: min(34rem, calc(100vw - 2.5rem));
+  max-height: calc(100vh - 2.5rem);
+  padding: 0;
+  background: var(--white);
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+.recu::backdrop { background: rgba(18, 40, 60, .55); }
+/* Le cadre recoit le focus a l'ouverture : il ne doit pas pour autant
+   s'entourer d'un liseré, ce n'est pas lui qu'on actionne. La fenetre
+   entiere se voit deja. */
+.recu__cadre { padding: clamp(1.75rem, 4vw, 2.75rem); }
+.recu__cadre:focus { outline: none; }
+
+.recu__marque {
+  display: block;
+  width: 2.75rem;
+  color: var(--lavender-dark);
+}
+.recu__marque svg { display: block; width: 100%; height: auto; }
+
+.recu__titre {
+  margin: 1.25rem 0 0;
+  font-family: var(--font-editorial);
+  font-size: var(--type-card);
+  line-height: 1.25;
+  color: var(--ink);
+}
+.recu__mot { margin: .85rem 0 0; }
+.recu .note { margin-top: 1.1rem; }
+
+.recu__gestes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+  padding-top: clamp(1.25rem, 2.5vw, 1.5rem);
+  border-top: 1px solid var(--line);
+}
+/* Sur un ecran etroit, les deux gestes prennent toute la largeur : ils se
+   touchent au pouce sans viser. */
+@media (max-width: 479px) {
+  .recu__gestes { flex-direction: column; align-items: stretch; }
+  .recu__gestes .btn { justify-content: center; }
+}
+
+/* L'apparition n'est armee que sous `html.js`, et neutralisee en mouvement
+   reduit : la fenetre est alors simplement la. */
+.js .recu[open] { animation: recu-venir .35s var(--ease) both; }
+@keyframes recu-venir {
+  from { opacity: 0; transform: translateY(.75rem); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .recu[open] { animation: none; }
+}
