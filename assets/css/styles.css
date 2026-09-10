@@ -605,13 +605,24 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   font-size: 1.0625rem;
   color: var(--ink);
 }
+/* Le libelle est entoure d'un `span` : le filet se pose sous le mot, pas
+   sous la rangee. La page ouverte se marque donc ici comme dans la barre du
+   haut — texte appuye et filet lavande — et la colonne des libelles reste
+   parfaitement alignee. L'ancien filet a gauche debordait dans la marge :
+   la rangee courante commencait treize pixels avant les autres. */
+.drawer__link span {
+  display: inline-block;
+  padding-bottom: .2rem;
+  border-bottom: 2px solid transparent;
+}
 .drawer__link[aria-current="page"] {
   color: var(--ink);
   font-weight: 600;
-  border-left: 2px solid var(--lavender-dark);
-  padding-left: .8rem;
-  margin-left: -1rem;
 }
+.drawer__link[aria-current="page"] span { border-bottom-color: var(--lavender-dark); }
+/* Au doigt comme au clavier, la rangee visee se signale de la meme facon. */
+.drawer__link:hover span,
+.drawer__link:focus-visible span { border-bottom-color: var(--line-strong); }
 .drawer .btn { width: 100%; justify-content: center; margin-top: 1.5rem; }
 
 /* ------------------------------------------------------------------ 7 hero */
