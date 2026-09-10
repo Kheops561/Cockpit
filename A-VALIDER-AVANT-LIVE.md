@@ -65,6 +65,21 @@ base et d’une période auditées.
 
 ## Visuels et vidéos
 
+- [ ] **Le portrait ajouté sur `diagnostic.html`** (`portrait-amelie-jardin.jpg`)
+      doit-il aussi remplacer le portrait principal de l’accueil et de la page
+      « À propos » ? Aujourd’hui les deux coexistent.
+- [ ] **La photographie « I LOVE YOU » proposée pour les témoignages n’a pas
+      été installée**, pour deux raisons à trancher :
+      son sujet est une œuvre de Mr Brainwash, signée et numérotée 55/100,
+      qui occupe tout le cadre : la publier sur un site commercial est une
+      question de droits à valider ; et le registre de la marque est « calme,
+      précision, méthode », alors que la mention imprimée sur l’œuvre,
+      « Terms and conditions may vary », se lirait comme une réserve ironique
+      sur une page de témoignages.
+- [ ] Le bandeau de la page témoignages emploie des vues de rue où des
+      passants figurent. La mention précise qu’elles ne représentent pas les
+      personnes citées. Confirmer que cette formulation convient.
+
 - [ ] Valider le choix et le cadrage des photographies fournies. Chacune sert
       à plusieurs endroits : voir le tableau de `GUIDE-VISUELS.md`.
 - [ ] Confirmer les droits d’usage commercial de chaque photographie.

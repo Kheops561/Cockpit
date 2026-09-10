@@ -1314,6 +1314,32 @@ a.card:hover,
   background: var(--rust);
 }
 
+/* La signature : le portrait de la fondatrice et son nom, poses au pied du
+   texte. La photographie est petite a dessein : c'est une signature, pas une
+   illustration. */
+.signature {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+}
+.signature__vue { flex: none; width: clamp(5rem, 9vw, 7rem); }
+.signature__nom {
+  font-family: var(--font-editorial);
+  font-size: 1.0625rem;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.signature__nom span {
+  display: block;
+  margin-top: .35rem;
+  font-family: var(--font-body);
+  font-size: .75rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 /* --------------------------------------------------------- 41 le planning
    Le déroulé du Diagnostic se lit comme un planning : un fil horizontal
    porte les quatre moments, chacun daté puis détaillé. Sur petit écran le
@@ -3717,3 +3743,96 @@ html:not(.js) .booking__confirm { display: none; }
 }
 .vigilance li:last-child { border-bottom: 1px solid var(--line); }
 .vigilance svg { margin-top: .35rem; color: var(--rust); flex: none; }
+
+
+/* ==========================================================================
+   42 · Le bandeau de photographies
+   Une bande de vues qui défile lentement, sur toute la largeur. Elle est
+   décorative et porte `aria-hidden` : le titre, le chapeau et la mention de
+   la section portent seuls le propos.
+
+   La suite d'images est écrite deux fois et la piste se décale d'exactement
+   la moitié de sa largeur : la boucle se referme sans saut, sans mesure et
+   sans JavaScript.
+
+   La commande d'arrêt est une case à cocher masquée pilotée par son
+   étiquette : elle fonctionne donc sans script, comme le couloir de la page
+   « À propos ». En mouvement réduit, rien ne bouge et la commande disparaît,
+   faute d'avoir quoi que ce soit à arrêter.
+   ========================================================================== */
+
+.bandeau-section { padding-bottom: clamp(2rem, 4vw, 3rem); }
+
+.bandeau {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  overflow: hidden;
+  /* Les deux bords s'estompent : la bande n'a ni début ni fin visibles. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6rem, #000 calc(100% - 6rem), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 6rem, #000 calc(100% - 6rem), transparent 100%);
+}
+.bandeau__piste {
+  display: flex;
+  gap: clamp(.75rem, 1.5vw, 1.25rem);
+  width: max-content;
+}
+.bandeau__vue {
+  flex: none;
+  width: clamp(11rem, 18vw, 17rem);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--paper-soft);
+}
+.bandeau__vue img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Le défilement. La piste porte deux fois la même suite : la ramener de
+   moitié la remet exactement sur son point de départ. */
+.js .bandeau__piste { animation: bandeau-defile var(--bandeau-duree, 42s) linear infinite; }
+@keyframes bandeau-defile {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-50% - clamp(.75rem, 1.5vw, 1.25rem) / 2)); }
+}
+
+/* La case à cocher est masquée : c'est son étiquette qui la pilote. */
+.bandeau__bouton { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.bandeau__bouton:checked ~ .bandeau .bandeau__piste { animation-play-state: paused; }
+
+.bandeau__pied {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .9rem clamp(1.25rem, 2.5vw, 2rem);
+  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+.bandeau__pause {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .65rem 1rem;
+  border: 1px solid var(--line-strong);
+  font-size: .75rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color .3s var(--ease), color .3s var(--ease);
+}
+.bandeau__pause:hover { background: var(--ink); color: var(--white); }
+/* Le clavier atteint la case ; c'est l'étiquette qui doit le montrer. */
+.bandeau__bouton:focus-visible ~ .bandeau__pied .bandeau__pause,
+.bandeau__bouton:focus-visible + .bandeau + .bandeau__pied .bandeau__pause {
+  outline: 2px solid var(--lavender-dark);
+  outline-offset: 3px;
+}
+.bandeau__etat { display: inline-flex; align-items: center; gap: .55rem; }
+.bandeau__etat--arret { display: none; }
+.bandeau__bouton:checked ~ .bandeau__pied .bandeau__etat--marche { display: none; }
+.bandeau__bouton:checked ~ .bandeau__pied .bandeau__etat--arret { display: inline-flex; }
+.bandeau__mention { margin: 0; max-width: 46ch; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Rien ne bouge : la bande se lit d'un bloc, et la commande n'a plus
+     d'objet. */
+  .js .bandeau__piste { animation: none; }
+  .bandeau { overflow-x: auto; }
+  .bandeau__pause { display: none; }
+}
