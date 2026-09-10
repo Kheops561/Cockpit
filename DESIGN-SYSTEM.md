@@ -94,6 +94,24 @@ Pas d’italique décoratif. Les polices sont locales (`assets/fonts/`), sous
 licence SIL OFL 1.1 (`assets/fonts/OFL.txt`) : aucun appel à un service de
 polices externe, donc aucun traceur tiers de ce fait.
 
+### Le vietnamien
+
+Le sous-jeu « latin étendu » s’arrête avant `U+1EA0`, et c’est précisément là
+que vivent la plupart des lettres vietnamiennes accentuées, avec `ơ`, `ư`, `đ`
+et `ă`. Inter et Source Serif 4 ont donc chacune un **troisième fichier**,
+`*-vietnamese.woff2`, déclaré avec sa propre plage : le navigateur ne le
+charge que s’il rencontre ces caractères, et les pages françaises et anglaises
+n’en téléchargent pas un octet. Les pages vietnamiennes le préchargent, comme
+elles préchargent le latin.
+
+**Caveat n’existe pas en vietnamien** : Google ne publie pas ce sous-jeu, et
+les lettres à ton n’y sont pas dessinées. Sur les pages vietnamiennes, et sur
+elles seules, les deux blocs manuscrits de la carte postale prennent donc le
+serif du site en italique (section 48 de `styles.css`). Le geste reste le même
+— le trait qui se dessine, le trajet, le filet — mais la lettre est lisible et
+entière. Les deux autres emplois de Caveat, la note et la citation d’Amélie,
+ne sont pas concernés : ce sont ses mots, ils restent en français.
+
 ### Échelle
 
 | Usage | Variable | Valeur |

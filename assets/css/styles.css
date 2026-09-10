@@ -4389,3 +4389,28 @@ html:not(.js) .booking__confirm { display: none; }
   .langues-choix__lien,
   .langues-choix__lien .drapeau { transition: none; }
 }
+
+/* ==========================================================================
+   48 · CARTE POSTALE EN VIETNAMIEN
+   Caveat n'existe pas en vietnamien : Google ne publie pas ce sous-jeu, et
+   les lettres à ton — ừ, ệ, ộ — n'y sont pas dessinées. Écrire « Từ Việt
+   Nam » en Caveat donnerait une main coupée par des lettres empruntées à
+   une autre police au milieu des mots.
+
+   Sur les pages vietnamiennes, et sur elles seules, les deux blocs
+   manuscrits de la carte postale prennent donc le serif du site, en
+   italique. Le geste reste le même — le trait qui se dessine, le trajet, le
+   filet — mais la lettre est lisible et entière.
+
+   Les deux autres emplois de Caveat, la note et la citation d'Amélie, ne
+   sont pas concernés : ce sont ses mots, ils restent en français.
+   ========================================================================== */
+
+.langue-vi .postale__titre,
+.langue-vi .postale__lieu {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-style: italic;
+}
+
+.langue-vi .postale__titre { font-size: clamp(1.5rem, 3.4vw, 2.3rem); }
+.langue-vi .postale__lieu { font-size: 0.95rem; }

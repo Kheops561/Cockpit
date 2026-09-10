@@ -53,6 +53,7 @@ cgv.html                   Conditions générales de vente
 404.html                   Page introuvable
 
 en/                        Les mêmes pages en anglais, sauf les pages légales
+vi/                        Les mêmes pages en vietnamien, sauf les pages légales
 
 assets/css/styles.css      Toute la mise en forme, commentée et numérotée
 assets/css/fonts.css       Déclaration des polices locales
@@ -84,7 +85,8 @@ utilisent `&rsquo;`.
 
 ## Les langues
 
-Le français est à la racine ; l’anglais dans `en/`. Les liens entre pages
+Le français est à la racine ; l’anglais dans `en/`, le vietnamien dans `vi/`.
+Les liens entre pages
 sont **relatifs**, ce qui fait qu’une page anglaise mène à une page anglaise ;
 les fichiers du site s’appellent en **absolu** (`/assets/…`) et servent à
 toutes les langues. Le sélecteur de langue, en drapeaux, est une simple liste
@@ -99,9 +101,20 @@ enfin : la prestation est vendue et facturée en France, sous TVA française,
 donc la page anglaise écrit 432 € et traduit « TTC » par « incl. French VAT »
 sans rien convertir.
 
-L’anglais est fabriqué à partir du français publié : la page anglaise
-vieillit dès que la page française change. Après toute retouche du français,
-il faut refabriquer les traductions.
+Les traductions sont fabriquées à partir du français publié : une page
+traduite vieillit dès que la page française change. Après toute retouche du
+français, il faut les refabriquer, une commande par langue :
+
+```bash
+python3 outils/traduire-site.py en
+python3 outils/traduire-site.py vi
+```
+
+Le vietnamien a besoin de deux fichiers de police que le français et l’anglais
+n’utilisent pas : le sous-jeu latin étendu ne contient pas les lettres à ton.
+Ils ne sont chargés que par les pages qui en ont besoin. Caveat, l’écriture
+manuscrite, n’existe pas en vietnamien : la carte postale de « À propos »
+emploie le serif du site sur ces pages. Voir `DESIGN-SYSTEM.md`.
 
 ## Vérifier avant de publier
 

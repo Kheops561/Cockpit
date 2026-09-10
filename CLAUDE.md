@@ -136,9 +136,9 @@ vectoriels monochromes : aucun émoji, aucune flèche Unicode.
 
 ## Langues
 
-Le site est **multilingue** depuis septembre 2026. Le français vit à la
-racine, les autres langues dans un dossier : `/en/`, `/vi/`. Trois règles
-tiennent l’ensemble :
+Le site est **multilingue** depuis septembre 2026 : français, anglais et
+vietnamien. Le français vit à la racine, les autres langues dans un dossier :
+`/en/`, `/vi/`. Trois règles tiennent l’ensemble :
 
 1. Les **liens entre pages restent relatifs** (`approche.html`). C’est ce qui
    fait qu’une page anglaise renvoie vers une page anglaise sans qu’on
@@ -148,6 +148,12 @@ tiennent l’ensemble :
 3. `langues.py` porte les textes de la coquille et la liste `PUBLIEES` : une
    langue n’apparaît dans le sélecteur et dans les `hreflang` que le jour où
    ses pages existent.
+
+Le vietnamien demande deux fichiers de police de plus, `inter-vietnamese` et
+`source-serif-4-vietnamese` : le sous-jeu latin étendu s’arrête avant les
+lettres à ton. **Caveat n’existe pas en vietnamien** ; la carte postale de
+`a-propos.html` emploie donc le serif du site sur ces pages, par la section 48
+de `styles.css`. Voir `DESIGN-SYSTEM.md`.
 
 Décisions prises avec Amélie : **une seule version anglaise** ; les
 **citations des témoignages restent en français**, les traduire reviendrait à

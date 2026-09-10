@@ -536,7 +536,7 @@ PAGES["a-propos.html"] = {
     "Amélie-Thu DUONG &middot; Fondatrice &amp; Investisseuse à Paris depuis 2014":
         "Amélie-Thu DUONG &middot; Founder &amp; investor in Paris since 2014",
     "Amélie-Thu DUONG &middot; Fondatrice": "Amélie-Thu DUONG &middot; Founder",
-    "Du Viêt Nam&hellip;": "From Viêt Nam&hellip;",
+    "De Hanoï&hellip;": "From Hanoi&hellip;",
     "à Paris.": "to Paris.",
     "Le départ": "The start",
     "Née au Viêt Nam.": "Born in Viêt Nam.",

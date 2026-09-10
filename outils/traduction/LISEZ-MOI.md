@@ -25,6 +25,7 @@ français par oubli, et une phrase française modifiée se signale d’elle-mêm
 
 ```bash
 python3 outils/traduire-site.py en
+python3 outils/traduire-site.py vi
 ```
 
 Toujours **après** les gabarits et après `donnees-structurees.py` et
@@ -45,6 +46,20 @@ dictionnaires/      Un fichier par langue et par page
 `verifier-site.py` appelle `controle_langue.py` tout seul sur les pages des
 dossiers de langue : le contrôle est donc dans la vérification habituelle,
 il n’y a rien de plus à lancer.
+
+## Les polices
+
+Le vietnamien a besoin de deux fichiers que les autres langues n’utilisent
+pas : `inter-vietnamese.woff2` et `source-serif-4-vietnamese.woff2`. Le
+sous-jeu « latin étendu » s’arrête avant `U+1EA0`, et c’est là que vivent la
+plupart des lettres à ton. Chaque fichier est déclaré avec sa propre plage :
+le navigateur ne le charge que s’il rencontre ces caractères, et les pages
+vietnamiennes le préchargent.
+
+**Caveat n’existe pas en vietnamien.** La carte postale de « À propos »
+emploie donc le serif du site sur ces pages, par la section 48 de
+`styles.css`. Les deux autres emplois de Caveat sont les mots d’Amélie : ils
+restent en français, donc en Caveat.
 
 ## Trois choses ne se traduisent pas
 

@@ -101,9 +101,9 @@ c’est la règle générale de ce type d’outil.
 
 ## Langues · nouveau
 
-Le site existe désormais en **français et en anglais**. Onze pages ont été
-traduites ; les trois pages légales restent en français, et les pages
-anglaises y renvoient en le disant.
+Le site existe désormais en **français, anglais et vietnamien**. Onze pages
+ont été traduites dans chaque langue ; les trois pages légales restent en
+français, et les pages traduites y renvoient en le disant.
 
 - [ ] **Faire relire la version anglaise.** Elle a été écrite avec soin,
       mais c’est la voix du cabinet dans une autre langue : Amélie est la
@@ -113,9 +113,22 @@ anglaises y renvoient en le disant.
       qui était la décision retenue : ce sont les mots de personnes
       réelles. Confirmer que cela convient, ou décider d’une traduction
       accompagnée de la mention qu’il s’agit d’une traduction.
-- [ ] **Le vietnamien n’est pas fait.** La place est prête — drapeau,
-      textes de coquille, machinerie — mais aucune page n’est écrite, et
-      la langue n’est donc pas annoncée. À reprendre quand ce sera utile.
+- [ ] **Faire relire la version vietnamienne**, au même titre que
+      l’anglaise, et plus encore : Amélie est vietnamienne, elle jugera
+      mieux que quiconque si le ton est juste. Le vouvoiement retenu est
+      « quý vị », qui s’adresse au lecteur avec respect sans lui donner
+      d’âge ni de rang.
+- [ ] **La carte postale de « À propos » change de police en vietnamien.**
+      Caveat, l’écriture manuscrite, n’existe pas dans cette langue : les
+      lettres à ton n’y sont pas dessinées. Sur les pages vietnamiennes, les
+      deux blocs manuscrits prennent donc le serif du site en italique. À
+      valider, ou à remplacer par une autre écriture manuscrite couvrant le
+      vietnamien — ce serait une quatrième police, donc une décision de
+      design.
+- [ ] **La carte postale part maintenant de Hanoï.** Le titre dit « De
+      Hanoï… à Paris. » et le trajet va de la gauche vers la droite. La
+      biographie, elle, continue de dire « Née au Viêt Nam », sans nommer de
+      ville : confirmer que Hanoï peut être nommée comme ville de départ.
 - [ ] **La fiche PDF « Les 3 effets » est en français.** La page anglaise
       le dit au moment de proposer le téléchargement. Décider si une
       version anglaise du PDF est souhaitée.

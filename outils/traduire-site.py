@@ -35,18 +35,30 @@ import traduire
 # Un dictionnaire par langue : la page d'accueil a le sien, les autres pages
 # sont regroupées. Chaque entrée dit ce qu'il faut faire de chaque chaîne —
 # la traduire, la garder comme citation, ou la laisser telle quelle.
+# Chaque langue range ses dictionnaires de la même façon : l'accueil à part —
+# c'est la page la plus longue, et celle qui donne le ton — puis les autres
+# pages ensemble.
+DICTIONNAIRES = {
+    "en": ("en_accueil", "en_pages", "en_titres", "EN"),
+    "vi": ("vi_accueil", "vi_pages", "vi_titres", "VI"),
+}
+
+
 def glossaires(lang):
-    if lang == "en":
-        import en_accueil, en_pages, en_titres
-        tables = {"index.html": (en_accueil.EN, en_accueil.CITATIONS,
-                                 en_accueil.INCHANGE)}
-        for page, dico in en_pages.PAGES.items():
-            tables[page] = (dico,
-                            en_pages.CITATIONS.get(page, set()),
-                            en_pages.INCHANGE.get(page, set()))
-        return tables, en_titres.TITRES
-    raise SystemExit(f"aucun dictionnaire pour « {lang} ». "
-                     "Voir outils/traduction/dictionnaires/.")
+    if lang not in DICTIONNAIRES:
+        raise SystemExit(f"aucun dictionnaire pour « {lang} ». "
+                         "Voir outils/traduction/dictionnaires/.")
+    nom_accueil, nom_pages, nom_titres, cle = DICTIONNAIRES[lang]
+    accueil = __import__(nom_accueil)
+    pages = __import__(nom_pages)
+    titres = __import__(nom_titres)
+    tables = {"index.html": (getattr(accueil, cle), accueil.CITATIONS,
+                             accueil.INCHANGE)}
+    for page, dico in pages.PAGES.items():
+        tables[page] = (dico,
+                        pages.CITATIONS.get(page, set()),
+                        pages.INCHANGE.get(page, set()))
+    return tables, titres.TITRES
 
 
 def main(lang):

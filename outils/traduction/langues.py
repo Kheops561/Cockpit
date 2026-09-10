@@ -30,7 +30,7 @@ LANGUES = ["fr", "en", "vi"]
 # page introuvable au visiteur et une erreur aux moteurs.
 #
 # On y ajoute une langue le jour où ses pages sont écrites, pas avant.
-PUBLIEES = ["fr", "en"]
+PUBLIEES = ["fr", "en", "vi"]
 
 # Ce qui identifie chaque langue : le code que lisent les navigateurs et les
 # moteurs, le nom que lisent les gens, et le drapeau qui les aide à repérer.

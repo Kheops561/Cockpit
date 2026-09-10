@@ -76,11 +76,27 @@ def alternats(path):
     return "\n".join(lignes)
 
 
+# Les fichiers de police qu'une page demande d'emblee. Le sous-jeu latin
+# sert partout ; le vietnamien s'y ajoute sur les pages vietnamiennes, ou il
+# porte la moitie des lettres. Une page francaise ou anglaise n'en telecharge
+# pas un octet.
+PRELOAD = {
+    "fr": ["inter-latin", "source-serif-4-latin"],
+    "en": ["inter-latin", "source-serif-4-latin"],
+    "vi": ["inter-latin", "source-serif-4-latin",
+           "inter-vietnamese", "source-serif-4-vietnamese"],
+}
+
+
 def head(title, description, path, image="/assets/images/og-image.jpg", lang="fr"):
     canonical = DOMAIN + "/" + prefixe(lang) + ("" if path == "index.html" else path)
     # Une classe par page : elle permet de régler une seule page,
     # par exemple la largeur de sa colonne, sans toucher aux autres.
     slug = path[:-5] if path.endswith(".html") else path
+    preloads = "\n".join(
+        f'<link rel="preload" as="font" type="font/woff2"'
+        f' href="/assets/fonts/{nom}.woff2" crossorigin>'
+        for nom in PRELOAD.get(lang, PRELOAD["fr"]))
     return f"""<!DOCTYPE html>
 <html lang="{IDENTITE[lang]['code']}">
 <head>
@@ -99,8 +115,7 @@ def head(title, description, path, image="/assets/images/og-image.jpg", lang="fr
 <meta property="og:url" content="{canonical}">
 <meta property="og:image" content="{DOMAIN}{image}">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/source-serif-4-latin.woff2" crossorigin>
+{preloads}
 <script>document.documentElement.classList.add('js');try{{if(!sessionStorage.getItem('ap-arrivee')){{document.documentElement.classList.add('premiere-visite');sessionStorage.setItem('ap-arrivee','1');}}}}catch(e){{}}</script>
 <link rel="stylesheet" href="/assets/css/fonts.css">
 <link rel="stylesheet" href="/assets/css/styles.css">

@@ -31,7 +31,8 @@ TOLERE = re.compile(
     r"Investir avec méthode|Décider avec clarté|Amélie|Partners|"
     r"AVANCER|PRÉPARER|RESTRUCTURER|APPROFONDIR|SUSPENDRE|"
     r"Saint-Maur-des-Fossés|Hanoï|Hanoi|Hoan Kiem|Pont des Arts|"
-    r"Viêt Nam|Côte d’Ivoire")
+    r"Viêt Nam|Côte d’Ivoire|La Réunion|Nouvelle-Calédonie|"
+    r"Fontainebleau|Rivoli|Louvre|Seine|Marais|Essilor|Veolia|CPAM")
 
 # Une citation gardee en francais porte son `lang` : on la retire avant de lire.
 CITATION = re.compile(r'(?s)<span lang="fr">.*?</span>')
