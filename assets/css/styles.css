@@ -1254,18 +1254,34 @@ a.card:hover,
 
 /* ------------------------------------------------------------ 18 formulaire */
 
-.form { display: grid; gap: 1.35rem; }
+/* Le formulaire se mesure lui-meme : en fenetre il dispose de 44 rem, dans
+   la page il tient dans une carte deux fois plus etroite. C'est sa propre
+   largeur qui decide, pas celle de l'ecran. */
+.form { display: grid; gap: 1.35rem; container-type: inline-size; }
 /* Deux champs courts tiennent sur une ligne des que la place le permet :
    le formulaire se lit en un ecran plutot qu'en un long rouleau. */
 .form__duo { display: grid; gap: 1.35rem; }
-@media (min-width: 540px) { .form__duo { grid-template-columns: 1fr 1fr; } }
+@container (min-width: 30rem) {
+  .form__duo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+/* Navigateur sans requetes de conteneur : une seule colonne, toujours
+   lisible. */
+@supports not (container-type: inline-size) {
+  @media (min-width: 900px) {
+    .form__duo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  }
+}
+/* Un champ de saisie a une largeur propre : sans cette permission de
+   retrecir, il refuserait d'entrer dans sa colonne et pousserait la page
+   au-dela de l'ecran. */
+.form__duo > .field { min-width: 0; }
 
 .field { display: grid; gap: .5rem; }
 .field label { font-size: .8125rem; letter-spacing: .04em; color: var(--ink); font-weight: 500; }
 
 /* Chaque champ porte son pictogramme, pose dans la marge gauche. Il est
    decoratif : l'etiquette au-dessus dit deja de quoi il s'agit. */
-.field__boite { position: relative; display: grid; }
+.field__boite { position: relative; display: grid; min-width: 0; }
 .field__boite > .icon {
   position: absolute;
   left: .95rem;
@@ -1282,6 +1298,8 @@ a.card:hover,
 .field select,
 .field textarea {
   font: inherit;
+  min-width: 0;
+  max-width: 100%;
   font-size: .9375rem;
   color: var(--text);
   background: var(--paper);
@@ -1360,6 +1378,10 @@ a.card:hover,
    sans lui il n'aurait rien a ouvrir. */
 
 .modale {
+  /* Le navigateur pose un `dialog` en absolu : hors fenetre modale, il se
+     superposerait au reste de la page. Ici il reprend sa place dans le
+     flux, a la suite du texte de la carte qui l'accueille. */
+  position: static;
   width: 100%;
   max-width: none;
   max-height: none;
@@ -1372,6 +1394,7 @@ a.card:hover,
 }
 /* Une fois ouverte par le script, elle se pose au centre de l'ecran. */
 .modale[open]:modal {
+  position: fixed;
   width: min(44rem, calc(100vw - 2rem));
   max-height: min(48rem, calc(100vh - 3rem));
   margin: auto;
