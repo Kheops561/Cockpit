@@ -1636,6 +1636,18 @@ a.card:hover,
 }
 .field__note::before { content: "\00b7"; margin-inline: .35rem; }
 
+/* Le compte de caracteres, sous le champ. Il ne s'affiche que lorsque la
+   saisie commence : un compteur a zero devant un champ vide n'apprend rien
+   et met une pression inutile. */
+.field__compte {
+  margin: .4rem 0 0;
+  font-size: .75rem;
+  letter-spacing: .04em;
+  color: var(--muted);
+  text-align: right;
+}
+.field__compte--court { color: var(--rust); }
+
 .field--inline { display: flex; align-items: flex-start; gap: .75rem; }
 .field--inline input { margin-top: .3rem; }
 .field--inline label { font-weight: 400; color: var(--muted); font-size: .8125rem; line-height: 1.6; }
@@ -2790,6 +2802,28 @@ html:not(.js) .booking__confirm { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .feuillet__fond::after { transition: none; }
 }
+/* La demande de renseignements : un feuillet a paraitre n'est pas une
+   impasse, on peut deja en parler. Le lien mene au formulaire, qui pose de
+   lui-meme la premiere phrase du message. */
+.feuillet__demande {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: 1rem;
+  align-self: flex-start;
+  font-size: .8125rem;
+  color: var(--ink);
+  border-bottom: 1px solid var(--lavender-dark);
+  padding-bottom: .15rem;
+}
+.feuillet__demande .icon { transition: transform .35s var(--ease); }
+.feuillet__demande:hover { color: var(--lavender-dark); }
+.feuillet__demande:hover .icon,
+.feuillet__demande:focus-visible .icon { transform: translateX(4px); }
+@media (prefers-reduced-motion: reduce) {
+  .feuillet__demande .icon { transition: none; }
+}
+
 /* Le corps se tient au-dessus du decor, et occupe toute la hauteur pour que
    l'etiquette reste en bas. */
 .feuillet__corps {

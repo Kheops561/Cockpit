@@ -980,7 +980,18 @@
       var v = champ.validity;
       if (!v) return '';
       if (v.valueMissing) return champ.getAttribute('data-manque') || 'Ce champ est nécessaire.';
-      if (v.tooShort) return champ.getAttribute('data-court') || 'Ce texte est un peu court.';
+      // « Un peu court » ne disait pas combien il manque : on voyait un champ
+      // rempli et un formulaire declare incomplet, sans comprendre pourquoi.
+      // Le compte, lui, se comprend sans explication.
+      if (v.tooShort) {
+        var mini = parseInt(champ.getAttribute('minlength'), 10) || 0;
+        var reste = mini - champ.value.length;
+        if (reste > 0) {
+          return 'Encore ' + reste + ' caractère' + (reste > 1 ? 's' : '')
+            + ' : une phrase entière nous suffit.';
+        }
+        return champ.getAttribute('data-court') || 'Ce texte est un peu court.';
+      }
       // `typeMismatch` vient du type du champ, `patternMismatch` du motif
       // qu'on lui a donne : les deux disent la meme chose au lecteur.
       if (v.typeMismatch || v.patternMismatch) {
@@ -1122,10 +1133,27 @@
       if (libelle) libelle.textContent = 'Envoi en cours…';
       dire('Envoi en cours…', true);
 
+      // Le corps part en `application/x-www-form-urlencoded`, comme le ferait
+      // le navigateur sans JavaScript. Un `FormData` partirait en
+      // `multipart/form-data`, que l'hebergeur ne decoupe pas : la fonction
+      // recevait alors un corps qu'elle ne savait pas lire, et repondait que
+      // tous les champs manquaient alors que le formulaire etait rempli.
+      var donnees = new URLSearchParams();
+      Array.prototype.forEach.call(form.elements, function (el) {
+        if (!el.name || el.disabled) return;
+        if ((el.type === 'checkbox' || el.type === 'radio') && !el.checked) return;
+        if (el.type === 'submit' || el.type === 'button') return;
+        donnees.append(el.name, el.value);
+      });
+
       fetch(form.getAttribute('action'), {
         method: 'POST',
-        body: new FormData(form),
-        headers: { 'Accept': 'application/json', 'X-Requested-With': 'fetch' }
+        body: donnees.toString(),
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'fetch',
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        }
       }).then(function (r) {
         return r.json().catch(function () { return { ok: r.ok, message: '' }; });
       }).then(function (d) {
@@ -1146,6 +1174,55 @@
         if (libelle) libelle.textContent = libelleInitial;
       });
     });
+
+    // ------------------------------------------- le compte de caracteres
+    // Il suit la saisie du message, et dit ce qui manque tant que le
+    // minimum n'est pas atteint. Sans JavaScript il n'apparait pas : la
+    // mention « de 20 a 5 000 caracteres » sous l'etiquette suffit alors.
+    var compte = form.querySelector('[data-compte]');
+    var champCompte = compte ? document.getElementById('message') : null;
+
+    if (compte && champCompte) {
+      var mini = parseInt(champCompte.getAttribute('minlength'), 10) || 0;
+      var maxi = parseInt(champCompte.getAttribute('maxlength'), 10) || 0;
+
+      var direCompte = function () {
+        var n = champCompte.value.length;
+        if (!n) { compte.hidden = true; return; }
+        compte.hidden = false;
+        var court = n < mini;
+        compte.textContent = court
+          ? 'Encore ' + (mini - n) + ' caractère' + (mini - n > 1 ? 's' : '')
+          : n + ' / ' + maxi + ' caractères';
+        compte.classList.toggle('field__compte--court', court);
+      };
+
+      champCompte.addEventListener('input', direCompte);
+      // La page peut revenir avec un message deja pose — un sujet venu d'une
+      // ressource, ou un retour de navigation.
+      window.setTimeout(direCompte, 0);
+    }
+
+    // ------------------------------- une demande venue d'une ressource
+    // Les feuillets « en preparation » mènent ici avec `?sujet=`. Le texte
+    // pose dans le message ne vient jamais de l'adresse : il est choisi dans
+    // cette table. Recopier ce que porte l'URL, meme echappe, ouvrirait la
+    // porte a un message ecrit par un tiers et attribue au visiteur.
+    var SUJETS = {
+      financer: 'Je souhaite être prévenu de la parution de la ressource sur le '
+        + 'financement, et j’aimerais en savoir plus sur ce sujet.',
+      acheter: 'Je souhaite être prévenu de la parution de la ressource sur la '
+        + 'préparation d’une offre, et j’aimerais en savoir plus sur ce sujet.',
+      arbitrer: 'Je souhaite être prévenu de la parution de la ressource sur '
+        + 'l’arbitrage, et j’aimerais en savoir plus sur ce sujet.'
+    };
+
+    var champMessage = form.querySelector('#message');
+    var sujet = new URLSearchParams(window.location.search).get('sujet');
+    if (champMessage && sujet && Object.prototype.hasOwnProperty.call(SUJETS, sujet)
+        && !champMessage.value) {
+      champMessage.value = SUJETS[sujet];
+    }
 
     // Retour d'un envoi sans JavaScript : la page revient avec `?envoi=`.
     var params = new URLSearchParams(window.location.search);

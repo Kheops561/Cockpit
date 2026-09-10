@@ -65,16 +65,46 @@ const EXPEDITEUR = process.env.CONTACT_FROM
   || 'Amélie & Partners <site@amelie-invest.com>';
 
 const QUALITES = ['Particulier', 'Professionnel', 'Société (SCI, holding)', 'Autre'];
-const PROFILS = ['Premier projet immobilier', 'Patrimoine déjà constitué',
-  'Arbitrage ou refinancement', 'Autre'];
+
+// Les douze profils d'investisseur, plus la sortie honnête pour qui ne se
+// reconnaît dans aucun. Cette liste doit rester le miroir exact de celle du
+// formulaire : ce qui arrive d'ailleurs est ramené à « Je ne sais pas
+// encore » plutôt que recopié tel quel dans le courrier.
+const PROFILS = [
+  'Primo-investisseur · se constituer un patrimoine',
+  'Investisseur locatif · générer des revenus réguliers',
+  'Rentier · vivre des revenus immobiliers',
+  'Investisseur patrimonial · préserver et développer son capital',
+  'Chasseur de rendement · maximiser la rentabilité',
+  'Marchand de biens · acheter, rénover, revendre',
+  'Investisseur fiscal · réduire sa fiscalité',
+  'Professionnel ou entrepreneur · développer un portefeuille',
+  'Investisseur familial · transmettre un patrimoine',
+  'Investisseur opportuniste · saisir une occasion',
+  'Investisseur en SCPI · investir sans gérer un bien',
+  'Investisseur institutionnel · placer des capitaux importants',
+  'Je ne sais pas encore',
+];
+
+const ECHEANCES = [
+  'Dans les trois mois',
+  'Dans trois à six mois',
+  'Dans six à douze mois',
+  'Au-delà d’un an',
+  'Pas de date fixée',
+];
 
 /** Caractères de contrôle : ils n'ont rien à faire dans un courrier. */
 const CONTROLES = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
 
 /** Le corps arrive en formulaire encodé ou en JSON selon l'appelant. */
 function lireCorps(req) {
-  const brut = req.body;
+  let brut = req.body;
   if (!brut) return {};
+  // Selon la configuration, l'hébergeur remet parfois le corps sans l'avoir
+  // décodé : un tampon d'octets plutôt qu'une chaîne. On le ramène au texte
+  // avant d'aller plus loin.
+  if (Buffer.isBuffer(brut)) brut = brut.toString('utf8');
   if (typeof brut === 'object') return brut;
   if (typeof brut === 'string') {
     const type = String(req.headers['content-type'] || '');
@@ -173,7 +203,8 @@ module.exports = async function handler(req, res) {
   const indicatif = champ(corps, 'indicatif', 8);
   const telephone = champ(corps, 'telephone', 40);
   let qualite = champ(corps, 'qualite', 60);
-  let profil = champ(corps, 'profil', 60);
+  let profil = champ(corps, 'profil', 80);
+  let echeance = champ(corps, 'echeance', 40);
   const message = champ(corps, 'message', 5000);
   const consent = champ(corps, 'consentement', 20) !== '';
 
@@ -184,7 +215,8 @@ module.exports = async function handler(req, res) {
     manques.push('une adresse e-mail valide');
   }
   if (!qualite) manques.push('à quel titre vous écrivez');
-  if (!profil) manques.push('où vous en êtes');
+  if (!profil) manques.push('le profil dont vous vous sentez le plus proche');
+  if (!echeance) manques.push('votre échéance');
   if (message.length < 20) manques.push('quelques lignes sur votre situation');
   if (!consent) manques.push('votre accord pour le traitement des informations');
 
@@ -195,7 +227,8 @@ module.exports = async function handler(req, res) {
   // Les listes ne prennent que les valeurs proposées : on ne fait pas
   // confiance à ce qui arrive.
   if (!QUALITES.includes(qualite)) qualite = 'Autre';
-  if (!PROFILS.includes(profil)) profil = 'Autre';
+  if (!PROFILS.includes(profil)) profil = 'Je ne sais pas encore';
+  if (!ECHEANCES.includes(echeance)) echeance = 'Pas de date fixée';
 
   const tel = telephone ? `${indicatif} ${telephone}`.trim() : 'non communiqué';
   const texte = [
@@ -204,7 +237,8 @@ module.exports = async function handler(req, res) {
     `Adresse e-mail : ${courriel}`,
     `Téléphone : ${tel}`,
     `Vous êtes : ${qualite}`,
-    `Où j’en suis : ${profil}`,
+    `Profil d’investisseur : ${profil}`,
+    `Échéance : ${echeance}`,
     '',
     'Message :',
     message,

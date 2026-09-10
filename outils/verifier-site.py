@@ -120,6 +120,10 @@ def main():
             if lien.startswith(("http://", "https://", "mailto:", "tel:")):
                 continue
             cible, _, ancre = lien.partition("#")
+            # Un lien interne peut porter une chaîne de requête —
+            # `formulaire.html?sujet=acheter` par exemple. Elle ne fait pas
+            # partie du nom de fichier : c'est la page qui la lit.
+            cible = cible.split("?")[0]
             if cible:
                 chemin = os.path.join(RACINE, cible)
                 if not os.path.exists(chemin):

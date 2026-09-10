@@ -117,8 +117,8 @@
       <h2 class="heading">Ce qu&rsquo;il nous faut pour vous répondre</h2>
       <ul class="checks" style="margin-top:1.5rem">
         <li>Votre projet ou la décision qui vous bloque</li>
-        <li>Là où vous en êtes&nbsp;: propriétaire, primo-accédant, patrimoine déjà constitué</li>
-        <li>Votre échéance, si vous en avez une</li>
+        <li>Le profil d&rsquo;investisseur dont vous vous sentez le plus proche</li>
+        <li>L&rsquo;échéance que vous avez en tête, même approximative</li>
       </ul>
       <form class="form" data-form action="/api/contact" method="post">
         <!-- Piège à robots : ce champ est masqué et doit rester vide.
@@ -228,31 +228,63 @@
             <p class="field__erreur" id="qualite-erreur" hidden></p>
           </div>
           <div class="field">
-            <label for="profil">Où vous en êtes <span class="field__requis" aria-hidden="true">*</span></label>
+            <label for="echeance">Votre échéance <span class="field__requis" aria-hidden="true">*</span></label>
             <div class="field__boite">
-              <svg class="icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><path d="M3 4.5h12M3 9h12M3 13.5h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/></svg>
-              <select id="profil" name="profil" required aria-describedby="profil-erreur"
-                      data-manque="Ce repère nous évite un aller-retour.">
+              <svg class="icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><rect x="2.25" y="3.75" width="13.5" height="12" stroke="currentColor" stroke-width="1.2"/><path d="M2.25 7.5h13.5M6 2.25v3M12 2.25v3" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/></svg>
+              <select id="echeance" name="echeance" required aria-describedby="echeance-erreur"
+                      data-manque="Même approximative, elle nous aide à prioriser.">
                 <option value="">Sélectionner</option>
-                <option>Premier projet immobilier</option>
-                <option>Patrimoine déjà constitué</option>
-                <option>Arbitrage ou refinancement</option>
-                <option>Autre</option>
+                <option>Dans les trois mois</option>
+                <option>Dans trois à six mois</option>
+                <option>Dans six à douze mois</option>
+                <option>Au-delà d’un an</option>
+                <option>Pas de date fixée</option>
               </select>
             </div>
-            <p class="field__erreur" id="profil-erreur" hidden></p>
+            <p class="field__erreur" id="echeance-erreur" hidden></p>
           </div>
         </div>
 
         <div class="field">
-          <label for="message">Votre situation en quelques lignes <span class="field__requis" aria-hidden="true">*</span></label>
+          <label for="profil">Votre profil d&rsquo;investisseur <span class="field__requis" aria-hidden="true">*</span></label>
+          <div class="field__boite">
+            <svg class="icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><path d="M3 4.5h12M3 9h12M3 13.5h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/></svg>
+            <select id="profil" name="profil" required aria-describedby="profil-erreur"
+                    data-manque="Choisissez le profil le plus proche, ou « je ne sais pas encore ».">
+              <option value="">Sélectionner</option>
+                <option>Primo-investisseur · se constituer un patrimoine</option>
+                <option>Investisseur locatif · générer des revenus réguliers</option>
+                <option>Rentier · vivre des revenus immobiliers</option>
+                <option>Investisseur patrimonial · préserver et développer son capital</option>
+                <option>Chasseur de rendement · maximiser la rentabilité</option>
+                <option>Marchand de biens · acheter, rénover, revendre</option>
+                <option>Investisseur fiscal · réduire sa fiscalité</option>
+                <option>Professionnel ou entrepreneur · développer un portefeuille</option>
+                <option>Investisseur familial · transmettre un patrimoine</option>
+                <option>Investisseur opportuniste · saisir une occasion</option>
+                <option>Investisseur en SCPI · investir sans gérer un bien</option>
+                <option>Investisseur institutionnel · placer des capitaux importants</option>
+                <option>Je ne sais pas encore</option>
+            </select>
+          </div>
+          <p class="field__erreur" id="profil-erreur" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="message">Votre situation en quelques lignes <span class="field__requis" aria-hidden="true">*</span> <span class="field__note">de 20 à 5 000 caractères</span></label>
           <div class="field__boite field__boite--haut">
             <svg class="icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><path d="M11.6 2.6 15.4 6.4 6.6 15.2H2.8v-3.8Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.8 4.4l3.8 3.8" stroke="currentColor" stroke-width="1.2"/></svg>
-            <textarea id="message" name="message" rows="5" placeholder="Votre projet ou la décision qui vous bloque, votre point de départ, votre échéance si vous en avez une."
-                      required minlength="20" aria-describedby="message-erreur"
+            <textarea id="message" name="message" rows="5" placeholder="Votre projet ou la décision qui vous bloque, votre point de départ, et ce que vous attendez de cet échange."
+                      required minlength="20" maxlength="5000"
+                      aria-describedby="message-compte message-erreur"
                       data-manque="Quelques lignes suffisent : elles nous évitent un aller-retour."
                       data-court="Quelques mots de plus, pour que nous puissions préparer une réponse utile."></textarea>
           </div>
+          <!-- Le compteur est annonce poliment : `aria-live="polite"` le fait
+               lire a la pause, jamais en coupant la frappe. Sans JavaScript
+               il reste vide, et la mention sous l'etiquette suffit. -->
+          <p class="field__compte" id="message-compte" data-compte
+             aria-live="polite" hidden></p>
           <p class="field__erreur" id="message-erreur" hidden></p>
         </div>
 
