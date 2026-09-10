@@ -1005,7 +1005,12 @@
       var v = champ.validity;
       if (!v) return '';
       if (v.valueMissing) return champ.getAttribute('data-manque') || 'Ce champ est nécessaire.';
-      if (v.typeMismatch) return champ.getAttribute('data-format') || 'Ce format ne semble pas valide.';
+      if (v.tooShort) return champ.getAttribute('data-court') || 'Ce texte est un peu court.';
+      // `typeMismatch` vient du type du champ, `patternMismatch` du motif
+      // qu'on lui a donne : les deux disent la meme chose au lecteur.
+      if (v.typeMismatch || v.patternMismatch) {
+        return champ.getAttribute('data-format') || 'Ce format ne semble pas valide.';
+      }
       return champ.validationMessage || '';
     }
 
@@ -1055,11 +1060,13 @@
       }
       e.preventDefault();
 
-      var nom = valeur('nom');
+      var nom = (valeur('prenom') + ' ' + valeur('nom')).trim();
+      var tel = valeur('telephone');
       var corps = [
         'Nom : ' + nom,
         'Adresse e-mail : ' + valeur('courriel'),
-        'Téléphone : ' + (valeur('telephone') || 'non communiqué'),
+        'Téléphone : ' + (tel ? (valeur('indicatif') + ' ' + tel).trim() : 'non communiqué'),
+        'Vous êtes : ' + valeur('qualite'),
         'Où j’en suis : ' + valeur('profil'),
         '',
         valeur('message'),

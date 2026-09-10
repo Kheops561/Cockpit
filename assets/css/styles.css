@@ -769,6 +769,16 @@ a:focus-visible .frame--zoom img { transform: scale(1.06); }
 .page-a-propos,
 #page-a-propos { --wrap: 1180px; }
 
+/* Les pages légales sont longues et denses : leur colonne s'élargit et la
+   mesure s'allonge, pour que le texte ne paraisse pas comprimé. Les blocs
+   d'appel centrés des autres pages gardent, eux, leur colonne étroite. */
+.page-cgv, #page-cgv,
+.page-mentions-legales, #page-mentions-legales,
+.page-confidentialite, #page-confidentialite { --wrap-narrow: 980px; }
+.page-cgv .prose, #page-cgv .prose,
+.page-mentions-legales .prose, #page-mentions-legales .prose,
+.page-confidentialite .prose, #page-confidentialite .prose { max-width: 90ch; }
+
 /* ------------------------------------------------------------- 10 cartes */
 
 .card {
@@ -1524,6 +1534,16 @@ a.card:hover,
   border-color: var(--lavender-dark);
   box-shadow: 0 0 0 3px var(--lavender-soft);
 }
+
+/* L'indicatif et le numero se tiennent sur une ligne : l'indicatif juste
+   assez large pour son libelle, le numero prend le reste. */
+.field__tel { display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr); gap: .5rem; }
+.field__boite--indicatif select { padding-left: 1rem; }
+@media (max-width: 460px) { .field__tel { grid-template-columns: minmax(0, 1fr); } }
+
+/* L'asterisque des champs necessaires. La mention en toutes lettres figure
+   sous le bouton : l'asterisque seul ne dirait rien a qui ne le connait. */
+.field__requis { color: var(--rust); }
 
 /* Le message d'erreur, sous son champ. Il n'apparait qu'une fois le champ
    quitte ou l'envoi tente : personne n'est averti d'une faute qu'il n'a
@@ -3558,9 +3578,30 @@ html:not(.js) .booking__confirm { display: none; }
    couvrent. Une liste de definitions serait plus juste encore, mais chaque
    entree porte trois informations de nature differente : la liste simple
    reste la lecture la plus claire. */
-.seances { margin: clamp(1.5rem, 3vw, 2rem) 0 0; padding: 0; list-style: none; }
+/* Les deux seances se lisent cote a cote : on compare une duree et un prix
+   d'un coup d'oeil, ce qu'une pile empeche. La carte se mesure elle-meme,
+   car elle n'occupe pas la meme largeur selon la page. */
+/* La boite porte la mesure : un element ne peut pas se mesurer lui-meme. */
+.seances-boite { container-type: inline-size; }
+.seances {
+  display: grid;
+  gap: 0;
+  margin: clamp(1.5rem, 3vw, 2rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
 .seance { padding-block: clamp(1.1rem, 2.2vw, 1.5rem); border-top: 1px solid var(--line); }
 .seance:last-child { border-bottom: 1px solid var(--line); }
+@container (min-width: 30rem) {
+  .seances { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.25rem, 2.5vw, 2rem); }
+  .seance { border-bottom: 1px solid var(--line); }
+}
+@supports not (container-type: inline-size) {
+  @media (min-width: 1100px) {
+    .seances { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.25rem, 2.5vw, 2rem); }
+    .seance { border-bottom: 1px solid var(--line); }
+  }
+}
 .seance__nom {
   margin: 0;
   font-family: var(--font-editorial);

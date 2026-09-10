@@ -133,11 +133,14 @@ def main():
     manquants = [n for n in noms if n not in accueil]
     if manquants:
         erreurs.append("index.html : témoignages manquants → " + ", ".join(manquants))
+    # Les huit témoignages passent en carrousel : chaque nom paraît une fois
+    # par page. Le bandeau défilant, qui doublait la série pour fermer sa
+    # boucle, n'existe plus.
     for n in noms:
-        if accueil.count(n) != 2:
+        if accueil.count(n) != 1:
             avertissements.append(
                 f"index.html : « {n} » apparaît {accueil.count(n)} fois "
-                "(2 attendues : la série et son doublon de bouclage)")
+                "(1 attendue : le carrousel ne double plus la série)")
 
     if "les résultats varient selon les situations" not in accueil:
         erreurs.append("index.html : mention sur la variabilité des résultats absente")
