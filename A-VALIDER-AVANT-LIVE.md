@@ -111,9 +111,12 @@ c’est la règle générale de ce type d’outil.
       C’est aussi ce que dit Calendly.
 - [ ] Vérifier que `432 € TTC` correspond bien à `360 € HT` dans votre
       comptabilité, et si le montant HT doit figurer à côté.
-- [ ] Relire les conditions générales de vente (`cgv.html`) avec un
-      professionnel du droit. Le modèle fourni parlait du « mentor » ; le texte
-      est repris au nom d’Amélie & Partners, sans changer la substance.
+- [ ] **Relire les conditions générales de vente (`cgv.html`) avec un
+      professionnel du droit.** Le modèle fourni parlait du « mentor » ; le
+      texte est repris au nom d’Amélie & Partners, sans changer la substance.
+      L’avertissement qui le disait en tête de page a été retiré à la demande
+      d’Amélie — il s’adressait à elle, pas au client. **L’exigence, elle,
+      tient toujours : ce point reste à cocher avant la mise en ligne.**
 
 ## Visuels et vidéos
 
