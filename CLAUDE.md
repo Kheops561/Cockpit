@@ -7,9 +7,9 @@ et `A-VALIDER-AVANT-LIVE.md` avant toute modification.
 ## Nature du projet
 
 Site **statique** : HTML, CSS, JavaScript simple. Aucune compilation, aucun
-gestionnaire de paquets, aucune dépendance externe, aucun framework. Seule
-exception, `contact.php` : un fichier PHP posé à la racine, sans dépendance
-ni gestionnaire de paquets, qui reçoit le formulaire de contact. Ne pas
+gestionnaire de paquets, aucune dépendance externe, aucun framework.
+`contact.php` existe à la racine mais **n’est pas en service** : il attend un
+hébergement qui exécute PHP. Ne pas
 introduire React, Next.js, Tailwind, shadcn, TypeScript ni aucun script
 distant. Si une idée d’interface vient d’un composant React, la réécrire en
 HTML, CSS et JavaScript simple pour ce site.
@@ -120,13 +120,11 @@ vectoriels monochromes : aucun émoji, aucune flèche Unicode.
 6. Aucun appel à un domaine tiers dans les pages : polices, styles et scripts
    sont hébergés avec le site. Seuls Calendly, LinkedIn et `mailto:` sont des
    liens sortants ; la politique de confidentialité de Calendly est citée
-   sur les pages légales. Le formulaire de contact est posté sur
-   `contact.php`, sur le domaine du site : le navigateur n’appelle donc
-   aucun tiers. C’est le serveur, et lui seul, qui remet le message à
-   Resend. La clé d’API vit dans `contact-config.php`, exclu du dépôt.
-   Voir `INSTALLATION-FORMULAIRE.md`. Aucune protection anti-robots
-   extérieure n’est chargée : champ piège, délai de saisie et limite par
-   adresse, tous côté serveur.
+   sur les pages légales. Le formulaire de contact n’appelle donc aucun
+   service : il prépare un message dans la messagerie du visiteur, adressé
+   à la boîte du domaine. Un envoi direct demanderait un hébergement qui
+   exécute du code ; le nécessaire est écrit et prêt dans `contact.php`,
+   mais **il n’est pas en service**. Voir `INSTALLATION-FORMULAIRE.md`.
 7. Une seule balise `h1` par page.
 
 ## Où modifier

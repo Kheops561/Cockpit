@@ -983,12 +983,6 @@
     var libelle = bouton ? bouton.querySelector('span') : null;
     var libelleInitial = libelle ? libelle.textContent : '';
 
-    // L'heure a laquelle le formulaire a ete pose. Le serveur s'en sert pour
-    // ecarter les envois instantanes, qui ne viennent pas d'une personne.
-    // Sans script, le champ reste vide et le serveur ne fait pas ce controle.
-    var pose = form.querySelector('[data-pose]');
-    if (pose) pose.value = String(Math.floor(Date.now() / 1000));
-
     // ------------------------------------------ signalement des champs
     // Sans ce script, le navigateur affiche ses propres bulles et le
     // formulaire part en POST classique : il reste utilisable tel quel.
@@ -1052,7 +1046,20 @@
       etat.classList.toggle('form__etat--ko', !reussi);
     }
 
-    // ------------------------------------------------------- l'envoi
+    // ------------------------------------------------- la redaction
+    // Le site est statique et n'a pas de composant serveur : il ne peut
+    // pas expedier un courrier lui-meme. Le bouton ouvre donc la
+    // messagerie de la personne, message deja redige, adresse au cabinet.
+    // Rien ne part sans qu'elle l'envoie, et aucune donnee ne transite par
+    // le site.
+    var action = form.getAttribute('action') || '';
+    var adresse = action.replace(/^mailto:/, '').split('?')[0];
+
+    function valeur(nom) {
+      var champ = form.elements[nom];
+      return champ ? String(champ.value || '').trim() : '';
+    }
+
     form.addEventListener('submit', function (e) {
       var premier = null;
       Array.prototype.forEach.call(champs, function (champ) {
@@ -1064,45 +1071,37 @@
         dire('Le formulaire n’est pas complet. Les champs signalés attendent une réponse.', false);
         return;
       }
-
-      // `fetch` absent : on laisse le navigateur poster le formulaire, et
-      // la page revient avec le resultat en parametre.
-      if (typeof window.fetch !== 'function') return;
-
+      if (!adresse) return;
       e.preventDefault();
-      if (bouton) bouton.disabled = true;
-      if (libelle) libelle.textContent = 'Envoi en cours…';
-      dire('Envoi en cours…', true);
 
-      fetch(form.getAttribute('action'), {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { 'Accept': 'application/json', 'X-Requested-With': 'fetch' }
-      }).then(function (r) {
-        return r.json().catch(function () { return { ok: r.ok, message: '' }; });
-      }).then(function (d) {
-        if (d && d.ok) {
-          form.reset();
-          if (pose) pose.value = String(Math.floor(Date.now() / 1000));
-          dire(d.message || 'Message envoyé. Nous répondons sous un jour ouvré.', true);
-        } else {
-          dire((d && d.message) || 'L’envoi a échoué. Réessayez dans un moment.', false);
-        }
-      }).catch(function () {
-        dire('L’envoi a échoué. Vérifiez votre connexion, puis réessayez.', false);
-      }).then(function () {
-        if (bouton) bouton.disabled = false;
-        if (libelle) libelle.textContent = libelleInitial;
-      });
+      var tel = valeur('telephone');
+      var qui = (valeur('prenom') + ' ' + valeur('nom')).trim();
+      var corps = [
+        'Prénom : ' + valeur('prenom'),
+        'Nom : ' + valeur('nom'),
+        'Adresse e-mail : ' + valeur('courriel'),
+        'Téléphone : ' + (tel ? (valeur('indicatif') + ' ' + tel).trim() : 'non communiqué'),
+        'Vous êtes : ' + valeur('qualite'),
+        'Où j’en suis : ' + valeur('profil'),
+        '',
+        valeur('message'),
+        '',
+        'Message préparé depuis le formulaire de contact d’amelie-invest.com.'
+      ].join('\r\n');
+
+      var sujet = 'Premier échange' + (qui ? ' · ' + qui : '');
+      var lien = document.createElement('a');
+      lien.href = 'mailto:' + adresse
+        + '?subject=' + encodeURIComponent(sujet)
+        + '&body=' + encodeURIComponent(corps);
+      // Un lien clique passe partout : certains navigateurs refusent une
+      // affectation directe d'adresse vers un protocole externe.
+      lien.style.display = 'none';
+      document.body.appendChild(lien);
+      lien.click();
+      document.body.removeChild(lien);
+      dire('Votre messagerie s’ouvre avec le message déjà rédigé. Il ne part qu’une fois que vous l’envoyez.', true);
     });
-
-    // Retour d'un envoi sans JavaScript : la page revient avec `?envoi=`.
-    var params = new URLSearchParams(window.location.search);
-    if (params.get('envoi') === 'ok') {
-      dire('Message envoyé. Nous répondons sous un jour ouvré.', true);
-    } else if (params.get('envoi') === 'erreur') {
-      dire('L’envoi a échoué. Réessayez dans un moment.', false);
-    }
   }
 
   function demarrer() { initFenetre(); initFormulaire(); }

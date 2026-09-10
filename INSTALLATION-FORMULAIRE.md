@@ -1,8 +1,25 @@
 # Mettre le formulaire de contact en service
 
-Le site reste un ensemble de fichiers statiques. `contact.php` est le seul
-composant serveur : il reçoit le formulaire et fait envoyer le message par
-Resend.
+> **État actuel : cette page décrit une évolution possible, pas le
+> fonctionnement d’aujourd’hui.**
+>
+> Le formulaire du site **prépare un message dans la messagerie du
+> visiteur**, adressé à la boîte du domaine. Il n’envoie rien lui-même.
+>
+> `amelie-invest.com` n’a pas d’hébergement qui exécute du code : le domaine
+> et les boîtes aux lettres sont chez OVH, mais le site est servi depuis une
+> machine Amazon EC2 (75.101.134.27). `contact.php` est écrit, testé et prêt,
+> mais il ne tournera qu’une fois un hébergement PHP en place. Suivre alors
+> la marche ci-dessous, puis rebrancher le formulaire sur `contact.php`.
+
+Le site reste un ensemble de fichiers statiques. `contact.php` serait le seul
+composant serveur : il recevrait le formulaire et ferait envoyer le message
+par Resend.
+
+Une variante est possible une fois l’hébergement en place : faire partir le
+message par le **serveur SMTP d’OVH** (`ssl0.ovh.net`, avec les
+identifiants d’une boîte du domaine) plutôt que par Resend. Cela éviterait
+un sous-traitant supplémentaire dans la page « Données personnelles. »
 
 **Le navigateur n'appelle jamais Resend.** Il ne parle qu'à
 `amelie-invest.com`. C'est le serveur, et lui seul, qui contacte l'API. La
