@@ -99,6 +99,36 @@ c’est la règle générale de ce type d’outil.
       transfert. La mention est en attente sur la page « Données
       personnelles ».
 
+## Langues · nouveau
+
+Le site existe désormais en **français et en anglais**. Onze pages ont été
+traduites ; les trois pages légales restent en français, et les pages
+anglaises y renvoient en le disant.
+
+- [ ] **Faire relire la version anglaise.** Elle a été écrite avec soin,
+      mais c’est la voix du cabinet dans une autre langue : Amélie est la
+      seule à pouvoir dire si elle s’y reconnaît. Les pages sont dans
+      `en/`, et se lisent depuis le site par le drapeau, en haut à droite.
+- [ ] **Les témoignages restent en français** sur la version anglaise, ce
+      qui était la décision retenue : ce sont les mots de personnes
+      réelles. Confirmer que cela convient, ou décider d’une traduction
+      accompagnée de la mention qu’il s’agit d’une traduction.
+- [ ] **Le vietnamien n’est pas fait.** La place est prête — drapeau,
+      textes de coquille, machinerie — mais aucune page n’est écrite, et
+      la langue n’est donc pas annoncée. À reprendre quand ce sera utile.
+- [ ] **La fiche PDF « Les 3 effets » est en français.** La page anglaise
+      le dit au moment de proposer le téléchargement. Décider si une
+      version anglaise du PDF est souhaitée.
+- [ ] **Les données structurées (JSON-LD) ne sont posées que sur les pages
+      françaises.** Celles qui existent décrivent le cabinet en français ;
+      les recopier telles quelles sur `/en/` dirait aux moteurs que la page
+      anglaise est française. À reprendre si le référencement anglais
+      devient un sujet.
+- [ ] **Le prix reste français** — `432 €`, « incl. French VAT » — parce
+      que la prestation est vendue et facturée en France. Confirmer que
+      c’est bien la règle voulue si des clients hors zone euro se
+      présentent.
+
 ## Tarifs et durées
 
 - [x] **Le prix du Diagnostic Stratégique** est arrêté à **432 € TTC**

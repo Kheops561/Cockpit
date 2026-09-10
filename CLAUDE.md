@@ -155,7 +155,31 @@ les modifier ; les **pages légales ne sont pas traduites**, les autres langues
 y renvoient en indiquant que le français fait foi.
 
 Le nom de la marque, sa signature et les noms des offres ne se traduisent
-jamais : ce sont des noms propres.
+jamais : ce sont des noms propres. Les cinq verdicts non plus : `AVANCER`,
+`PRÉPARER`, `RESTRUCTURER`, `APPROFONDIR`, `SUSPENDRE` sont les mots que
+porte la Note de Diagnostic & Décision ; la page les explique en anglais sans
+les remplacer.
+
+**Le prix reste français et le droit reste français.** 432 € TTC : la
+prestation est vendue en France, facturée en France, soumise à la TVA
+française. Les pages anglaises écrivent donc le prix en euros et traduisent
+« TTC » par « incl. French VAT » ; elles ne convertissent rien. Les renvois
+vers les pages légales disent qu’elles sont en français.
+
+L’anglais est **fabriqué à partir du français publié**, pas écrit à part : la
+page française sert de source, sa coquille est refaite dans la langue voulue
+et son corps est traduit chaîne par chaîne à partir d’un dictionnaire. Une
+chaîne absente du dictionnaire arrête la fabrication : aucune phrase ne peut
+rester en français par oubli. Conséquence pratique : **traduire vient après
+générer**, jamais avant, et une retouche du français se répercute en
+relançant la traduction.
+
+Deux précautions valent d’être connues. Les listes déroulantes du formulaire
+reçoivent une valeur française explicite avant traduction : le visiteur lit
+sa langue, le serveur reçoit ce que `api/contact.js` attend, et le message
+qui arrive chez Amélie garde le même vocabulaire quelle que soit la langue.
+Et le champ caché `retour`, qui sert au renvoi sans JavaScript, porte le
+préfixe de langue ; `api/contact.js` l’accepte, en le contrôlant.
 
 ## Où modifier
 
@@ -166,7 +190,8 @@ jamais : ce sont des noms propres.
 - Visuels : `assets/images/` et `assets/videos/`, voir `GUIDE-VISUELS.md`.
 
 L’en-tête et le pied de page sont **répétés dans chaque page**. Une
-modification de navigation doit être reportée dans les quatorze fichiers.
+modification de navigation doit être reportée dans les quatorze fichiers
+français, puis dans chaque dossier de langue.
 
 ## Méthode obligatoire avant livraison
 
@@ -178,6 +203,8 @@ modification de navigation doit être reportée dans les quatorze fichiers.
 5. Relancer `python3 outils/donnees-structurees.py` si `index.html` ou
    `diagnostic.html` ont été régénérés, et
    `python3 outils/dimensions-images.py` après tout changement de visuel.
+   Puis refabriquer les pages traduites : elles descendent des pages
+   françaises et vieillissent dès que celles-ci changent.
 6. Vérifier le rendu à 375, 768, 1024, 1200 et 1440 px.
 7. Vérifier clavier, contrastes, textes alternatifs et mouvement réduit.
 8. Donner un résumé des fichiers modifiés, des tests réellement effectués et

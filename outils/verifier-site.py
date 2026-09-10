@@ -23,6 +23,7 @@ from html.parser import HTMLParser
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CALENDLY = "https://calendly.com/amelie-partners"
 EMAIL = "contact@amelie-invest.com"
+DOMAINE = "https://amelie-invest.com"
 
 erreurs = []
 avertissements = []
@@ -79,7 +80,36 @@ class Analyse(HTMLParser):
 
 
 def pages():
-    return sorted(f for f in os.listdir(RACINE) if f.endswith(".html"))
+    """Les pages du site : le francais a la racine, les traductions dessous.
+
+    Une langue vit dans son propre dossier — `en/`, `vi/`. Le nom rendu est
+    celui qu'on ecrirait dans un lien depuis la racine du site :
+    `index.html`, `en/index.html`. C'est aussi la cle des liens verifies
+    plus bas.
+    """
+    noms = [f for f in os.listdir(RACINE) if f.endswith(".html")]
+    for lang in os.listdir(RACINE):
+        # Un dossier de langue porte un code de deux lettres, et rien
+        # d'autre dans le dépôt n'a cette forme.
+        if not re.fullmatch(r"[a-z]{2}", lang):
+            continue
+        dossier = os.path.join(RACINE, lang)
+        if os.path.isdir(dossier):
+            noms += [f"{lang}/{f}" for f in os.listdir(dossier)
+                     if f.endswith(".html")]
+    return sorted(noms)
+
+
+def resoudre(nom, ref):
+    """Le chemin vise par un lien ecrit dans la page `nom`.
+
+    Un chemin qui commence par « / » part de la racine du site. Les autres
+    partent du dossier de la page : c'est ce qui permet a `en/contact.html`
+    d'ecrire `formulaire.html` et d'atteindre `en/formulaire.html`.
+    """
+    if ref.startswith("/"):
+        return ref.lstrip("/")
+    return os.path.normpath(os.path.join(os.path.dirname(nom), ref))
 
 
 def main():
@@ -112,10 +142,7 @@ def main():
             # domaine tiers n'est appelé, la règle est respectée.
             if ref.startswith("/_vercel/"):
                 continue
-            # Un chemin qui commence par « / » part de la racine du site,
-            # pas du disque : c'est ce qui permet à une page rangée dans un
-            # sous-dossier de langue de retrouver les mêmes fichiers.
-            chemin = os.path.join(RACINE, ref.split("?")[0].lstrip("/"))
+            chemin = os.path.join(RACINE, resoudre(nom, ref.split("?")[0]))
             if not os.path.exists(chemin):
                 erreurs.append(f"{nom} : ressource introuvable → {ref}")
 
@@ -128,11 +155,15 @@ def main():
             # partie du nom de fichier : c'est la page qui la lit.
             cible = cible.split("?")[0]
             if cible:
-                chemin = os.path.join(RACINE, cible.lstrip("/"))
-                if not os.path.exists(chemin):
+                vise = resoudre(nom, cible)
+                # Un lien vers un dossier — « /en/ » — designe sa page
+                # d'accueil.
+                if vise.endswith("/") or os.path.isdir(os.path.join(RACINE, vise)):
+                    vise = os.path.join(vise, "index.html").replace("\\", "/")
+                if not os.path.exists(os.path.join(RACINE, vise)):
                     erreurs.append(f"{nom} : lien cassé → {lien}")
                     continue
-                doc = docs.get(cible)
+                doc = docs.get(vise)
             else:
                 doc = p
             if ancre and doc and ancre not in doc.ids:
@@ -185,6 +216,45 @@ def main():
               "assets/css/fonts.css", "assets/js/site.js", "assets/fonts/OFL.txt"):
         if not os.path.exists(os.path.join(RACINE, f)):
             erreurs.append(f"fichier attendu manquant : {f}")
+
+    # ------------------------------------------- pages traduites
+    # Le dictionnaire garantit qu'aucune chaîne n'a été oubliée au moment
+    # de fabriquer la page. Ce contrôle-ci prend le problème par l'autre
+    # bout : il relit la page produite et signale ce qui *ressemble* encore
+    # à du français. C'est un filet, pas une preuve — mais il attrape la
+    # traduction distraite qui aurait recopié sa source.
+    sys.path.insert(0, os.path.join(RACINE, "outils", "traduction"))
+    try:
+        from controle_langue import suspects
+    except ImportError:
+        suspects = None
+    if suspects:
+        for nom in docs:
+            if "/" not in nom:
+                continue
+            for texte, mots in suspects(os.path.join(RACINE, nom)):
+                erreurs.append(
+                    f"{nom} : reste en français ({', '.join(mots)}) → "
+                    f"{texte[:70]}")
+
+    # ---------------------------------------------------- plan du site
+    # Une page ajoutée et non déclarée ne se voit pas : c'est exactement ce
+    # que le plan du site est là pour éviter. On le compare donc aux pages
+    # réellement présentes. Il se réécrit par `outils/plan-du-site.py`.
+    plan = os.path.join(RACINE, "sitemap.xml")
+    if os.path.exists(plan):
+        declarees = set(re.findall(r"<loc>([^<]+)</loc>",
+                                   open(plan, encoding="utf-8").read()))
+        attendues = set()
+        for nom in docs:
+            if os.path.basename(nom) == "404.html":
+                continue
+            chemin = nom[:-len("index.html")] if nom.endswith("index.html") else nom
+            attendues.add(DOMAINE + "/" + chemin)
+        for manquante in sorted(attendues - declarees):
+            erreurs.append(f"sitemap.xml : page absente du plan → {manquante}")
+        for fantome in sorted(declarees - attendues):
+            erreurs.append(f"sitemap.xml : adresse sans page → {fantome}")
 
     # ------------------------------------------------------------- rapport
     print(f"{len(docs)} pages analysées.")

@@ -1,81 +1,202 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://amelie-invest.com/</loc>
-    <lastmod>2026-09-07</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/en/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/"/>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://amelie-invest.com/diagnostic.html</loc>
-    <lastmod>2026-09-07</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/diagnostic.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/diagnostic.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/diagnostic.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/en/diagnostic.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/diagnostic.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/diagnostic.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/diagnostic.html"/>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://amelie-invest.com/accompagnements.html</loc>
-    <lastmod>2026-09-07</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/accompagnements.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/accompagnements.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/accompagnements.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/en/accompagnements.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/accompagnements.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/accompagnements.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/accompagnements.html"/>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://amelie-invest.com/approche.html</loc>
-    <lastmod>2026-09-07</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/approche.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/approche.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/approche.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/en/approche.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/approche.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/approche.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/approche.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/temoignages.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/temoignages.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/temoignages.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/temoignages.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/en/temoignages.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/temoignages.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/temoignages.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/temoignages.html"/>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://amelie-invest.com/ressources.html</loc>
-    <lastmod>2026-09-07</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/ressources.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/ressources.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/ressources.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/en/ressources.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/ressources.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/ressources.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/ressources.html"/>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amelie-invest.com/ressource-3-effets.html</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://amelie-invest.com/a-propos.html</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://amelie-invest.com/contact.html</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://amelie-invest.com/formulaire.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/ressource-3-effets.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/ressource-3-effets.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/ressource-3-effets.html"/>
     <lastmod>2026-09-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://amelie-invest.com/en/ressource-3-effets.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/ressource-3-effets.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/ressource-3-effets.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/ressource-3-effets.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/a-propos.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/a-propos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/a-propos.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/a-propos.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/en/a-propos.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/a-propos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/a-propos.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/a-propos.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/contact.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/contact.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/en/contact.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/contact.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/formulaire.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/formulaire.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/formulaire.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/formulaire.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/en/formulaire.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://amelie-invest.com/formulaire.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://amelie-invest.com/en/formulaire.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://amelie-invest.com/formulaire.html"/>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://amelie-invest.com/cgv.html</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://amelie-invest.com/mentions-legales.html</loc>
-    <lastmod>2026-09-07</lastmod>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   <url>
     <loc>https://amelie-invest.com/confidentialite.html</loc>
-    <lastmod>2026-09-07</lastmod>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://amelie-invest.com/temoignages.html</loc>
-    <lastmod>2026-09-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://amelie-invest.com/cgv.html</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
   </url>
 </urlset>

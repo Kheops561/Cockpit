@@ -179,9 +179,78 @@ function champ(corps, nom, max = 500) {
 const PAGES_RETOUR = ['formulaire.html', 'contact.html'];
 const PAGE_DEFAUT = 'formulaire.html';
 
+/**
+ * Le site existe en plusieurs langues, rangées dans un dossier par langue.
+ * Un visiteur venu de `/en/formulaire.html` doit y revenir, et non atterrir
+ * sur la page française. Le préfixe est donc accepté — mais seulement s'il
+ * désigne une langue du site, et la page reste prise dans la liste ci-dessus.
+ */
+const LANGUES_RETOUR = ['en', 'vi'];
+const FORME_RETOUR = /^(?:([a-z]{2})\/)?([a-z0-9-]+\.html)$/;
+
 function pageRetour(corps) {
   const v = champ(corps, 'retour', 40);
-  return PAGES_RETOUR.includes(v) ? v : PAGE_DEFAUT;
+  const parts = FORME_RETOUR.exec(v);
+  if (!parts) return PAGE_DEFAUT;
+  const [, langue, page] = parts;
+  if (!PAGES_RETOUR.includes(page)) return PAGE_DEFAUT;
+  if (langue && !LANGUES_RETOUR.includes(langue)) return PAGE_DEFAUT;
+  return v;
+}
+
+/**
+ * Ce que la fonction répond au visiteur, dans sa langue.
+ *
+ * La langue n'a pas besoin d'un champ à elle : elle est déjà dans `retour`,
+ * qui porte le dossier de la page d'où vient le formulaire — `en/…` — et qui
+ * est contrôlé juste au-dessus. Un site sans traduction reste en français
+ * sans rien changer ici.
+ *
+ * Les libellés des champs manquants sont rangés avec les phrases : ils
+ * s'assemblent dans « Il manque … », et se traduisent donc ensemble.
+ */
+const PAROLES = {
+  fr: {
+    methode: 'Méthode non autorisée.',
+    recu: 'Message reçu.',
+    manque: (liste) => `Il manque ${liste.join(', ')}.`,
+    champs: {
+      prenom: 'le prénom',
+      nom: 'le nom',
+      courriel: 'une adresse e-mail valide',
+      qualite: 'à quel titre vous écrivez',
+      profil: 'le profil dont vous vous sentez le plus proche',
+      echeance: 'votre échéance',
+      message: 'quelques lignes sur votre situation',
+      consent: 'votre accord pour le traitement des informations',
+    },
+    pasConfigure: (a) => `Le formulaire n’est pas encore configuré. Écrivez directement à ${a}.`,
+    echec: (a) => `L’envoi a échoué. Réessayez dans un moment, ou écrivez directement à ${a}.`,
+    envoye: 'Message envoyé. Nous répondons sous un jour ouvré.',
+  },
+  en: {
+    methode: 'Method not allowed.',
+    recu: 'Message received.',
+    manque: (liste) => `Still missing: ${liste.join(', ')}.`,
+    champs: {
+      prenom: 'your first name',
+      nom: 'your surname',
+      courriel: 'a valid email address',
+      qualite: 'in what capacity you are writing',
+      profil: 'the profile you feel closest to',
+      echeance: 'your timeframe',
+      message: 'a few lines about your situation',
+      consent: 'your agreement to the information being processed',
+    },
+    pasConfigure: (a) => `The form is not set up yet. Please write directly to ${a}.`,
+    echec: (a) => `Sending failed. Try again in a moment, or write directly to ${a}.`,
+    envoye: 'Message sent. We reply within one working day.',
+  },
+};
+
+function paroles(page) {
+  const m = /^([a-z]{2})\//.exec(page || '');
+  return (m && PAROLES[m[1]]) || PAROLES.fr;
 }
 
 function repondre(req, res, code, message, ok = false, page = PAGE_DEFAUT) {
@@ -213,7 +282,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method !== 'POST') {
-    return repondre(req, res, 405, 'Méthode non autorisée.');
+    return repondre(req, res, 405, PAROLES.fr.methode);
   }
 
   const corps = lireCorps(req);
@@ -223,14 +292,14 @@ module.exports = async function handler(req, res) {
   // extérieur n'est appelé pour cette vérification. On répond « reçu » sans
   // rien envoyer : un robot ne doit pas apprendre qu'il a été repéré.
   if (champ(corps, 'site_web', 200) !== '') {
-    return repondre(req, res, 200, 'Message reçu.', true, page);
+    return repondre(req, res, 200, paroles(page).recu, true, page);
   }
 
   // Un formulaire rempli en moins de trois secondes ne l'a pas été par une
   // personne. Sans JavaScript le champ reste vide et le contrôle est ignoré.
   const pose = parseInt(champ(corps, 'pose', 20), 10);
   if (Number.isFinite(pose) && pose > 0 && (Date.now() / 1000 - pose) < 3) {
-    return repondre(req, res, 200, 'Message reçu.', true, page);
+    return repondre(req, res, 200, paroles(page).recu, true, page);
   }
 
   const prenom = champ(corps, 'prenom', 80);
@@ -244,20 +313,21 @@ module.exports = async function handler(req, res) {
   const message = champ(corps, 'message', 5000);
   const consent = champ(corps, 'consentement', 20) !== '';
 
+  const dit = paroles(page);
   const manques = [];
-  if (!prenom) manques.push('le prénom');
-  if (!nom) manques.push('le nom');
+  if (!prenom) manques.push(dit.champs.prenom);
+  if (!nom) manques.push(dit.champs.nom);
   if (!/^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$/.test(courriel)) {
-    manques.push('une adresse e-mail valide');
+    manques.push(dit.champs.courriel);
   }
-  if (!qualite) manques.push('à quel titre vous écrivez');
-  if (!profil) manques.push('le profil dont vous vous sentez le plus proche');
-  if (!echeance) manques.push('votre échéance');
-  if (message.length < 20) manques.push('quelques lignes sur votre situation');
-  if (!consent) manques.push('votre accord pour le traitement des informations');
+  if (!qualite) manques.push(dit.champs.qualite);
+  if (!profil) manques.push(dit.champs.profil);
+  if (!echeance) manques.push(dit.champs.echeance);
+  if (message.length < 20) manques.push(dit.champs.message);
+  if (!consent) manques.push(dit.champs.consent);
 
   if (manques.length) {
-    return repondre(req, res, 422, `Il manque ${manques.join(', ')}.`, false, page);
+    return repondre(req, res, 422, dit.manque(manques), false, page);
   }
 
   // Les listes ne prennent que les valeurs proposées : on ne fait pas
@@ -332,8 +402,7 @@ module.exports = async function handler(req, res) {
   const cle = process.env.RESEND_API_KEY;
   if (!cle) {
     console.error('[contact] RESEND_API_KEY absente des variables du projet.');
-    return repondre(req, res, 500, 'Le formulaire n’est pas encore configuré. '
-      + `Écrivez directement à ${DESTINATAIRE}.`, false, page);
+    return repondre(req, res, 500, dit.pasConfigure(DESTINATAIRE), false, page);
   }
 
   try {
@@ -358,14 +427,12 @@ module.exports = async function handler(req, res) {
       // Le détail part dans le journal Vercel, jamais vers le visiteur : il
       // ne doit rien apprendre de la configuration.
       console.error('[contact] Resend a répondu', r.status, await r.text());
-      return repondre(req, res, 502, 'L’envoi a échoué. Réessayez dans un moment, '
-        + `ou écrivez directement à ${DESTINATAIRE}.`, false, page);
+      return repondre(req, res, 502, dit.echec(DESTINATAIRE), false, page);
     }
   } catch (err) {
     console.error('[contact] appel à Resend impossible :', err);
-    return repondre(req, res, 502, 'L’envoi a échoué. Réessayez dans un moment, '
-      + `ou écrivez directement à ${DESTINATAIRE}.`, false, page);
+    return repondre(req, res, 502, dit.echec(DESTINATAIRE), false, page);
   }
 
-  return repondre(req, res, 200, 'Message envoyé. Nous répondons sous un jour ouvré.', true, page);
+  return repondre(req, res, 200, dit.envoye, true, page);
 };
