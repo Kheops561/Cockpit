@@ -47,6 +47,19 @@ dictionnaires/      Un fichier par langue et par page
 dossiers de langue : le contrôle est donc dans la vérification habituelle,
 il n’y a rien de plus à lancer.
 
+## Le sélecteur
+
+C’est un `details` : un menu déroulant natif. Il s’ouvre au clavier, s’annonce
+aux lecteurs d’écran avec son état, et fonctionne sans JavaScript. Le bouton
+porte le drapeau et le code de la langue ouverte ; la liste donne les noms en
+toutes lettres, chacun écrit dans sa langue et marqué comme tel par `lang`. Un
+drapeau ne dit pas une langue, il dit un pays : il aide à repérer, jamais à
+comprendre seul.
+
+Sa classe est `langues-choix`. `langues`, sans suffixe, est déjà prise par la
+phrase « L’échange se tient en… » de la page Contact — les deux ne doivent pas
+se confondre.
+
 ## Les polices
 
 Le vietnamien a besoin de deux fichiers que les autres langues n’utilisent

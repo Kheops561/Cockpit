@@ -460,8 +460,6 @@ PAGES["temoignages.html"] = {
     "Témoignages": "Client stories",
     "Les investisseurs": "Investors",
     "partagent leur expérience.": "share their experience.",
-    "Huit personnes accompagnées racontent leur projet, la décision qu&rsquo;elles avaient à prendre et ce que l&rsquo;accompagnement a changé.":
-        "Eight people we have advised describe their project, the decision they faced and what the engagement changed.",
     "Descendre au contenu": "Scroll to content",
     "Ce qu&rsquo;ils en disent.": "In their own words.",
     "Résidence principale &middot; Fontainebleau": "Main home &middot; Fontainebleau",

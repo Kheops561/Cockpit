@@ -50,6 +50,49 @@
     });
   }
 
+  /* ------------------------------------------- choix de la langue */
+
+  /* Le menu des langues est un `details` : il s'ouvre et se ferme tout seul,
+     au clic comme au clavier, sans une ligne de JavaScript. Ce qui suit ne
+     fait qu'ajouter les deux gestes qu'un `details` ne connait pas de
+     lui-meme — la touche d'echappement, et le clic a cote — parce qu'un menu
+     qui reste ouvert derriere le doigt agace. Sans JavaScript, il faut
+     recliquer sur le bouton : le menu reste utilisable. */
+
+  function initLangues() {
+    var menus = document.querySelectorAll('[data-langues]');
+    if (!menus.length) return;
+
+    function fermerLesAutres(sauf) {
+      Array.prototype.forEach.call(menus, function (m) {
+        if (m !== sauf) m.open = false;
+      });
+    }
+
+    Array.prototype.forEach.call(menus, function (menu) {
+      menu.addEventListener('toggle', function () {
+        if (menu.open) fermerLesAutres(menu);
+      });
+    });
+
+    document.addEventListener('click', function (e) {
+      Array.prototype.forEach.call(menus, function (menu) {
+        if (menu.open && !menu.contains(e.target)) menu.open = false;
+      });
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      Array.prototype.forEach.call(menus, function (menu) {
+        if (!menu.open) return;
+        menu.open = false;
+        // Le focus revient sur le bouton : on ne perd pas sa place.
+        var bouton = menu.querySelector('summary');
+        if (bouton) bouton.focus();
+      });
+    });
+  }
+
   /* --------------------------------------------- ombre de l'en-tête */
 
   function initHeader() {
@@ -232,6 +275,7 @@
 
   function init() {
     initMenu();
+    initLangues();
     initHeader();
     initReveal();
     initCounters();

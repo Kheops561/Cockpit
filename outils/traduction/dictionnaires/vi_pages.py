@@ -460,8 +460,6 @@ PAGES["temoignages.html"] = {
     "Témoignages": "Khách hàng nói gì",
     "Les investisseurs": "Các nhà đầu tư",
     "partagent leur expérience.": "kể lại trải nghiệm của họ.",
-    "Huit personnes accompagnées racontent leur projet, la décision qu&rsquo;elles avaient à prendre et ce que l&rsquo;accompagnement a changé.":
-        "Tám người từng được đồng hành kể lại dự án của mình, quyết định họ phải đưa ra và điều mà sự đồng hành đã thay đổi.",
     "Descendre au contenu": "Xuống phần nội dung",
     "Ce qu&rsquo;ils en disent.": "Bằng lời của chính họ.",
     "Résidence principale &middot; Fontainebleau": "Nhà ở chính &middot; Fontainebleau",

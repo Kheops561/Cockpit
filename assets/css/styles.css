@@ -4205,7 +4205,9 @@ html:not(.js) .booking__confirm { display: none; }
 
 
 /* Les langues dans lesquelles l'echange peut se tenir. Le drapeau precede
-   la langue ecrite : il aide a reperer, il ne remplace rien. */
+   la langue ecrite : il aide a reperer, il ne remplace rien.
+   A ne pas confondre avec `.langues-choix`, le selecteur de langue de
+   l'en-tete : celui-ci n'est qu'une phrase de la page Contact. */
 .langues {
   display: flex;
   flex-wrap: wrap;
@@ -4328,67 +4330,128 @@ html:not(.js) .booking__confirm { display: none; }
 
 /* ==========================================================================
    47 · Le choix de la langue
-   Une liste de liens, rien de plus : elle fonctionne sans JavaScript, et
-   chaque lien mene a la meme page dans l'autre langue. Le drapeau aide a
-   reperer, le code de langue le double en toutes lettres — un drapeau ne
-   dit pas une langue, il dit un pays.
+   Un menu deroulant natif — un `details` — et rien d'autre : il s'ouvre au
+   clavier, s'annonce aux lecteurs d'ecran avec son etat, et fonctionne sans
+   JavaScript. Le bouton porte le drapeau et le code de la langue ouverte ;
+   la liste donne les noms en toutes lettres, chacun dans sa langue. Un
+   drapeau ne dit pas une langue, il dit un pays : il aide a reperer, jamais
+   a comprendre seul.
+
+   Le menu est visible a toutes les largeurs, telephone compris : c'est un
+   seul bouton, il tient a cote du menu.
    ========================================================================== */
 
-.langues-choix ul {
-  display: flex;
-  align-items: center;
-  gap: .15rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.langues-choix__lien {
+/* Tous les drapeaux du site, ou qu'ils soient : selecteur, page Contact,
+   carte postale. Ils sont dessines en SVG avec un `viewBox` de 30 par 20 et
+   sans attributs `width`/`height` : certains navigateurs, faute de
+   dimensions ecrites, ne savent pas deduire la hauteur d'un `height: auto`
+   et reduisent le drapeau a un point. Le rapport est donc dit ici, une fois
+   pour toutes. */
+.drapeau { aspect-ratio: 3 / 2; }
+
+.langues-choix { position: relative; }
+
+.langues-choix__bouton {
   display: inline-flex;
   align-items: center;
   gap: .4rem;
-  padding: .3rem .5rem;
+  height: 2.75rem;
+  padding: 0 .6rem;
   font-size: .75rem;
+  font-weight: 600;
   letter-spacing: .1em;
   color: var(--muted);
-  border: 1px solid transparent;
-  transition: color .3s var(--ease), border-color .3s var(--ease),
-              background-color .3s var(--ease);
+  background: none;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  /* Le triangle que le navigateur pose devant un `summary` : on le retire,
+     le chevron dessine le remplace. */
+  list-style: none;
+  transition: color .3s var(--ease), border-color .3s var(--ease);
+}
+.langues-choix__bouton::-webkit-details-marker { display: none; }
+.langues-choix__bouton:hover { color: var(--ink); border-color: var(--ink); }
+.langues-choix__bouton .drapeau {
+  display: block;
+  width: 1.15rem;
+  height: auto;
+  border: 1px solid var(--line);
+}
+.langues-choix__bouton .icon {
+  transition: transform .3s var(--ease);
+}
+.langues-choix[open] .langues-choix__bouton { color: var(--ink); border-color: var(--ink); }
+.langues-choix[open] .langues-choix__bouton .icon { transform: rotate(180deg); }
+
+/* Le panneau. Il se pose sous le bouton, aligne a droite pour ne jamais
+   sortir de la barre. */
+.langues-choix__liste {
+  position: absolute;
+  top: calc(100% + .4rem);
+  right: 0;
+  z-index: 60;
+  min-width: 11rem;
+  margin: 0;
+  padding: .35rem;
+  list-style: none;
+  /* Blanc franc : le panneau doit se detacher de l'ivoire de la page, sans
+     ombre lourde. */
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 34px rgba(18, 40, 60, .12);
+}
+.langues-choix__lien {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .55rem .6rem;
+  font-size: .875rem;
+  color: var(--ink);
+  transition: background-color .25s var(--ease);
 }
 .langues-choix__lien .drapeau {
   display: block;
-  width: 1rem;
+  width: 1.15rem;
   height: auto;
   border: 1px solid var(--line);
-  opacity: .8;
-  transition: opacity .3s var(--ease);
 }
-.langues-choix__lien:hover { color: var(--ink); }
-.langues-choix__lien:hover .drapeau { opacity: 1; }
+.langues-choix__lien:hover { background: var(--lavender-soft); }
 /* La langue en cours se marque comme la page ouverte : appuyee, et
-   soulignee d'un filet lavande. */
-.langues-choix__lien[aria-current="true"] {
-  color: var(--ink);
-  font-weight: 600;
-  border-bottom-color: var(--lavender-dark);
+   soulignee d'un filet lavande sous son seul nom. */
+.langues-choix__lien[aria-current="true"] { font-weight: 600; }
+.langues-choix__lien[aria-current="true"] span {
+  border-bottom: 1px solid var(--lavender-dark);
 }
-.langues-choix__lien[aria-current="true"] .drapeau { opacity: 1; }
 
 /* En-tete accroche : le selecteur suit la barre, qui est passee en lavande. */
-.header.is-stuck .langues-choix__lien { color: rgba(255, 255, 255, .8); }
-.header.is-stuck .langues-choix__lien:hover,
-.header.is-stuck .langues-choix__lien[aria-current="true"] { color: var(--white); }
-.header.is-stuck .langues-choix__lien[aria-current="true"] { border-bottom-color: var(--white); }
-.header.is-stuck .langues-choix__lien .drapeau { border-color: rgba(255, 255, 255, .4); }
+.header.is-stuck .langues-choix__bouton {
+  color: rgba(255, 255, 255, .85);
+  border-color: rgba(255, 255, 255, .45);
+}
+.header.is-stuck .langues-choix__bouton:hover,
+.header.is-stuck .langues-choix[open] .langues-choix__bouton {
+  color: var(--white);
+  border-color: var(--white);
+}
+.header.is-stuck .langues-choix__bouton .drapeau { border-color: rgba(255, 255, 255, .4); }
 
 /* Sous 1200 px la barre passe au menu deroulant : le selecteur se range
-   avant le bouton, ou il reste atteignable. */
+   avant le bouton d'ouverture, ou il reste atteignable du pouce. */
 @media (max-width: 1199px) {
   .langues-choix { margin-left: auto; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .langues-choix__lien,
-  .langues-choix__lien .drapeau { transition: none; }
+/* Sur les plus petits ecrans, le code de langue suffit : le drapeau et le
+   chevron tiennent la place, le mot entier attend la liste. */
+@media (max-width: 400px) {
+  .langues-choix__bouton { padding: 0 .45rem; gap: .3rem; }
+  .langues-choix__liste { min-width: 10rem; }
 }
+@media (prefers-reduced-motion: reduce) {
+  .langues-choix__bouton,
+  .langues-choix__bouton .icon,
+  .langues-choix__lien { transition: none; }
+}
+
 
 /* ==========================================================================
    48 · CARTE POSTALE EN VIETNAMIEN

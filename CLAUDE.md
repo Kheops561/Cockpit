@@ -149,6 +149,13 @@ vietnamien. Le français vit à la racine, les autres langues dans un dossier :
    langue n’apparaît dans le sélecteur et dans les `hreflang` que le jour où
    ses pages existent.
 
+Le sélecteur est un **menu déroulant natif** — un `details` — visible à toutes
+les largeurs, téléphone compris. Il s’ouvre au clavier, s’annonce avec son
+état et fonctionne sans JavaScript ; le script n’ajoute que les deux gestes
+qu’un `details` ne connaît pas de lui-même, la touche d’échappement et le clic
+à côté. Sa classe est `langues-choix` : `langues`, sans suffixe, appartient
+déjà à la phrase « L’échange se tient en… » de la page Contact.
+
 Le vietnamien demande deux fichiers de police de plus, `inter-vietnamese` et
 `source-serif-4-vietnamese` : le sous-jeu latin étendu s’arrête avant les
 lettres à ton. **Caveat n’existe pas en vietnamien** ; la carte postale de

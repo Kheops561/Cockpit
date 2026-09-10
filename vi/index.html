@@ -59,9 +59,17 @@
 <li><a class="nav__link" href="contact.html">Liên hệ</a></li>
       </ul>
     </nav>
-    <nav class="langues-choix" aria-label="Chọn ngôn ngữ">
-      <ul><li><a class="langues-choix__lien" href="/" hreflang="fr" lang="fr"><svg class="drapeau" viewBox="0 0 30 20" role="presentation" focusable="false" aria-hidden="true"><rect width="10" height="20" fill="#002395"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#ed2939"/></svg><span>FR</span><span class="sr-only"> — Français</span></a></li><li><a class="langues-choix__lien" href="/en/" hreflang="en" lang="en"><svg class="drapeau" viewBox="0 0 30 20" role="presentation" focusable="false" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0 0 30 20M30 0 0 20" stroke="#fff" stroke-width="4.4"/><path d="M0 0 30 20M30 0 0 20" stroke="#c8102e" stroke-width="1.8"/><path d="M15 0v20M0 10h30" stroke="#fff" stroke-width="6.6"/><path d="M15 0v20M0 10h30" stroke="#c8102e" stroke-width="4"/></svg><span>EN</span><span class="sr-only"> — English</span></a></li><li><a class="langues-choix__lien" href="/vi/" hreflang="vi" lang="vi" aria-current="true"><svg class="drapeau" viewBox="0 0 30 20" role="presentation" focusable="false" aria-hidden="true"><rect width="30" height="20" fill="#da251d"/><path fill="#ff0" d="M15 4.6 16.6 9.4 21.7 9.4 17.6 12.4 19.2 17.2 15 14.2 10.8 17.2 12.4 12.4 8.3 9.4 13.4 9.4Z"/></svg><span>VI</span><span class="sr-only"> — Tiếng Việt</span></a></li></ul>
-    </nav>
+    <details class="langues-choix" data-langues>
+      <summary class="langues-choix__bouton">
+        <svg class="drapeau" viewBox="0 0 30 20" role="presentation" focusable="false" aria-hidden="true"><rect width="30" height="20" fill="#da251d"/><path fill="#ff0" d="M15 4.6 16.6 9.4 21.7 9.4 17.6 12.4 19.2 17.2 15 14.2 10.8 17.2 12.4 12.4 8.3 9.4 13.4 9.4Z"/></svg><span class="langues-choix__code">VI</span><svg class="icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false"><path d="M3 5.5 7 9.5l4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="square"/></svg>
+        <span class="sr-only">Ngôn ngữ hiện tại : Tiếng Việt. Chọn ngôn ngữ</span>
+      </summary>
+      <ul class="langues-choix__liste">
+        <li><a class="langues-choix__lien" href="/" hreflang="fr" lang="fr"><svg class="drapeau" viewBox="0 0 30 20" role="presentation" focusable="false" aria-hidden="true"><rect width="10" height="20" fill="#002395"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#ed2939"/></svg><span>Français</span></a></li>
+        <li><a class="langues-choix__lien" href="/en/" hreflang="en" lang="en"><svg class="drapeau" viewBox="0 0 30 20" role="presentation" focusable="false" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0 0 30 20M30 0 0 20" stroke="#fff" stroke-width="4.4"/><path d="M0 0 30 20M30 0 0 20" stroke="#c8102e" stroke-width="1.8"/><path d="M15 0v20M0 10h30" stroke="#fff" stroke-width="6.6"/><path d="M15 0v20M0 10h30" stroke="#c8102e" stroke-width="4"/></svg><span>English</span></a></li>
+        <li><a class="langues-choix__lien" href="/vi/" hreflang="vi" lang="vi" aria-current="true"><svg class="drapeau" viewBox="0 0 30 20" role="presentation" focusable="false" aria-hidden="true"><rect width="30" height="20" fill="#da251d"/><path fill="#ff0" d="M15 4.6 16.6 9.4 21.7 9.4 17.6 12.4 19.2 17.2 15 14.2 10.8 17.2 12.4 12.4 8.3 9.4 13.4 9.4Z"/></svg><span>Tiếng Việt</span></a></li>
+      </ul>
+    </details>
     <a class="btn header__cta" href="diagnostic.html"><span>Phân tích tình hình của tôi</span><svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="square"/></svg></a>
     <button class="burger" type="button" data-burger aria-expanded="false" aria-controls="menu-mobile" hidden>
       <span></span><span></span><span></span>

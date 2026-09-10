@@ -137,11 +137,17 @@ def head(title, description, path, image="/assets/images/og-image.jpg", lang="fr
 
 
 def selecteur_langue(lang, path):
-    """Le choix de la langue, en drapeaux.
+    """Le choix de la langue, en menu deroulant.
 
-    C'est une liste de liens, rien d'autre : elle fonctionne sans JavaScript,
-    et chaque lien mene a la meme page dans l'autre langue. La langue en
-    cours porte `aria-current`, comme la page ouverte dans la navigation.
+    C'est un `<details>` : un dispositif d'ouverture natif du navigateur. Il
+    fonctionne donc **sans JavaScript**, s'ouvre au clavier comme un bouton
+    et s'annonce aux lecteurs d'ecran avec son etat. Le contenu reste une
+    liste de liens, chacun menant a la meme page dans l'autre langue.
+
+    Le bouton porte le drapeau et le code de la langue ouverte ; la liste
+    donne les noms en toutes lettres, chacun ecrit dans sa langue et marque
+    comme tel par `lang`. Un drapeau ne dit pas une langue, il dit un pays :
+    il aide a reperer, jamais a comprendre seul.
 
     Les pages legales n'existent qu'en francais : sur celles-la, le selecteur
     ne s'affiche pas — il n'aurait nulle part ou mener.
@@ -152,19 +158,27 @@ def selecteur_langue(lang, path):
     # Une seule langue en ligne : le selecteur n'a rien a proposer.
     if len(PUBLIEES) < 2:
         return ""
+    ici = IDENTITE[lang]
     items = []
     for autre in PUBLIEES:
         ident = IDENTITE[autre]
         cible = "/" + prefixe(autre) + ("" if path == "index.html" else path)
         courant = ' aria-current="true"' if autre == lang else ""
         items.append(
-            f'<li><a class="langues-choix__lien" href="{cible}" hreflang="{ident["code"]}"'
-            f' lang="{ident["code"]}"{courant}>'
-            f'{DRAPEAUX[ident["drapeau"]]}<span>{ident["court"]}</span>'
-            f'<span class="sr-only"> — {ident["nom"]}</span></a></li>')
-    return (f'    <nav class="langues-choix" aria-label="{TEXTES[lang]["choisir-langue"]}">\n'
-            f'      <ul>{"".join(items)}</ul>\n'
-            f'    </nav>\n')
+            f'        <li><a class="langues-choix__lien" href="{cible}"'
+            f' hreflang="{ident["code"]}" lang="{ident["code"]}"{courant}>'
+            f'{DRAPEAUX[ident["drapeau"]]}<span>{ident["nom"]}</span></a></li>')
+    liens = "\n".join(items)
+    return f"""    <details class="langues-choix" data-langues>
+      <summary class="langues-choix__bouton">
+        {DRAPEAUX[ici["drapeau"]]}<span class="langues-choix__code">{ici["court"]}</span>{ICON['chevron']}
+        <span class="sr-only">{TEXTES[lang]['langue-actuelle']} : {ici['nom']}. {TEXTES[lang]['choisir-langue']}</span>
+      </summary>
+      <ul class="langues-choix__liste">
+{liens}
+      </ul>
+    </details>
+"""
 
 
 def header(active="", lang="fr", path=None):
