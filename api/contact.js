@@ -125,6 +125,24 @@ function lireCorps(req) {
 }
 
 /**
+ * Met le numéro au propre. Une seule correction, mais elle compte quand on
+ * rappelle : le zéro initial. On tape « 06 89 … » par habitude ; derrière un
+ * indicatif international le numéro s'écrit « +33 6 89 … », et « +33 06 89 … »
+ * composé depuis l'étranger ne sonne pas.
+ *
+ * Le reste de la saisie est laissé tel quel : espaces, points ou tirets, la
+ * personne écrit son numéro comme elle le lit, et le regrouper autrement
+ * revient à le rendre méconnaissable — les usages ne sont pas les mêmes d'un
+ * pays à l'autre.
+ */
+function numero(indicatif, brut) {
+  const ind = String(indicatif || '').trim();
+  let n = String(brut).trim();
+  if (ind && n.startsWith('0')) n = n.slice(1).trim();
+  return ind ? `${ind} ${n}` : n;
+}
+
+/**
  * Échappe ce qui part dans la version mise en forme du courrier. Sans cela,
  * un message contenant `<script>` ou une image piégée s'exécuterait dans la
  * boîte de qui le lit — et ce message vient d'un inconnu.
@@ -248,7 +266,7 @@ module.exports = async function handler(req, res) {
   if (!PROFILS.includes(profil)) profil = 'Je ne sais pas encore';
   if (!ECHEANCES.includes(echeance)) echeance = 'Pas de date fixée';
 
-  const tel = telephone ? `${indicatif} ${telephone}`.trim() : 'non communiqué';
+  const tel = telephone ? numero(indicatif, telephone) : 'non communiqué';
   const texte = [
     `Prénom : ${prenom}`,
     `Nom : ${nom}`,
