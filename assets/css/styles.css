@@ -155,12 +155,12 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   align-items: center;
   gap: .85rem;
   font-family: var(--font-body);
-  font-size: .75rem;
+  font-size: .875rem;
   font-weight: 600;
-  letter-spacing: .16em;
+  letter-spacing: .14em;
   text-transform: uppercase;
   color: var(--rust);
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.25rem;
 }
 /* Un filet court ouvre le surtitre, comme un tiret de rubrique. */
 .eyebrow::before {
@@ -312,7 +312,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   display: inline-flex;
   align-items: center;
   gap: .7rem;
-  padding: 1.0625rem 1.85rem;
+  padding: 1.0625rem 1.85rem 1.0625rem 2.9rem;
   background: var(--btn-bg);
   color: var(--btn-fg);
   border: 1px solid var(--btn-line);
@@ -326,26 +326,55 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   transition: transform .35s var(--ease), background-color .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease);
 }
 .btn > * { position: relative; z-index: 1; }
+
+/* Une pastille se tient a gauche du bouton. Au survol, elle se dilate en
+   cercle jusqu'a couvrir le bouton entier ; le cadre etant a angles
+   francs, le disque y est retaille. Le mouvement remplace le volet qui
+   montait par le bas. */
 .btn::after {
   content: "";
   position: absolute;
-  inset: 0;
-  background: var(--lavender-dark);
-  transform: translateY(101%);
-  transition: transform .45s var(--ease);
+  left: 1.5rem;
+  top: 50%;
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: var(--btn-fill, var(--lavender-dark));
+  transform: translate(-50%, -50%);
+  transition: transform .55s cubic-bezier(.22, .61, .36, 1);
   z-index: 0;
 }
-.btn:hover { color: var(--white); border-color: var(--lavender-dark); }
-.btn:hover::after { transform: translateY(0); }
+.btn:hover::after,
+.btn:focus-visible::after { transform: translate(-50%, -50%) scale(120); }
+.btn:hover,
+.btn:focus-visible { color: var(--white); border-color: var(--btn-fill, var(--lavender-dark)); }
 .btn:active { transform: translateY(1px); }
 
 .btn .icon { flex: none; transition: transform .35s var(--ease); }
-.btn:hover .icon { transform: translateX(4px); }
+.btn:hover .icon,
+.btn:focus-visible .icon { transform: translateX(4px); }
 
 .btn--ghost { --btn-bg: transparent; --btn-fg: var(--ink); --btn-line: var(--line-strong); }
 .btn--light { --btn-bg: var(--white); --btn-fg: var(--ink); --btn-line: var(--white); }
 .btn--outline-light { --btn-bg: transparent; --btn-fg: var(--white); --btn-line: var(--line-light); }
-.btn--rust::after { background: var(--rust); }
+.btn--rust { --btn-fill: var(--rust); }
+
+/* Sous mouvement reduit, la pastille ne se dilate pas : le bouton change
+   simplement de fond. */
+@media (prefers-reduced-motion: reduce) {
+  .btn::after { transition: none; }
+  .btn:hover::after,
+  .btn:focus-visible::after {
+    transform: none;
+    inset: 0;
+    left: 0;
+    top: 0;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+  }
+  .btn .icon { transition: none; }
+}
 
 .btn-row {
   display: flex;
@@ -1162,42 +1191,78 @@ a.card:hover,
 /* Une adresse citee, pas cliquee : elle reste lisible sans etre un lien. */
 .prose__url { font-family: var(--font-editorial); letter-spacing: .01em; }
 
-/* Formulaire replie derriere un bouton.
-   Un `details` natif : il s'ouvre et se ferme sans JavaScript, il est
-   annonce comme tel aux technologies d'assistance, et il se pilote au
-   clavier. Le `summary` prend l'apparence d'un bouton de la maison. */
+/* Formulaire en fenetre.
+   Le formulaire est ecrit dans un `dialog` ouvert : sans JavaScript il
+   s'affiche simplement dans la page, utilisable tel quel. Le script le
+   referme au chargement et le rouvre en fenetre modale au clic. Le bouton
+   d'ouverture, lui, reste masque tant que le script ne l'a pas revele :
+   sans lui il n'aurait rien a ouvrir. */
 
-.pliage { margin-top: clamp(1.5rem, 3vw, 2rem); }
-.pliage__bouton {
-  list-style: none;
+.modale {
   width: 100%;
-  justify-content: center;
+  max-width: none;
+  max-height: none;
+  margin: clamp(1.5rem, 3vw, 2rem) 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  overflow: visible;
 }
-.pliage__bouton::-webkit-details-marker { display: none; }
-.pliage__bouton::marker { content: ""; }
-.pliage__fermer { display: none; }
-.pliage[open] .pliage__ouvrir { display: none; }
-.pliage[open] .pliage__fermer { display: inline; }
-.pliage__chevron { transition: transform .3s var(--ease); }
-.pliage[open] .pliage__chevron { transform: rotate(180deg); }
-
-.pliage__corps {
-  margin-top: clamp(1.5rem, 3vw, 2rem);
-  padding-top: clamp(1.5rem, 3vw, 2rem);
-  border-top: 1px solid var(--line);
+/* Une fois ouverte par le script, elle se pose au centre de l'ecran. */
+.modale[open]:modal {
+  width: min(38rem, calc(100vw - 2rem));
+  max-height: min(46rem, calc(100vh - 3rem));
+  margin: auto;
+  overflow: auto;
 }
-.js .pliage[open] .pliage__corps { animation: deplier .45s var(--ease) both; }
-@keyframes deplier {
-  from { opacity: 0; transform: translateY(-8px); }
+.modale::backdrop { background: rgba(18, 40, 60, .55); }
+.js .modale[open]:modal { animation: fenetre .38s var(--ease) both; }
+@keyframes fenetre {
+  from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: none; }
 }
 
-.pliage__note { margin-top: 1rem; text-align: center; }
-.pliage__note a { color: var(--lavender-dark); text-decoration: underline; text-underline-offset: .2em; }
+.modale__cadre { background: var(--white); border: 1px solid var(--line); padding: clamp(1.5rem, 3vw, 2.5rem); }
+/* Dans la page, sans fenetre, le cadre se fond dans la carte qui l'accueille. */
+.modale:not(:modal) .modale__cadre { border: 0; padding: 0; background: none; }
+
+.modale__tete {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.modale__titre {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(1.1875rem, 1.8vw, 1.4375rem);
+  color: var(--ink);
+}
+.modale__fermer {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color .3s var(--ease), color .3s var(--ease);
+}
+.modale__fermer:hover { background: var(--ink); color: var(--white); }
+/* Sans script, la croix ne fermerait rien : elle reste hors du champ. */
+.modale:not(:modal) .modale__tete { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .pliage__chevron { transition: none; }
-  .js .pliage[open] .pliage__corps { animation: none; }
+  .js .modale[open]:modal { animation: none; }
+  .modale__fermer { transition: none; }
 }
 
 /* ------------------------------------------------------------- 19 pied de page */
@@ -1309,7 +1374,14 @@ a.card:hover,
   overflow: hidden;
 }
 
-.booking__stack { position: relative; width: 100%; max-width: 46rem; }
+.booking__stack {
+  position: relative;
+  width: 100%;
+  max-width: 46rem;
+  /* Sans marges automatiques, la pile se calait a gauche du conteneur des
+     que celui-ci devenait plus large qu'elle. */
+  margin-inline: auto;
+}
 
 .booking__status {
   display: inline-flex;
@@ -2264,49 +2336,23 @@ html:not(.js) .booking__confirm { display: none; }
 }
 
 /* ==========================================================================
-   32 · Les témoignages en pile
-   Une carte devant, les suivantes derrière, légèrement décalées et
-   inclinées : la parole d'un investisseur à la fois, sans que le reste
-   disparaisse. On avance à la souris, au doigt, au clavier ou par les
-   repères sous la pile.
-
-   Sans JavaScript, les huit témoignages s'affichent en grille, tous
-   lisibles : la pile est un confort de lecture, jamais une condition
-   d'accès. Rien ne défile tout seul, il n'y a donc rien à mettre en pause.
+   32 · La carte de témoignage
+   Une carte par témoignage, posée dans un carrousel. Le contexte, la
+   parole, puis la signature : un portrait dessiné, jamais une
+   photographie, et le nom écrit en toutes lettres à côté.
    ========================================================================== */
 
-.temoignages-duo { display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
-@media (min-width: 1100px) {
-  .temoignages-duo {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
-    gap: clamp(3rem, 6vw, 6rem);
-    align-items: center;
-  }
-}
-.pile { margin-top: 0; }
-
-.pile__cartes {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: clamp(1.25rem, 2.5vw, 2rem);
-  /* Le nombre de colonnes suit la largeur du conteneur, jamais celle de
-     l'ecran : sans JavaScript la grille tient dans la colonne etroite que
-     la pile occupe une fois le script actif. */
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-}
-
-.pile__carte {
+.temoignage {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
   padding: clamp(1.5rem, 3vw, 2.25rem);
   background: var(--white);
   border: 1px solid var(--line);
 }
 
-.pile__contexte {
+.temoignage__contexte {
   margin: 0;
   font-size: .6875rem;
   letter-spacing: .1em;
@@ -2314,7 +2360,7 @@ html:not(.js) .booking__confirm { display: none; }
   color: var(--lavender-dark);
   line-height: 1.5;
 }
-.pile__texte {
+.temoignage__texte {
   margin: 0;
   flex: 1 1 auto;
   font-size: clamp(1rem, 1.6vw, 1.0625rem);
@@ -2322,7 +2368,7 @@ html:not(.js) .booking__confirm { display: none; }
   color: var(--text);
 }
 
-.pile__signature {
+.temoignage__signature {
   display: flex;
   align-items: center;
   gap: .9rem;
@@ -2335,78 +2381,10 @@ html:not(.js) .booking__confirm { display: none; }
 .pile__plaque { fill: var(--paper-soft); }
 .pile__buste, .pile__tete { fill: var(--lavender); }
 .pile__cheveux { fill: var(--lavender-dark); }
-.pile__nom { display: block; font-weight: 600; color: var(--ink); }
-.pile__role { display: block; font-size: .8125rem; color: var(--muted); margin-top: .15rem; }
+.temoignage__nom { display: block; font-weight: 600; color: var(--ink); }
+.temoignage__role { display: block; font-size: .8125rem; color: var(--muted); margin-top: .15rem; }
 
-.pile__note { margin-top: clamp(1.5rem, 3vw, 2rem); }
-
-/* --------------------------------------------------------------- la pile */
-/* Le script pose `est-empilee` : la grille devient alors une pile. */
-
-/* Mode de mesure : les cartes restent dans le flux, mais a la largeur
-   qu'elles auront une fois empilees. Mesurer la grille a trois colonnes
-   donnerait une hauteur bien trop grande. */
-.js .pile.est-mesure .pile__cartes {
-  display: block;
-  max-width: 34rem;
-  margin-inline: auto;
-}
-.js .pile.est-mesure .pile__carte { position: static; height: auto; }
-
-.js .pile.est-empilee .pile__cartes {
-  position: relative;
-  display: block;
-  /* Hauteur figée par le script sur la plus haute des huit cartes : sans
-     cela la pile sauterait d'un témoignage à l'autre. */
-  min-height: var(--pile-h, 24rem);
-  max-width: 34rem;
-  margin-inline: auto;
-  /* Les cartes en retrait dépassent : il leur faut de la place. */
-  padding-bottom: 2.5rem;
-}
-.js .pile.est-empilee .pile__carte {
-  position: absolute;
-  inset: 0 0 auto;
-  height: var(--pile-h, 24rem);
-  transform-origin: 50% 100%;
-  transition: transform .55s cubic-bezier(.22, .61, .36, 1),
-              opacity .55s var(--ease);
-  box-shadow: 0 18px 40px rgba(18, 40, 60, .08);
-}
-/* Rang 0 : la carte lue. Rangs 1 et 2 : celles qui attendent derrière. */
-.js .pile.est-empilee .pile__carte[data-rang="0"] { transform: none; opacity: 1; z-index: 3; }
-.js .pile.est-empilee .pile__carte[data-rang="1"] {
-  transform: translateY(.85rem) scale(.955) rotate(-1.4deg);
-  opacity: .6;
-  z-index: 2;
-}
-.js .pile.est-empilee .pile__carte[data-rang="2"] {
-  transform: translateY(1.7rem) scale(.91) rotate(-2.8deg);
-  opacity: .3;
-  z-index: 1;
-}
-.js .pile.est-empilee .pile__carte[data-rang="-1"] {
-  transform: translateY(-1.5rem) scale(1.02);
-  opacity: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-/* Seule la carte de devant se laisse saisir. */
-.js .pile.est-empilee .pile__carte[data-rang="0"] { cursor: grab; }
-.js .pile.est-empilee .pile__carte.est-saisie { cursor: grabbing; transition: none; }
-
-/* Commandes : deux chevrons et huit repères, tous atteignables au clavier. */
-.pile__commandes {
-  /* Tant que la pile n'est pas formee, les huit temoignages sont tous
-     affiches : il n'y a rien a faire defiler. */
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(.75rem, 2vw, 1.5rem);
-  margin-top: clamp(1.5rem, 3vw, 2.25rem);
-}
-.js .pile.est-empilee .pile__commandes { display: flex; }
-
+/* Chevrons et repères du carrousel : ils servent aux deux carrousels. */
 .pile__fleche {
   display: inline-flex;
   align-items: center;
@@ -2434,9 +2412,9 @@ html:not(.js) .booking__confirm { display: none; }
 .pile__repere[aria-current="true"] { background: var(--rust); transform: scale(1.4); }
 
 @media (prefers-reduced-motion: reduce) {
-  .js .pile.est-empilee .pile__carte { transition: none; }
   .pile__fleche, .pile__repere { transition: none; }
 }
+
 
 /* ==========================================================================
    33 · La carte de tarif
@@ -2554,6 +2532,9 @@ html:not(.js) .booking__confirm { display: none; }
   scroll-snap-align: start;
   display: flex;
 }
+/* Piste libre : chaque carte garde sa hauteur. Utile quand les contenus
+   sont de longueurs tres inegales, comme les temoignages. */
+.carrousel--libre .carrousel__piste { align-items: flex-start; }
 .carrousel__item > .card { width: 100%; }
 
 /* Voile lateral : les cartes sortent du champ sans arete franche. */
@@ -2691,3 +2672,119 @@ html:not(.js) .booking__confirm { display: none; }
   text-transform: uppercase;
   color: rgba(255, 255, 255, .62);
 }
+
+/* ==========================================================================
+   37 · Le schéma des étapes
+   Les étapes de la méthode, posées en tête de page comme un sommaire. Ce
+   sont de vrais liens d'ancre vers leur développement plus bas : le schéma
+   fonctionne sans une ligne de script. Le trait qui relie les pastilles est
+   décoratif ; l'ordre est écrit dans les numéros.
+   ========================================================================== */
+
+.schema__liste {
+  --schema-gap: clamp(1.25rem, 2.5vw, 2rem);
+  --schema-rayon: 1.5rem;
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--schema-gap);
+}
+.schema__lien {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text);
+  transition: color .3s var(--ease);
+}
+.schema__lien:hover { color: var(--ink); }
+
+.schema__pastille {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: var(--paper-soft);
+  font-family: var(--font-editorial);
+  font-size: .875rem;
+  letter-spacing: .1em;
+  color: var(--lavender-dark);
+  transition: background-color .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease);
+}
+.schema__lien:hover .schema__pastille,
+.schema__lien:focus-visible .schema__pastille {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+.schema__nom {
+  font-family: var(--font-editorial);
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  line-height: 1.3;
+}
+
+/* Dès que la place le permet, les étapes s'alignent et un trait les relie. */
+@media (min-width: 760px) {
+  .schema__liste { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  /* Le trait relie le centre de la premiere pastille a celui de la
+     derniere. Avec cinq colonnes egales, ce dernier centre se trouve a
+     80 % de la largeur, plus quatre cinquiemes d'une gouttiere. */
+  .schema__liste::before {
+    content: "";
+    position: absolute;
+    top: var(--schema-rayon);
+    left: var(--schema-rayon);
+    right: calc(20% - var(--schema-rayon) - .8 * var(--schema-gap));
+    height: 1px;
+    background: var(--line-strong);
+    z-index: 0;
+  }
+  .schema__lien {
+    position: relative;
+    z-index: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .9rem;
+  }
+  .schema__nom { max-width: 9ch; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schema__lien, .schema__pastille { transition: none; }
+}
+
+
+/* ==========================================================================
+   38 · La promesse, en deux volets
+   Ce que le cabinet ne promet pas, ce qu'il cherche. Deux volets face à
+   face, sur fond blanc, séparés par un filet : l'opposition se lit d'un
+   regard, et la phrase gagne la place qu'elle mérite.
+   ========================================================================== */
+
+.promesse {
+  display: grid;
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: clamp(1.75rem, 4vw, 3.5rem);
+}
+@media (min-width: 900px) {
+  .promesse { grid-template-columns: 1fr 1fr; gap: clamp(2.5rem, 5vw, 4.5rem); }
+  .promesse__volet--oui { border-left: 1px solid var(--line); padding-left: clamp(2.5rem, 5vw, 4.5rem); }
+}
+.promesse__texte {
+  margin: 1.25rem 0 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(1.375rem, 2.6vw, 2rem);
+  line-height: 1.35;
+  color: var(--ink);
+  text-wrap: balance;
+}
+/* Ce que l'on ne promet pas s'écrit en retrait : c'est l'autre volet qui
+   porte l'engagement. */
+.promesse__volet--non .promesse__texte { color: var(--muted); }

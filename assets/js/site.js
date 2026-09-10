@@ -580,235 +580,78 @@
 })();
 
 /* ==========================================================================
-   Les temoignages en pile.
-   Une carte devant, les suivantes derriere. On avance au doigt, a la
-   souris, au clavier ou par les reperes. Sans ce script, les huit
-   temoignages restent affiches en grille : la pile est un confort de
-   lecture, jamais une condition d'acces. Rien ne defile tout seul, il n'y
-   a donc rien a mettre en pause.
+   Le voile de transition.
+   La levee du voile est une animation CSS : elle se termine seule, meme si
+   ce script ne s'execute jamais, et la page ne peut donc pas rester
+   masquee. On n'ajoute ici que le depart : au clic sur un lien interne, le
+   voile revient avant que la page suivante ne s'ouvre.
+
+   Sous mouvement reduit, rien n'est intercepte : les liens fonctionnent
+   comme des liens.
    ========================================================================== */
 
 (function () {
   'use strict';
 
-  var SEUIL = 90;   // deplacement, en pixels, au-dela duquel la carte part
+  var DUREE = 340;      // doit correspondre a la transition de .est-sortant
+  var SECOURS = 2500;   // si la navigation n'aboutit pas, on releve le voile
 
-  function initPile() {
-    var bloc = document.querySelector('[data-pile]');
-    if (!bloc) return;
+  function initVoile() {
+    var voile = document.querySelector('[data-voile]');
+    if (!voile) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    var liste = bloc.querySelector('.pile__cartes');
-    var cartes = bloc.querySelectorAll('[data-pile-carte]');
-    if (cartes.length < 2) return;
+    var parti = false;
 
-    var courant = 0;
-
-    // --- Hauteur figee : la pile ne doit pas sauter d'une carte a l'autre.
-    //     Renvoie false si le bloc n'est pas mesurable, par exemple parce
-    //     qu'il est encore masque : mieux vaut alors laisser la grille en
-    //     place que d'empiler les cartes dans une hauteur nulle.
-    function figerHauteur() {
-      liste.style.removeProperty('--pile-h');
-      bloc.classList.remove('est-empilee');
-      // Mesurer les cartes a la largeur qu'elles auront une fois empilees :
-      // la grille a trois colonnes les rendrait bien plus hautes.
-      bloc.classList.add('est-mesure');
-      var h = 0;
-      for (var k = 0; k < cartes.length; k++) {
-        h = Math.max(h, cartes[k].getBoundingClientRect().height);
-      }
-      bloc.classList.remove('est-mesure');
-      if (h < 80) return false;
-      bloc.classList.add('est-empilee');
-      liste.style.setProperty('--pile-h', Math.ceil(h) + 'px');
-      return true;
+    function interne(a) {
+      if (!a || a.target || a.hasAttribute('download')) return null;
+      var url;
+      try { url = new URL(a.getAttribute('href'), window.location.href); }
+      catch (err) { return null; }
+      // Ni mailto:, ni tel:, ni un autre domaine.
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+      if (url.origin !== window.location.origin) return null;
+      // Une ancre dans la page courante n'est pas un changement de page.
+      if (url.pathname === window.location.pathname && url.hash) return null;
+      if (url.href === window.location.href) return null;
+      return url;
     }
 
-    // --- Commandes : deux chevrons et un repere par temoignage.
-    var chevron = function (d) {
-      return '<svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none"'
-           + ' aria-hidden="true" focusable="false"><path d="M' + (d < 0 ? '10 3L5 8l5 5' : '6 3l5 5-5 5')
-           + '" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>';
-    };
+    document.addEventListener('click', function (e) {
+      if (parti || e.defaultPrevented) return;
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      var url = interne(a);
+      if (!url) return;
 
-    var commandes = document.createElement('div');
-    commandes.className = 'pile__commandes';
-
-    var avant = document.createElement('button');
-    avant.type = 'button';
-    avant.className = 'pile__fleche';
-    avant.innerHTML = chevron(-1) + '<span class="sr-only">Témoignage précédent</span>';
-
-    var reperes = document.createElement('ul');
-    reperes.className = 'pile__reperes';
-
-    var apres = document.createElement('button');
-    apres.type = 'button';
-    apres.className = 'pile__fleche';
-    apres.innerHTML = chevron(1) + '<span class="sr-only">Témoignage suivant</span>';
-
-    var boutons = [];
-    Array.prototype.forEach.call(cartes, function (carte, i) {
-      var li = document.createElement('li');
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'pile__repere';
-      b.innerHTML = '<span class="sr-only">Témoignage ' + (i + 1) + ' sur ' + cartes.length + '</span>';
-      b.addEventListener('click', function () { montrer(i); });
-      li.appendChild(b);
-      reperes.appendChild(li);
-      boutons.push(b);
-    });
-
-    commandes.appendChild(avant);
-    commandes.appendChild(reperes);
-    commandes.appendChild(apres);
-    liste.parentNode.insertBefore(commandes, liste.nextSibling);
-
-    avant.addEventListener('click', function () { montrer(courant - 1); });
-    apres.addEventListener('click', function () { montrer(courant + 1); });
-
-    // --- Placement : trois cartes visibles, les autres retirees du plan.
-    function montrer(i) {
-      courant = (i + cartes.length) % cartes.length;
-      for (var k = 0; k < cartes.length; k++) {
-        var rang = (k - courant + cartes.length) % cartes.length;
-        cartes[k].setAttribute('data-rang', rang > 2 ? '-1' : String(rang));
-        cartes[k].style.transform = '';
-        // Les huit temoignages restent lus par les technologies
-        // d'assistance : la pile est un effet visuel, pas un filtre.
-        boutons[k].setAttribute('aria-current', String(k === courant));
-      }
-    }
-
-    // --- Saisie : la carte de devant suit le doigt ou la souris.
-    var depart = null;
-    liste.addEventListener('pointerdown', function (e) {
-      var carte = cartes[courant];
-      if (!carte.contains(e.target)) return;
-      depart = e.clientX;
-      carte.classList.add('est-saisie');
-      carte.setPointerCapture(e.pointerId);
-    });
-    liste.addEventListener('pointermove', function (e) {
-      if (depart === null) return;
-      var d = e.clientX - depart;
-      cartes[courant].style.transform = 'translateX(' + d + 'px) rotate(' + (d / 22) + 'deg)';
-    });
-    function relacher(e) {
-      if (depart === null) return;
-      var d = e.clientX - depart;
-      var carte = cartes[courant];
-      depart = null;
-      carte.classList.remove('est-saisie');
-      carte.style.transform = '';
-      if (Math.abs(d) > SEUIL) montrer(courant + (d < 0 ? 1 : -1));
-    }
-    liste.addEventListener('pointerup', relacher);
-    liste.addEventListener('pointercancel', relacher);
-
-    // --- Clavier : les fleches parcourent la pile.
-    bloc.addEventListener('keydown', function (e) {
-      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-      if (!d) return;
       e.preventDefault();
-      montrer(courant + d);
+      parti = true;
+      voile.classList.remove('est-pose');
+      // Forcer un calcul : sans cela, le passage de l'animation a la
+      // transition se ferait d'un coup, sans fondu.
+      void voile.offsetWidth;
+      voile.classList.add('est-sortant');
+      window.setTimeout(function () { window.location.href = url.href; }, DUREE);
+      window.setTimeout(function () {
+        parti = false;
+        voile.classList.remove('est-sortant');
+        voile.classList.add('est-pose');
+      }, SECOURS);
     });
 
-    function preparer() {
-      if (!figerHauteur()) return false;
-      montrer(courant);
-      return true;
-    }
-
-    if (!preparer() && window.ResizeObserver) {
-      // Le bloc etait masque : reessayer des qu'il prend une taille.
-      var guet = new ResizeObserver(function () {
-        if (preparer()) guet.disconnect();
-      });
-      guet.observe(bloc);
-    }
-
-    var attente = null;
-    window.addEventListener('resize', function () {
-      window.clearTimeout(attente);
-      attente = window.setTimeout(preparer, 150);
-    });
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(preparer);
-    }
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initPile);
-  } else {
-    initPile();
-  }
-})();
-
-/* ==========================================================================
-   Le formulaire de contact.
-   Le site est statique et n'appelle aucun domaine tiers : a l'envoi, le
-   script compose un message dans la messagerie du visiteur, deja rempli
-   avec ce qu'il vient d'ecrire. Rien ne part sans sa validation, et aucune
-   donnee ne transite par ce site.
-
-   Sans ce script, le formulaire reste affiche et utilisable : l'adresse est
-   ecrite juste au-dessus, et le bouton ouvre un message vers la meme
-   adresse.
-   ========================================================================== */
-
-(function () {
-  'use strict';
-
-  function initFormulaire() {
-    var form = document.querySelector('[data-form-mail]');
-    if (!form) return;
-
-    var action = form.getAttribute('action') || '';
-    var adresse = action.replace(/^mailto:/, '').split('?')[0];
-    if (!adresse) return;
-
-    function valeur(nom) {
-      var champ = form.elements[nom];
-      return champ ? String(champ.value || '').trim() : '';
-    }
-
-    form.addEventListener('submit', function (e) {
-      // Laisser le navigateur signaler lui-meme les champs incomplets.
-      if (form.checkValidity && !form.checkValidity()) return;
-      e.preventDefault();
-
-      var nom = valeur('nom');
-      var corps = [
-        'Nom : ' + nom,
-        'Adresse e-mail : ' + valeur('courriel'),
-        'Téléphone : ' + (valeur('telephone') || 'non communiqué'),
-        'Où j’en suis : ' + valeur('profil'),
-        '',
-        valeur('message'),
-        '',
-        'Message préparé depuis le formulaire de contact d’amelie-invest.com.'
-      ].join('\r\n');
-
-      var sujet = 'Premier échange' + (nom ? ' \u00b7 ' + nom : '');
-      var lien = document.createElement('a');
-      lien.href = 'mailto:' + adresse
-        + '?subject=' + encodeURIComponent(sujet)
-        + '&body=' + encodeURIComponent(corps);
-      // Un lien clique passe partout : certains navigateurs refusent une
-      // affectation directe d'adresse vers un protocole externe.
-      lien.style.display = 'none';
-      document.body.appendChild(lien);
-      lien.click();
-      document.body.removeChild(lien);
+    // Retour par le bouton precedent : la page revient du cache, le voile
+    // doit se retirer.
+    window.addEventListener('pageshow', function () {
+      parti = false;
+      voile.classList.remove('est-sortant');
+      voile.classList.add('est-pose');
     });
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFormulaire);
+    document.addEventListener('DOMContentLoaded', initVoile);
   } else {
-    initFormulaire();
+    initVoile();
   }
 })();
 
@@ -924,7 +767,7 @@
       attente = false;
       // Marge d'un pixel : les navigateurs arrondissent le defilement.
       var debut = piste.scrollLeft <= 1;
-      var fin = piste.scrollLeft >= piste.scrollWidth - piste.clientWidth - 1;
+      var fin = piste.scrollLeft >= butee() - 1;
       avant.disabled = debut;
       apres.disabled = fin;
       bloc.classList.toggle('est-au-bout', fin);
@@ -949,7 +792,7 @@
 
   function tout() {
     var blocs = document.querySelectorAll('[data-carrousel]');
-    Array.prototype.forEach.call(blocs, initCarrousel);
+    Array.prototype.forEach.call(blocs, function (b) { initCarrousel(b); });
   }
 
   if (document.readyState === 'loading') {
@@ -960,77 +803,94 @@
 })();
 
 /* ==========================================================================
-   Le voile de transition.
-   La levee du voile est une animation CSS : elle se termine seule, meme si
-   ce script ne s'execute jamais, et la page ne peut donc pas rester
-   masquee. On n'ajoute ici que le depart : au clic sur un lien interne, le
-   voile revient avant que la page suivante ne s'ouvre.
+   Le formulaire de contact, en fenetre.
+   Le formulaire est ecrit dans un `dialog` ouvert : sans JavaScript il
+   s'affiche donc simplement dans la page, utilisable tel quel. Le script le
+   referme au chargement et le rouvre en fenetre modale au clic sur le
+   bouton, avec fermeture par la croix, par la touche d'echappement et par
+   un clic hors du cadre.
 
-   Sous mouvement reduit, rien n'est intercepte : les liens fonctionnent
-   comme des liens.
+   A l'envoi, le message est compose dans la messagerie du visiteur : le
+   site est statique et n'appelle aucun domaine tiers. Rien ne part sans sa
+   validation, et aucune donnee saisie ne transite par ce site.
    ========================================================================== */
 
 (function () {
   'use strict';
 
-  var DUREE = 340;      // doit correspondre a la transition de .est-sortant
-  var SECOURS = 2500;   // si la navigation n'aboutit pas, on releve le voile
+  function initFenetre() {
+    var fenetre = document.querySelector('[data-modale]');
+    if (!fenetre || typeof fenetre.showModal !== 'function') return;
 
-  function initVoile() {
-    var voile = document.querySelector('[data-voile]');
-    if (!voile) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var ouvrir = document.querySelector('[data-modale-ouvrir]');
+    var fermer = fenetre.querySelector('[data-modale-fermer]');
+    if (!ouvrir) return;
 
-    var parti = false;
+    fenetre.close();
+    ouvrir.hidden = false;
 
-    function interne(a) {
-      if (!a || a.target || a.hasAttribute('download')) return null;
-      var url;
-      try { url = new URL(a.getAttribute('href'), window.location.href); }
-      catch (err) { return null; }
-      // Ni mailto:, ni tel:, ni un autre domaine.
-      if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
-      if (url.origin !== window.location.origin) return null;
-      // Une ancre dans la page courante n'est pas un changement de page.
-      if (url.pathname === window.location.pathname && url.hash) return null;
-      if (url.href === window.location.href) return null;
-      return url;
-    }
+    ouvrir.addEventListener('click', function () { fenetre.showModal(); });
+    if (fermer) fermer.addEventListener('click', function () { fenetre.close(); });
 
-    document.addEventListener('click', function (e) {
-      if (parti || e.defaultPrevented) return;
-      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
-      var url = interne(a);
-      if (!url) return;
-
-      e.preventDefault();
-      parti = true;
-      voile.classList.remove('est-pose');
-      // Forcer un calcul : sans cela, le passage de l'animation a la
-      // transition se ferait d'un coup, sans fondu.
-      void voile.offsetWidth;
-      voile.classList.add('est-sortant');
-      window.setTimeout(function () { window.location.href = url.href; }, DUREE);
-      window.setTimeout(function () {
-        parti = false;
-        voile.classList.remove('est-sortant');
-        voile.classList.add('est-pose');
-      }, SECOURS);
-    });
-
-    // Retour par le bouton precedent : la page revient du cache, le voile
-    // doit se retirer.
-    window.addEventListener('pageshow', function () {
-      parti = false;
-      voile.classList.remove('est-sortant');
-      voile.classList.add('est-pose');
+    // Clic dans le fond, hors du cadre : la fenetre se referme.
+    fenetre.addEventListener('click', function (e) {
+      if (e.target !== fenetre) return;
+      var r = fenetre.getBoundingClientRect();
+      var dedans = e.clientX >= r.left && e.clientX <= r.right
+                && e.clientY >= r.top && e.clientY <= r.bottom;
+      if (!dedans) fenetre.close();
     });
   }
 
+  function initFormulaire() {
+    var form = document.querySelector('[data-form-mail]');
+    if (!form) return;
+
+    var action = form.getAttribute('action') || '';
+    var adresse = action.replace(/^mailto:/, '').split('?')[0];
+    if (!adresse) return;
+
+    function valeur(nom) {
+      var champ = form.elements[nom];
+      return champ ? String(champ.value || '').trim() : '';
+    }
+
+    form.addEventListener('submit', function (e) {
+      // Laisser le navigateur signaler lui-meme les champs incomplets.
+      if (form.checkValidity && !form.checkValidity()) return;
+      e.preventDefault();
+
+      var nom = valeur('nom');
+      var corps = [
+        'Nom : ' + nom,
+        'Adresse e-mail : ' + valeur('courriel'),
+        'Téléphone : ' + (valeur('telephone') || 'non communiqué'),
+        'Où j’en suis : ' + valeur('profil'),
+        '',
+        valeur('message'),
+        '',
+        'Message préparé depuis le formulaire de contact d’amelie-invest.com.'
+      ].join('\r\n');
+
+      var sujet = 'Premier échange' + (nom ? ' · ' + nom : '');
+      var lien = document.createElement('a');
+      lien.href = 'mailto:' + adresse
+        + '?subject=' + encodeURIComponent(sujet)
+        + '&body=' + encodeURIComponent(corps);
+      // Un lien clique passe partout : certains navigateurs refusent une
+      // affectation directe d'adresse vers un protocole externe.
+      lien.style.display = 'none';
+      document.body.appendChild(lien);
+      lien.click();
+      document.body.removeChild(lien);
+    });
+  }
+
+  function demarrer() { initFenetre(); initFormulaire(); }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initVoile);
+    document.addEventListener('DOMContentLoaded', demarrer);
   } else {
-    initVoile();
+    demarrer();
   }
 })();
