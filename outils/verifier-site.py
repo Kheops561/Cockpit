@@ -155,6 +155,13 @@ def main():
             erreurs.append(f"{nom} : émoji ou flèche Unicode détecté (chevrons vectoriels attendus)")
         if "#/" in s:
             avertissements.append(f"{nom} : routeur « #/… » détecté")
+        # Les pages sont produites par des gabarits Python. Une accolade
+        # restée en clair est un marqueur non remplacé : il s'affiche tel
+        # quel dans le navigateur. Les styles en ligne sont ecartes, une
+        # accolade y est legitime.
+        sans_style = re.sub(r'style="[^"]*"', "", s)
+        for marqueur in set(re.findall(r"\{[A-Za-z_][A-Za-z0-9_]*\}", sans_style)):
+            erreurs.append(f"{nom} : marqueur de gabarit non remplacé → {marqueur}")
 
     if CALENDLY not in accueil:
         erreurs.append("index.html : lien de réservation absent")

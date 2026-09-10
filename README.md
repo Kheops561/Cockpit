@@ -19,13 +19,19 @@ python3 -m http.server 8000
 
 ## Mettre en ligne
 
-Le contenu du dossier est le site : il se dépose tel quel chez n’importe quel
-hébergeur statique (Netlify, Vercel, Cloudflare Pages, OVH, o2switch…).
+Le site est publié sur **Vercel** : il sert les pages statiques et exécute
+la seule fonction serveur du projet, `api/contact.js`, qui reçoit le
+formulaire de contact. Un hébergeur strictement statique conviendrait pour
+les pages, mais le formulaire n’enverrait alors rien.
+
 Points à régler côté hébergeur :
 
-- pointer le domaine `amelie-invest.com` sur la racine du dossier ;
+- pointer le domaine `amelie-invest.com` sur le projet ;
 - forcer HTTPS et rediriger `www` vers le domaine sans `www` ;
 - déclarer `404.html` comme page d’erreur ;
+- renseigner `RESEND_API_KEY` dans les variables d’environnement du projet,
+  sans quoi le formulaire répond une erreur — voir
+  `INSTALLATION-FORMULAIRE.md` ;
 - envoyer `https://amelie-invest.com/sitemap.xml` à Google Search Console.
 
 ## Arborescence
@@ -39,9 +45,11 @@ ressources.html            La bibliothèque
 ressource-3-effets.html    Ressource « Les 3 effets dans l’immobilier »
 temoignages.html           Les huit témoignages, en pile de cartes
 a-propos.html              La fondatrice, la carte postale du parcours, le fil de lecture
-contact.html               Réserver, écrire ou remplir le formulaire
+contact.html               Réserver un créneau ou passer au formulaire
+formulaire.html            Le formulaire de contact, sur sa propre page
 mentions-legales.html      Modèle à compléter
 confidentialite.html       Modèle à compléter
+cgv.html                   Conditions générales de vente
 404.html                   Page introuvable
 
 assets/css/styles.css      Toute la mise en forme, commentée et numérotée
@@ -65,7 +73,7 @@ CLAUDE.md                  Instructions permanentes pour toute reprise
 
 Les textes sont directement dans les fichiers `.html`. L’en-tête et le pied de
 page sont répétés dans chaque page : une modification de navigation doit être
-reportée dans les douze fichiers. Les caractères accentués sont écrits en
+reportée dans les quatorze fichiers. Les caractères accentués sont écrits en
 clair ; les apostrophes typographiques utilisent `&rsquo;`.
 
 ## Vérifier avant de publier

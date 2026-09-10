@@ -932,47 +932,21 @@
 })();
 
 /* ==========================================================================
-   Le formulaire de contact, en fenetre.
-   Le formulaire est ecrit dans un `dialog` ouvert : sans JavaScript il
-   s'affiche donc simplement dans la page, utilisable tel quel. Le script le
-   referme au chargement et le rouvre en fenetre modale au clic sur le
-   bouton, avec fermeture par la croix, par la touche d'echappement et par
-   un clic hors du cadre.
+   Le formulaire de contact.
+   Il occupe sa propre page, `formulaire.html` : dans une fenetre il etait a
+   l'etroit, et une fenetre ne se partage pas par un lien.
 
-   A l'envoi, le message est compose dans la messagerie du visiteur : le
-   site est statique et n'appelle aucun domaine tiers. Rien ne part sans sa
-   validation, et aucune donnee saisie ne transite par ce site.
+   A l'envoi, il est poste sur `/api/contact`, la seule fonction serveur du
+   site : les pages n'appellent donc aucun domaine tiers. Si cette fonction
+   ne repond pas, la saisie n'est pas perdue — un lien reprend le message
+   dans la messagerie du visiteur.
+
+   Sans JavaScript, le formulaire part en envoi classique et la page revient
+   avec le resultat en parametre : il reste utilisable tel quel.
    ========================================================================== */
 
 (function () {
   'use strict';
-
-  function initFenetre() {
-    var fenetre = document.querySelector('[data-modale]');
-    if (!fenetre || typeof fenetre.showModal !== 'function') return;
-
-    var ouvrir = document.querySelector('[data-modale-ouvrir]');
-    var fermer = fenetre.querySelector('[data-modale-fermer]');
-    if (!ouvrir) return;
-
-    fenetre.close();
-    // C'est la rangee qui est masquee, pas le bouton : masquer le bouton
-    // seul laisserait sa rangee occuper de la place pour rien.
-    var rangee = document.querySelector('[data-modale-rangee]') || ouvrir;
-    rangee.hidden = false;
-
-    ouvrir.addEventListener('click', function () { fenetre.showModal(); });
-    if (fermer) fermer.addEventListener('click', function () { fenetre.close(); });
-
-    // Clic dans le fond, hors du cadre : la fenetre se referme.
-    fenetre.addEventListener('click', function (e) {
-      if (e.target !== fenetre) return;
-      var r = fenetre.getBoundingClientRect();
-      var dedans = e.clientX >= r.left && e.clientX <= r.right
-                && e.clientY >= r.top && e.clientY <= r.bottom;
-      if (!dedans) fenetre.close();
-    });
-  }
 
   function initFormulaire() {
     var form = document.querySelector('[data-form]');
@@ -982,6 +956,12 @@
     var bouton = form.querySelector('button[type="submit"]');
     var libelle = bouton ? bouton.querySelector('span') : null;
     var libelleInitial = libelle ? libelle.textContent : '';
+
+    // L'heure a laquelle le formulaire a ete pose. La fonction serveur s'en
+    // sert pour ecarter les envois instantanes, qui ne viennent pas d'une
+    // personne. Sans script, le champ reste vide et le controle est ignore.
+    var pose = form.querySelector('[data-pose]');
+    if (pose) pose.value = String(Math.floor(Date.now() / 1000));
 
     // ------------------------------------------ signalement des champs
     // Sans ce script, le navigateur affiche ses propres bulles et le
@@ -1038,28 +1018,52 @@
       champ.addEventListener('change', siFautif);
     });
 
-    function dire(message, reussi) {
+    // Adresse de repli : elle est lue sur le formulaire, pour qu'une seule
+    // source la porte.
+    var ADRESSE = form.getAttribute('data-courriel') || 'contact@amelie-invest.com';
+
+    // Si l'envoi echoue — fonction serveur absente, panne, coupure — rien de
+    // ce qui a ete ecrit n'est perdu : on propose un lien qui reprend la
+    // saisie dans la messagerie du visiteur.
+    function lienDeSecours() {
+      function v(nom) {
+        var c = form.querySelector('[name="' + nom + '"]');
+        return c ? String(c.value || '').trim() : '';
+      }
+      var tel = v('telephone') ? (v('indicatif') + ' ' + v('telephone')).trim() : 'non communiqué';
+      var corps = [
+        'Prénom : ' + v('prenom'),
+        'Nom : ' + v('nom'),
+        'Adresse e-mail : ' + v('courriel'),
+        'Téléphone : ' + tel,
+        'Vous êtes : ' + v('qualite'),
+        'Où j’en suis : ' + v('profil'),
+        '',
+        'Message :',
+        v('message')
+      ].join('\n');
+      var lien = document.createElement('a');
+      lien.className = 'form__secours';
+      lien.href = 'mailto:' + ADRESSE
+        + '?subject=' + encodeURIComponent('Formulaire de contact · ' + v('prenom') + ' ' + v('nom'))
+        + '&body=' + encodeURIComponent(corps);
+      lien.textContent = 'Envoyer ce message par votre messagerie';
+      return lien;
+    }
+
+    function dire(message, reussi, secours) {
       if (!etat) return;
       etat.textContent = message;
+      if (secours) {
+        etat.appendChild(document.createTextNode(' '));
+        etat.appendChild(lienDeSecours());
+      }
       etat.hidden = false;
       etat.classList.toggle('form__etat--ok', !!reussi);
       etat.classList.toggle('form__etat--ko', !reussi);
     }
 
-    // ------------------------------------------------- la redaction
-    // Le site est statique et n'a pas de composant serveur : il ne peut
-    // pas expedier un courrier lui-meme. Le bouton ouvre donc la
-    // messagerie de la personne, message deja redige, adresse au cabinet.
-    // Rien ne part sans qu'elle l'envoie, et aucune donnee ne transite par
-    // le site.
-    var action = form.getAttribute('action') || '';
-    var adresse = action.replace(/^mailto:/, '').split('?')[0];
-
-    function valeur(nom) {
-      var champ = form.elements[nom];
-      return champ ? String(champ.value || '').trim() : '';
-    }
-
+    // ------------------------------------------------------- l'envoi
     form.addEventListener('submit', function (e) {
       var premier = null;
       Array.prototype.forEach.call(champs, function (champ) {
@@ -1071,40 +1075,51 @@
         dire('Le formulaire n’est pas complet. Les champs signalés attendent une réponse.', false);
         return;
       }
-      if (!adresse) return;
+
+      // `fetch` absent : on laisse le navigateur poster le formulaire, et
+      // la page revient avec le resultat en parametre.
+      if (typeof window.fetch !== 'function') return;
+
       e.preventDefault();
+      if (bouton) bouton.disabled = true;
+      if (libelle) libelle.textContent = 'Envoi en cours…';
+      dire('Envoi en cours…', true);
 
-      var tel = valeur('telephone');
-      var qui = (valeur('prenom') + ' ' + valeur('nom')).trim();
-      var corps = [
-        'Prénom : ' + valeur('prenom'),
-        'Nom : ' + valeur('nom'),
-        'Adresse e-mail : ' + valeur('courriel'),
-        'Téléphone : ' + (tel ? (valeur('indicatif') + ' ' + tel).trim() : 'non communiqué'),
-        'Vous êtes : ' + valeur('qualite'),
-        'Où j’en suis : ' + valeur('profil'),
-        '',
-        valeur('message'),
-        '',
-        'Message préparé depuis le formulaire de contact d’amelie-invest.com.'
-      ].join('\r\n');
-
-      var sujet = 'Premier échange' + (qui ? ' · ' + qui : '');
-      var lien = document.createElement('a');
-      lien.href = 'mailto:' + adresse
-        + '?subject=' + encodeURIComponent(sujet)
-        + '&body=' + encodeURIComponent(corps);
-      // Un lien clique passe partout : certains navigateurs refusent une
-      // affectation directe d'adresse vers un protocole externe.
-      lien.style.display = 'none';
-      document.body.appendChild(lien);
-      lien.click();
-      document.body.removeChild(lien);
-      dire('Votre messagerie s’ouvre avec le message déjà rédigé. Il ne part qu’une fois que vous l’envoyez.', true);
+      fetch(form.getAttribute('action'), {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json', 'X-Requested-With': 'fetch' }
+      }).then(function (r) {
+        return r.json().catch(function () { return { ok: r.ok, message: '' }; });
+      }).then(function (d) {
+        if (d && d.ok) {
+          form.reset();
+          if (pose) pose.value = String(Math.floor(Date.now() / 1000));
+          dire(d.message || 'Message envoyé. Nous répondons sous un jour ouvré.', true);
+        } else {
+          dire((d && d.message) || 'L’envoi a échoué. Réessayez dans un moment,'
+            + ' ou écrivez-nous directement à ' + ADRESSE + '.', false, true);
+        }
+      }).catch(function () {
+        dire('L’envoi a échoué. Vérifiez votre connexion, puis réessayez,'
+          + ' ou écrivez-nous directement à ' + ADRESSE + '.', false, true);
+      }).then(function () {
+        if (bouton) bouton.disabled = false;
+        if (libelle) libelle.textContent = libelleInitial;
+      });
     });
+
+    // Retour d'un envoi sans JavaScript : la page revient avec `?envoi=`.
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('envoi') === 'ok') {
+      dire('Message envoyé. Nous répondons sous un jour ouvré.', true);
+    } else if (params.get('envoi') === 'erreur') {
+      dire('L’envoi a échoué. Réessayez dans un moment, ou écrivez-nous'
+        + ' directement à ' + ADRESSE + '.', false, true);
+    }
   }
 
-  function demarrer() { initFenetre(); initFormulaire(); }
+  function demarrer() { initFormulaire(); }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', demarrer);
@@ -1247,5 +1262,110 @@
     document.addEventListener('DOMContentLoaded', initDiapos);
   } else {
     initDiapos();
+  }
+})();
+
+/* ==========================================================================
+   L'ecriture au survol.
+   Une phrase se reecrit quand le curseur la traverse : chaque mot est
+   devoile de gauche a droite, avec un decalage, si bien que le regard suit
+   une plume plutot qu'un fondu.
+
+   Le texte est ecrit en clair dans la page : ce script ne fait que
+   l'entourer mot a mot. Sans JavaScript, il ne se passe rien et la phrase
+   se lit telle quelle. Sous mouvement reduit, l'effet ne s'arme pas.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  var reduit = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* Chaque mot recoit son enveloppe. Les espaces restent des noeuds de
+     texte : le retour a la ligne se fait donc comme avant, et la mesure ne
+     bouge pas d'un pixel. On ne coupe que sur l'espace ordinaire, pour que
+     l'espace insecable garde le guillemet colle a son mot. */
+  function decouper(bloc) {
+    var marcheur = document.createTreeWalker(bloc, NodeFilter.SHOW_TEXT, null, false);
+    var noeuds = [];
+    while (marcheur.nextNode()) noeuds.push(marcheur.currentNode);
+
+    var mots = [];
+    noeuds.forEach(function (noeud) {
+      if (!noeud.nodeValue || !noeud.nodeValue.trim()) return;
+      var lot = document.createDocumentFragment();
+      noeud.nodeValue.split(/( +)/).forEach(function (bout) {
+        if (bout === '') return;
+        if (/^ +$/.test(bout)) {
+          lot.appendChild(document.createTextNode(bout));
+          return;
+        }
+        var mot = document.createElement('span');
+        mot.className = 'ecrit__mot';
+        mot.textContent = bout;
+        lot.appendChild(mot);
+        mots.push(mot);
+      });
+      noeud.parentNode.replaceChild(lot, noeud);
+    });
+    return mots;
+  }
+
+  function armer(bloc) {
+    var mots = decouper(bloc);
+    if (!mots.length) return;
+
+    var enCours = false;
+    // La plume traverse la phrase en une seconde environ, quelle que soit sa
+    // longueur : une citation courte ne doit pas paraitre plus lente.
+    var pas = Math.max(28, Math.min(85, 1000 / mots.length));
+    var glisse = 380;
+
+    function ecrire() {
+      if (enCours || reduit.matches) return;
+      enCours = true;
+
+      mots.forEach(function (mot) {
+        mot.style.transition = 'none';
+        mot.style.clipPath = 'inset(0 100% -25% 0)';
+      });
+      // Une mesure force le navigateur a prendre acte de l'etat ferme avant
+      // qu'on ne l'ouvre : sans elle, les deux ecritures sont fondues en une
+      // seule et il n'y a rien a animer.
+      void bloc.offsetWidth;
+
+      mots.forEach(function (mot, i) {
+        mot.style.transition = 'clip-path ' + glisse + 'ms cubic-bezier(.22,.61,.36,1) '
+          + Math.round(i * pas) + 'ms';
+        mot.style.clipPath = 'inset(0 0 -25% 0)';
+      });
+
+      window.setTimeout(function () {
+        mots.forEach(function (mot) {
+          mot.style.transition = '';
+          mot.style.clipPath = '';
+        });
+        enCours = false;
+      }, mots.length * pas + glisse + 120);
+    }
+
+    bloc.addEventListener('mouseenter', ecrire);
+    // Au clavier : la phrase se reecrit quand le bloc, ou ce qu'il contient,
+    // recoit le focus.
+    bloc.addEventListener('focusin', ecrire);
+  }
+
+  function initEcriture() {
+    var blocs = document.querySelectorAll('[data-ecriture]');
+    if (!blocs.length) return;
+    // `clip-path` avec `inset()` : sans lui, on ne touche a rien.
+    if (!window.CSS || !CSS.supports || !CSS.supports('clip-path', 'inset(0 100% 0 0)')) return;
+    Array.prototype.forEach.call(blocs, armer);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEcriture);
+  } else {
+    initEcriture();
   }
 })();

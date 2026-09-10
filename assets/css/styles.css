@@ -347,8 +347,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 .btn > * { position: relative; z-index: 1; }
 /* Une carte est une colonne flexible : un bouton pose directement dedans
    s'etirerait sur toute sa largeur. Il garde sa largeur propre. */
-.card > .btn,
-.modale .btn { align-self: start; }
+.card > .btn { align-self: start; }
 
 /* Une pastille se tient a gauche du bouton. Au survol, elle se dilate en
    cercle jusqu'a couvrir le bouton entier ; le cadre etant a angles
@@ -445,10 +444,39 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   border-bottom: 1px solid transparent;
   transition: border-color .4s var(--ease), background-color .4s var(--ease), box-shadow .4s var(--ease);
 }
+/* Des que la page a defile, l'en-tete quitte l'ivoire et passe en lavande
+   sombre : la barre se detache franchement du contenu qui glisse dessous.
+   Le texte passe au blanc, la pastille de la page ouverte reste blanche a
+   texte fonce — c'est elle qui doit rester le repere le plus lisible. */
 .header.is-stuck {
-  border-bottom-color: var(--line);
-  box-shadow: 0 1px 30px rgba(18, 40, 60, .06);
+  background: rgba(117, 80, 143, .95);
+  border-bottom-color: var(--lavender-dark);
+  box-shadow: 0 1px 30px rgba(18, 40, 60, .18);
 }
+.header.is-stuck .logo__name,
+.header.is-stuck .nav__link,
+.header.is-stuck .nav__link:hover { color: var(--white); }
+.header.is-stuck .logo__tag,
+.header.is-stuck .logo__tag span { color: rgba(255, 255, 255, .78); }
+.header.is-stuck .nav__link::after { background: var(--white); }
+/* La pastille garde son fond blanc : sur lavande, elle se voit encore mieux
+   que sur ivoire. Seul son filet passe au blanc pour rester visible. */
+.header.is-stuck .nav__link[aria-current="page"] {
+  color: var(--ink);
+  border-color: var(--white);
+}
+.header.is-stuck .nav__link[aria-current="page"]::after { background: var(--white); }
+/* Le bouton de tete s'inverse : fond ivoire, texte bleu nuit. */
+.header.is-stuck .header__cta {
+  --btn-bg: var(--paper);
+  --btn-fg: var(--ink);
+  --btn-line: var(--paper);
+  /* Au survol il se remplit de bleu nuit : une pastille lavande se perdrait
+     dans l'en-tete devenu lavande. */
+  --btn-fill: var(--ink);
+}
+.header.is-stuck .burger { border-color: rgba(255, 255, 255, .5); }
+.header.is-stuck .burger span { background: var(--white); }
 
 .header__inner {
   display: flex;
@@ -1332,24 +1360,33 @@ a.card:hover,
 .signature {
   display: flex;
   align-items: center;
-  gap: clamp(1rem, 2vw, 1.5rem);
-  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  gap: clamp(1.25rem, 2.6vw, 2.25rem);
+  margin: clamp(2.25rem, 4.5vw, 3.25rem) 0 0;
+  padding-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  border-top: 1px solid var(--line);
 }
-.signature__vue { flex: none; width: clamp(5rem, 9vw, 7rem); }
+.signature__vue { flex: none; width: clamp(8rem, 15vw, 12rem); }
 .signature__nom {
   font-family: var(--font-editorial);
-  font-size: 1.0625rem;
-  line-height: 1.35;
+  font-size: clamp(1.1875rem, 1.9vw, 1.4375rem);
+  line-height: 1.25;
   color: var(--ink);
 }
 .signature__nom span {
   display: block;
-  margin-top: .35rem;
+  margin-top: .5rem;
   font-family: var(--font-body);
   font-size: .75rem;
-  letter-spacing: .08em;
+  letter-spacing: .1em;
+  line-height: 1.5;
   text-transform: uppercase;
   color: var(--muted);
+}
+/* Sous 520 px, le portrait passe au-dessus du nom : cote a cote, il ne
+   resterait plus de place pour l'un ni pour l'autre. */
+@media (max-width: 520px) {
+  .signature { display: block; }
+  .signature__vue { width: clamp(9rem, 45vw, 13rem); margin-bottom: 1.1rem; }
 }
 
 /* --------------------------------------------------------- 41 le planning
@@ -1565,6 +1602,16 @@ a.card:hover,
 }
 .form__etat--ok { border-left-color: var(--lavender-dark); background: var(--lavender-soft); color: var(--ink); }
 .form__etat--ko { border-left-color: var(--rust); background: var(--rust-soft); color: var(--ink); }
+/* Le repli quand l'envoi echoue : la saisie est reprise dans la messagerie
+   du visiteur, rien de ce qu'il a ecrit n'est perdu. */
+.form__secours {
+  display: inline-block;
+  margin-top: .35rem;
+  color: var(--ink);
+  border-bottom: 1px solid var(--rust);
+  font-weight: 500;
+}
+.form__secours:hover { color: var(--rust); }
 
 /* L'asterisque des champs necessaires. La mention en toutes lettres figure
    sous le bouton : l'asterisque seul ne dirait rien a qui ne le connait. */
@@ -1617,109 +1664,6 @@ a.card:hover,
 /* Une adresse citee, pas cliquee : elle reste lisible sans etre un lien. */
 .prose__url { font-family: var(--font-editorial); letter-spacing: .01em; }
 
-/* Formulaire en fenetre.
-   Le formulaire est ecrit dans un `dialog` ouvert : sans JavaScript il
-   s'affiche simplement dans la page, utilisable tel quel. Le script le
-   referme au chargement et le rouvre en fenetre modale au clic. Le bouton
-   d'ouverture, lui, reste masque tant que le script ne l'a pas revele :
-   sans lui il n'aurait rien a ouvrir. */
-
-.modale {
-  /* Le navigateur pose un `dialog` en absolu : hors fenetre modale, il se
-     superposerait au reste de la page. Ici il reprend sa place dans le
-     flux, a la suite du texte de la carte qui l'accueille. */
-  position: static;
-  width: 100%;
-  max-width: none;
-  max-height: none;
-  margin: clamp(1.5rem, 3vw, 2rem) 0 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  overflow: visible;
-}
-/* Une fois ouverte par le script, elle se pose au centre de l'ecran. */
-.modale[open]:modal {
-  position: fixed;
-  width: min(44rem, calc(100vw - 2rem));
-  max-height: min(48rem, calc(100vh - 3rem));
-  margin: auto;
-  overflow: hidden;
-}
-/* Dans la fenetre, seuls les champs defilent : le titre et le bouton
-   d'envoi restent en place, et la barre de defilement ne traverse plus
-   toute la hauteur. */
-.modale[open]:modal .modale__cadre {
-  display: flex;
-  flex-direction: column;
-  max-height: min(48rem, calc(100vh - 3rem));
-}
-.modale[open]:modal .modale__tete { flex: none; }
-.modale[open]:modal .form {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding-right: .35rem;
-}
-/* Le bloc d'envoi reste sous les yeux quand les champs defilent. Un filet
-   le detache : une ombre blanche masquerait la ligne juste au-dessus. */
-.modale[open]:modal .form__envoi {
-  position: sticky;
-  bottom: 0;
-  background: var(--white);
-  border-top: 1px solid var(--line);
-  padding-top: 1.1rem;
-  margin-top: .35rem;
-}
-.modale::backdrop { background: rgba(18, 40, 60, .55); }
-.js .modale[open]:modal { animation: fenetre .38s var(--ease) both; }
-@keyframes fenetre {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: none; }
-}
-
-.modale__cadre { background: var(--white); border: 1px solid var(--line); padding: clamp(1.5rem, 3vw, 2.5rem); }
-/* Dans la page, sans fenetre, le cadre se fond dans la carte qui l'accueille. */
-.modale:not(:modal) .modale__cadre { border: 0; padding: 0; background: none; }
-
-.modale__tete {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--line);
-}
-.modale__titre {
-  margin: 0;
-  font-family: var(--font-editorial);
-  font-size: clamp(1.1875rem, 1.8vw, 1.4375rem);
-  color: var(--ink);
-}
-.modale__fermer {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  padding: 0;
-  background: none;
-  border: 1px solid var(--line);
-  color: var(--ink);
-  cursor: pointer;
-  transition: background-color .3s var(--ease), color .3s var(--ease);
-}
-.modale__fermer:hover { background: var(--ink); color: var(--white); }
-/* Sans script, la croix ne fermerait rien : elle reste hors du champ. */
-.modale:not(:modal) .modale__tete { display: none; }
-
-@media (prefers-reduced-motion: reduce) {
-  .js .modale[open]:modal { animation: none; }
-  .modale__fermer { transition: none; }
-}
 
 /* ------------------------------------------------------------- 19 pied de page */
 
@@ -1845,7 +1789,7 @@ a.card:hover,
 @media print {
   .header, .footer, .drawer, .marquee-controls,
   .hero__media, .cta__media, .voile, .skip,
-  .cta, .booking, .modale,
+  .cta, .booking,
   .telechargement, .diapos__commandes, .carrousel__commandes,
   .videobtn, .apercu-note { display: none !important; }
 
@@ -3919,7 +3863,21 @@ html:not(.js) .booking__confirm { display: none; }
    ========================================================================== */
 
 .bandeau-section { padding-top: clamp(2rem, 4vw, 3rem); }
-.vitrine { margin: 0; }
+/* La colonne de l'image se règle sur la largeur de l'image, pas l'inverse :
+   le texte prend tout le reste. */
+@media (min-width: 900px) {
+  .bandeau-section .split {
+    grid-template-columns: auto minmax(0, 46rem);
+    justify-content: center;
+    align-items: start;
+  }
+}
+.vitrine {
+  margin: 0;
+  /* La photographie accompagne le texte, elle ne le domine pas : sa largeur
+     est bornée, et elle reste calée en haut de sa colonne. */
+  max-width: clamp(13rem, 22vw, 19rem);
+}
 .vitrine__credit {
   margin-top: .9rem;
   font-size: .75rem;
@@ -3928,3 +3886,77 @@ html:not(.js) .booking__confirm { display: none; }
   color: var(--muted);
 }
 .vitrine__credit em { font-style: italic; }
+
+
+/* ==========================================================================
+   43 · L'ecriture au survol
+   Une phrase se reecrit quand le curseur passe dessus : chaque mot est
+   devoile de gauche a droite, comme sous une plume qui traverse la ligne.
+
+   Trois garde-fous, dans l'ordre des regles du site :
+   1. Le texte est ecrit en clair dans la page. Le script ne fait que
+      l'entourer mot a mot ; sans JavaScript, rien ne change et tout se lit.
+   2. Aucune information ne depend de l'effet : c'est la meme phrase, avant,
+      pendant et apres.
+   3. Sous mouvement reduit, l'effet ne s'arme pas du tout.
+   ========================================================================== */
+
+.ecrit__mot {
+  display: inline-block;
+  /* Le decoupage se fait a la volee : le mot garde sa place exacte. */
+  will-change: clip-path;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ecrit__mot { clip-path: none !important; transition: none !important; }
+}
+
+
+/* ==========================================================================
+   44 · La page du formulaire
+   Le formulaire a quitte la fenetre pour une page entiere. Une photographie
+   se tient derriere lui, tres en retrait : elle donne de la profondeur sans
+   jamais disputer la lisibilite des champs. Le panneau qui porte le
+   formulaire est opaque — un fond translucide sur une photographie rendrait
+   les etiquettes penibles a lire.
+   ========================================================================== */
+
+.formulaire-fond { position: relative; overflow: clip; }
+.formulaire-fond__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.formulaire-fond__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+/* Le voile : l'ivoire du site, pose a moitie. La photographie se voit, mais
+   aucun texte ne repose dessus — le formulaire est sur un panneau opaque —
+   si bien que la lisibilite ne depend jamais de ce qui se trouve derriere.
+   Le voile se resserre en haut et en bas pour raccorder la section aux
+   aplats ivoire qui l'encadrent. */
+.formulaire-fond__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(248, 245, 239, .92) 0%,
+    rgba(248, 245, 239, .55) 22%,
+    rgba(248, 245, 239, .55) 78%,
+    rgba(248, 245, 239, .95) 100%);
+}
+.formulaire-fond__inner { position: relative; z-index: 1; }
+
+.formulaire-panneau {
+  max-width: 60rem;
+  margin-inline: auto;
+  padding: clamp(1.75rem, 4vw, 3rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  /* L'ombre detache franchement le panneau de la photographie : sans elle,
+     le cadre blanc paraitrait colle au decor. */
+  box-shadow: 0 30px 70px rgba(18, 40, 60, .22);
+}
+.formulaire-panneau .form { margin-top: 2rem; }

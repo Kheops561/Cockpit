@@ -1,80 +1,86 @@
 # Mettre le formulaire de contact en service
 
-> **État actuel : cette page décrit une évolution possible, pas le
-> fonctionnement d’aujourd’hui.**
->
-> Le formulaire du site **prépare un message dans la messagerie du
-> visiteur**, adressé à la boîte du domaine. Il n’envoie rien lui-même.
->
-> `amelie-invest.com` n’a pas d’hébergement qui exécute du code : le domaine
-> et les boîtes aux lettres sont chez OVH, mais le site est servi depuis une
-> machine Amazon EC2 (75.101.134.27). `contact.php` est écrit, testé et prêt,
-> mais il ne tournera qu’une fois un hébergement PHP en place. Suivre alors
-> la marche ci-dessous, puis rebrancher le formulaire sur `contact.php`.
+Le formulaire de `contact.html` envoie le message **directement**, sans
+passer par la messagerie du visiteur. Il lui faut donc un serveur, et un
+seul morceau de code y tourne : `api/contact.js`.
 
-Le site reste un ensemble de fichiers statiques. `contact.php` serait le seul
-composant serveur : il recevrait le formulaire et ferait envoyer le message
-par Resend.
+Le site reste un ensemble de fichiers statiques. `api/contact.js` reçoit le
+formulaire, le contrôle, puis fait partir le message par l'API **Resend**.
 
-Une variante est possible une fois l’hébergement en place : faire partir le
-message par le **serveur SMTP d’OVH** (`ssl0.ovh.net`, avec les
-identifiants d’une boîte du domaine) plutôt que par Resend. Cela éviterait
-un sous-traitant supplémentaire dans la page « Données personnelles. »
+**Le navigateur n'appelle jamais Resend.** Il ne parle qu'au site lui-même,
+sur `/api/contact`. C'est la fonction, et elle seule, qui contacte l'API. La
+clé ne quitte donc jamais le serveur et ne figure pas dans le dépôt.
 
-**Le navigateur n'appelle jamais Resend.** Il ne parle qu'à
-`amelie-invest.com`. C'est le serveur, et lui seul, qui contacte l'API. La
-clé d'API ne quitte donc jamais le serveur et ne figure pas dans le dépôt.
+## Où le site est publié
 
-## 1. Vérifier que l'hébergement OVH sait exécuter PHP
+Le projet est déployé sur **Vercel**, qui sert les pages statiques et
+exécute les fonctions du dossier `api/`. Aucune configuration
+supplémentaire n'est nécessaire : Vercel reconnaît ce dossier tout seul.
 
-Il faut une offre OVH avec PHP 8.0 ou plus récent et l'extension cURL, ce
-qui est le cas des hébergements mutualisés courants. Sur une offre
-strictement statique, le formulaire ne fonctionnera pas.
+L'aperçu de travail est `https://amelie-invest-phi.vercel.app`. Le domaine
+`amelie-invest.com` pointe pour l'instant ailleurs : le jour où il sera
+basculé sur Vercel, la marche à suivre est au point 4.
 
-Pour vérifier : déposer un fichier `test.php` contenant
-`<?php phpinfo();`, l'ouvrir dans un navigateur, **puis le supprimer**.
-
-## 2. Créer la clé Resend
+## 1. Créer la clé Resend
 
 1. Sur [resend.com](https://resend.com), ajouter le domaine
-   `amelie-invest.com` et suivre la procédure de vérification : Resend
-   donne des enregistrements DNS (SPF, DKIM) à créer dans la zone DNS OVH.
-   Tant que le domaine n'est pas vérifié, l'envoi est refusé.
+   `amelie-invest.com` et suivre la procédure de vérification : Resend donne
+   des enregistrements DNS (SPF, DKIM) à créer dans la zone DNS **OVH**, où
+   le domaine est géré. Tant que le domaine n'est pas vérifié, l'envoi est
+   refusé.
 2. Créer une clé d'API avec le **droit d'envoi seulement**.
 3. Choisir la région de traitement dans le compte Resend. Ce choix a des
    conséquences sur la page « Données personnelles » : voir le point 5.
 
-## 3. Déposer la configuration sur le serveur
+Tant que le domaine n'est pas vérifié, il est possible de tester avec le
+domaine d'essai fourni par Resend (`onboarding@resend.dev`) : les messages
+ne partent alors que vers l'adresse du compte Resend.
 
-Copier `contact-config.example.php` sous le nom `contact-config.php`, à la
-racine du site, et le remplir :
+## 2. Déclarer les variables sur Vercel
 
-```php
-return [
-    'cle_resend'   => 're_xxxxxxxxxxxxxxxxxxxx',
-    'expediteur'   => 'Amélie & Partners <site@amelie-invest.com>',
-    'destinataire' => 'contact@amelie-invest.com',
-];
-```
+Dans le projet Vercel : **Settings → Environment Variables**. Trois
+variables, à cocher pour *Production*, *Preview* et *Development* :
 
-`contact-config.php` est exclu du dépôt par `.gitignore`. **La clé ne doit
-jamais être versionnée.** Si elle a été exposée, la révoquer dans Resend et
-en créer une autre.
+| Nom | Valeur | Obligatoire |
+| --- | --- | --- |
+| `RESEND_API_KEY` | `re_xxxxxxxxxxxxxxxxxxxx` | oui |
+| `CONTACT_TO` | `contact@amelie-invest.com` | non, c'est la valeur par défaut |
+| `CONTACT_FROM` | `Amélie & Partners <site@amelie-invest.com>` | non, c'est la valeur par défaut |
 
-Le domaine de l'expéditeur doit être celui vérifié à l'étape 2.
+**La clé ne doit jamais être versionnée.** Si elle a été exposée, la
+révoquer dans Resend et en créer une autre.
 
-## 4. Vérifier
+Le domaine de `CONTACT_FROM` doit être celui vérifié à l'étape 1.
+
+Après avoir ajouté ou modifié une variable, **redéployer** : les variables
+ne sont lues qu'au démarrage de la fonction.
+
+## 3. Vérifier
 
 - Envoyer un message depuis `contact.html` : il doit arriver sur l'adresse
   destinataire, avec le visiteur en adresse de réponse.
 - Désactiver JavaScript et recommencer : le formulaire part en envoi
   classique et la page revient avec `?envoi=ok`.
-- Envoyer six messages d'affilée : le sixième doit être refusé. La limite
-  est de cinq par heure et par adresse IP.
+- Ouvrir la page sur un serveur qui n'exécute pas `api/contact.js` (un
+  simple `python3 -m http.server`, par exemple) : l'envoi échoue, et le
+  message d'erreur propose un lien qui reprend la saisie dans la messagerie
+  du visiteur. Rien de ce qui a été écrit n'est perdu.
 
-En cas d'échec, le détail part dans le journal d'erreurs PHP de
-l'hébergement ; le visiteur, lui, ne voit qu'un message général. C'est
+En cas d'échec, le détail part dans les journaux Vercel (**Deployments →
+Functions → Logs**) ; le visiteur, lui, ne voit qu'un message général. C'est
 volontaire : il ne doit rien apprendre de la configuration.
+
+## 4. Le jour où le domaine bascule sur Vercel
+
+1. Dans le projet Vercel : **Settings → Domains**, ajouter
+   `amelie-invest.com` et `www.amelie-invest.com`.
+2. Dans la zone DNS OVH, remplacer l'enregistrement `A` de l'apex et le
+   `CNAME` du `www` par les valeurs que Vercel indique.
+3. **Ne pas toucher aux enregistrements `MX`, `SPF`, `DKIM` et `DMARC`** :
+   les boîtes aux lettres restent chez OVH, et ces enregistrements portent
+   aussi la vérification Resend. Les supprimer casserait à la fois la
+   réception du courrier et l'envoi du formulaire.
+4. Mettre à jour la mention de l'hébergeur dans `mentions-legales.html`.
 
 ## 5. Ce qui reste à trancher
 
@@ -86,13 +92,18 @@ volontaire : il ne doit rien apprendre de la configuration.
 
 ## Protection contre les envois automatisés
 
-Elle est entièrement côté serveur, sans service extérieur :
+Elle est entièrement dans la fonction, sans service extérieur :
 
 - un champ piège, masqué et hors du parcours au clavier, qui doit rester
   vide ;
 - un contrôle du délai : un formulaire rempli en moins de trois secondes
   n'a pas été rempli par une personne ;
-- une limite de cinq envois par heure et par adresse IP.
+- une revalidation complète côté serveur : les listes déroulantes ne
+  prennent que les valeurs proposées, les longueurs sont bornées, les
+  caractères de contrôle sont retirés.
+
+Dans les deux premiers cas, la fonction répond « message reçu » sans rien
+envoyer : un robot ne doit pas apprendre qu'il a été repéré.
 
 Un service comme Cloudflare Turnstile a été écarté : il faudrait charger un
 script depuis un domaine tiers dans les pages, ce que le cahier des charges

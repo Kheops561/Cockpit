@@ -7,10 +7,11 @@ et `A-VALIDER-AVANT-LIVE.md` avant toute modification.
 ## Nature du projet
 
 Site **statique** : HTML, CSS, JavaScript simple. Aucune compilation, aucun
-gestionnaire de paquets, aucune dépendance externe, aucun framework.
-`contact.php` existe à la racine mais **n’est pas en service** : il attend un
-hébergement qui exécute PHP. Ne pas
-introduire React, Next.js, Tailwind, shadcn, TypeScript ni aucun script
+gestionnaire de paquets, aucune dépendance externe, aucun framework. Une
+seule exception, hors des pages : `api/contact.js`, la fonction serveur qui
+reçoit le formulaire de contact et fait partir le message. Le site est
+publié sur **Vercel**, qui sert les pages et exécute ce dossier `api/`. Ne
+pas introduire React, Next.js, Tailwind, shadcn, TypeScript ni aucun script
 distant. Si une idée d’interface vient d’un composant React, la réécrire en
 HTML, CSS et JavaScript simple pour ce site.
 
@@ -120,22 +121,23 @@ vectoriels monochromes : aucun émoji, aucune flèche Unicode.
 6. Aucun appel à un domaine tiers dans les pages : polices, styles et scripts
    sont hébergés avec le site. Seuls Calendly, LinkedIn et `mailto:` sont des
    liens sortants ; la politique de confidentialité de Calendly est citée
-   sur les pages légales. Le formulaire de contact n’appelle donc aucun
-   service : il prépare un message dans la messagerie du visiteur, adressé
-   à la boîte du domaine. Un envoi direct demanderait un hébergement qui
-   exécute du code ; le nécessaire est écrit et prêt dans `contact.php`,
-   mais **il n’est pas en service**. Voir `INSTALLATION-FORMULAIRE.md`.
+   sur les pages légales. Le formulaire de contact poste sur `/api/contact`,
+   c’est-à-dire sur le site lui-même : le navigateur ne s’adresse jamais à
+   Resend, seule la fonction serveur le fait, et la clé d’API vit dans les
+   variables d’environnement du projet Vercel. Si la fonction ne répond pas,
+   la saisie n’est pas perdue : un lien la reprend dans la messagerie du
+   visiteur. Voir `INSTALLATION-FORMULAIRE.md`.
 7. Une seule balise `h1` par page.
 
 ## Où modifier
 
-- Pages : les treize fichiers `.html` à la racine.
+- Pages : les quatorze fichiers `.html` à la racine.
 - Mise en forme : `assets/css/styles.css`, sections numérotées.
 - Comportements : `assets/js/site.js`.
 - Visuels : `assets/images/` et `assets/videos/`, voir `GUIDE-VISUELS.md`.
 
 L’en-tête et le pied de page sont **répétés dans chaque page**. Une
-modification de navigation doit être reportée dans les treize fichiers.
+modification de navigation doit être reportée dans les quatorze fichiers.
 
 ## Méthode obligatoire avant livraison
 

@@ -15,5 +15,9 @@ __pycache__/
 # Travail local
 *.log
 
-# Configuration du formulaire : contient la clé d’API Resend.
-contact-config.php
+# Variables locales de la fonction de contact : elles contiennent la clé
+# d’API Resend. Sur Vercel, ces valeurs vivent dans les variables
+# d’environnement du projet, jamais dans le dépôt.
+.env
+.env.local
+.vercel/
