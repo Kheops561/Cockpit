@@ -23,12 +23,17 @@ except ImportError:
     raise SystemExit("Pillow est nécessaire :  pip install Pillow")
 
 BALISE = re.compile(r'<img\b[^>]*>', re.I)
-SRC = re.compile(r'src="(assets/images/[^"]+)"')
+# Le « / » de tête est optionnel : les pages appellent les images depuis la
+# racine du site, mais l'outil doit continuer à reconnaître les deux formes.
+SRC = re.compile(r'src="(/?assets/images/[^"]+)"')
 
 
 def dimensions(rel, cache={}):
     if rel not in cache:
-        chemin = os.path.join(RACINE, rel)
+        # Un chemin qui commence par « / » part de la racine du site, pas
+        # du disque : c'est ce qui permet aux pages rangées dans un dossier
+        # de langue de partager les mêmes images.
+        chemin = os.path.join(RACINE, rel.lstrip("/"))
         cache[rel] = Image.open(chemin).size if os.path.exists(chemin) else None
     return cache[rel]
 

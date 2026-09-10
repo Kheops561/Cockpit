@@ -4324,3 +4324,68 @@ html:not(.js) .booking__confirm { display: none; }
 @media (max-height: 520px) {
   .hero__suite { display: none; }
 }
+
+
+/* ==========================================================================
+   47 · Le choix de la langue
+   Une liste de liens, rien de plus : elle fonctionne sans JavaScript, et
+   chaque lien mene a la meme page dans l'autre langue. Le drapeau aide a
+   reperer, le code de langue le double en toutes lettres — un drapeau ne
+   dit pas une langue, il dit un pays.
+   ========================================================================== */
+
+.langues-choix ul {
+  display: flex;
+  align-items: center;
+  gap: .15rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.langues-choix__lien {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .3rem .5rem;
+  font-size: .75rem;
+  letter-spacing: .1em;
+  color: var(--muted);
+  border: 1px solid transparent;
+  transition: color .3s var(--ease), border-color .3s var(--ease),
+              background-color .3s var(--ease);
+}
+.langues-choix__lien .drapeau {
+  display: block;
+  width: 1rem;
+  height: auto;
+  border: 1px solid var(--line);
+  opacity: .8;
+  transition: opacity .3s var(--ease);
+}
+.langues-choix__lien:hover { color: var(--ink); }
+.langues-choix__lien:hover .drapeau { opacity: 1; }
+/* La langue en cours se marque comme la page ouverte : appuyee, et
+   soulignee d'un filet lavande. */
+.langues-choix__lien[aria-current="true"] {
+  color: var(--ink);
+  font-weight: 600;
+  border-bottom-color: var(--lavender-dark);
+}
+.langues-choix__lien[aria-current="true"] .drapeau { opacity: 1; }
+
+/* En-tete accroche : le selecteur suit la barre, qui est passee en lavande. */
+.header.is-stuck .langues-choix__lien { color: rgba(255, 255, 255, .8); }
+.header.is-stuck .langues-choix__lien:hover,
+.header.is-stuck .langues-choix__lien[aria-current="true"] { color: var(--white); }
+.header.is-stuck .langues-choix__lien[aria-current="true"] { border-bottom-color: var(--white); }
+.header.is-stuck .langues-choix__lien .drapeau { border-color: rgba(255, 255, 255, .4); }
+
+/* Sous 1200 px la barre passe au menu deroulant : le selecteur se range
+   avant le bouton, ou il reste atteignable. */
+@media (max-width: 1199px) {
+  .langues-choix { margin-left: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .langues-choix__lien,
+  .langues-choix__lien .drapeau { transition: none; }
+}

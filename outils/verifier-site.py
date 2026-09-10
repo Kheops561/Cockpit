@@ -112,7 +112,10 @@ def main():
             # domaine tiers n'est appelé, la règle est respectée.
             if ref.startswith("/_vercel/"):
                 continue
-            chemin = os.path.join(RACINE, ref.split("?")[0])
+            # Un chemin qui commence par « / » part de la racine du site,
+            # pas du disque : c'est ce qui permet à une page rangée dans un
+            # sous-dossier de langue de retrouver les mêmes fichiers.
+            chemin = os.path.join(RACINE, ref.split("?")[0].lstrip("/"))
             if not os.path.exists(chemin):
                 erreurs.append(f"{nom} : ressource introuvable → {ref}")
 
@@ -125,7 +128,7 @@ def main():
             # partie du nom de fichier : c'est la page qui la lit.
             cible = cible.split("?")[0]
             if cible:
-                chemin = os.path.join(RACINE, cible)
+                chemin = os.path.join(RACINE, cible.lstrip("/"))
                 if not os.path.exists(chemin):
                     erreurs.append(f"{nom} : lien cassé → {lien}")
                     continue

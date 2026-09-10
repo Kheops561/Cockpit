@@ -134,9 +134,33 @@ vectoriels monochromes : aucun émoji, aucune flèche Unicode.
    visiteur. Voir `INSTALLATION-FORMULAIRE.md`.
 7. Une seule balise `h1` par page.
 
+## Langues
+
+Le site est **multilingue** depuis septembre 2026. Le français vit à la
+racine, les autres langues dans un dossier : `/en/`, `/vi/`. Trois règles
+tiennent l’ensemble :
+
+1. Les **liens entre pages restent relatifs** (`approche.html`). C’est ce qui
+   fait qu’une page anglaise renvoie vers une page anglaise sans qu’on
+   l’écrive.
+2. Les **fichiers du site s’appellent en absolu** (`/assets/…`), et sont donc
+   partagés par toutes les langues.
+3. `langues.py` porte les textes de la coquille et la liste `PUBLIEES` : une
+   langue n’apparaît dans le sélecteur et dans les `hreflang` que le jour où
+   ses pages existent.
+
+Décisions prises avec Amélie : **une seule version anglaise** ; les
+**citations des témoignages restent en français**, les traduire reviendrait à
+les modifier ; les **pages légales ne sont pas traduites**, les autres langues
+y renvoient en indiquant que le français fait foi.
+
+Le nom de la marque, sa signature et les noms des offres ne se traduisent
+jamais : ce sont des noms propres.
+
 ## Où modifier
 
-- Pages : les quatorze fichiers `.html` à la racine.
+- Pages : les quatorze fichiers `.html` à la racine, plus un dossier par
+  langue supplémentaire.
 - Mise en forme : `assets/css/styles.css`, sections numérotées.
 - Comportements : `assets/js/site.js`.
 - Visuels : `assets/images/` et `assets/videos/`, voir `GUIDE-VISUELS.md`.

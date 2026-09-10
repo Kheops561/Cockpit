@@ -62,7 +62,7 @@ SERVICE = {
     },
 }
 
-MARQUEUR = '<script src="assets/js/site.js" defer></script>'
+MARQUEUR = '<script src="/assets/js/site.js" defer></script>'
 
 
 def appliquer(fichier, donnees):
