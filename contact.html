@@ -136,7 +136,15 @@
                 <span class="sr-only">Fermer le formulaire</span>
               </button>
             </div>
-          <form class="form" data-form-mail action="mailto:contact@amelie-invest.com" method="post" enctype="text/plain">
+          <form class="form" data-form action="contact.php" method="post">
+            <!-- Piège à robots : ce champ est masqué et doit rester vide.
+                 Aucun service extérieur n’est appelé pour cette
+                 vérification. -->
+            <div class="leurre" aria-hidden="true">
+              <label for="site_web">Ne pas remplir</label>
+              <input id="site_web" name="site_web" type="text" tabindex="-1" autocomplete="off">
+            </div>
+            <input type="hidden" name="pose" value="" data-pose>
             <div class="form__duo">
               <div class="field">
                 <label for="prenom">Prénom <span class="field__requis" aria-hidden="true">*</span></label>
@@ -268,8 +276,10 @@
             <p class="field__erreur" id="consentement-erreur" hidden></p>
 
             <div class="form__envoi">
-              <button class="btn" type="submit"><svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><rect x="1.75" y="3.25" width="12.5" height="9.5" stroke="currentColor" stroke-width="1.2"/><path d="m2 4 6 4.5L14 4" stroke="currentColor" stroke-width="1.2"/></svg><span>Préparer mon message</span></button>
-              <p class="note"><span class="field__requis" aria-hidden="true">*</span> Champs nécessaires. Le bouton ouvre votre messagerie avec le message déjà rédigé&nbsp;: rien n&rsquo;est envoyé sans votre validation, et aucune donnée ne transite par ce site.</p>
+              <button class="btn" type="submit"><svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><rect x="1.75" y="3.25" width="12.5" height="9.5" stroke="currentColor" stroke-width="1.2"/><path d="m2 4 6 4.5L14 4" stroke="currentColor" stroke-width="1.2"/></svg><span>Envoyer mon message</span></button>
+              <p class="form__etat" role="status" data-form-etat hidden></p>
+              <p class="note"><span class="field__requis" aria-hidden="true">*</span> Champs nécessaires. Votre message nous est envoyé directement, sans passer par votre logiciel de messagerie. Nous répondons sous un jour ouvré.</p>
+              <p class="note">Les informations saisies servent uniquement à traiter votre demande et le suivi commercial qui en découle. Elles sont conservées trois ans à compter du dernier contact et ne sont cédées à personne. Vous disposez d&rsquo;un droit d&rsquo;accès, de rectification, d&rsquo;effacement et d&rsquo;opposition, que vous pouvez exercer par ce même formulaire. Le détail figure dans les <a href="confidentialite.html">données personnelles</a>.</p>
             </div>
           </form>
           </div>

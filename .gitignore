@@ -14,3 +14,6 @@ __pycache__/
 
 # Travail local
 *.log
+
+# Configuration du formulaire : contient la clé d’API Resend.
+contact-config.php

@@ -975,22 +975,23 @@
   }
 
   function initFormulaire() {
-    var form = document.querySelector('[data-form-mail]');
+    var form = document.querySelector('[data-form]');
     if (!form) return;
 
-    var action = form.getAttribute('action') || '';
-    var adresse = action.replace(/^mailto:/, '').split('?')[0];
-    if (!adresse) return;
+    var etat = form.querySelector('[data-form-etat]');
+    var bouton = form.querySelector('button[type="submit"]');
+    var libelle = bouton ? bouton.querySelector('span') : null;
+    var libelleInitial = libelle ? libelle.textContent : '';
 
-    function valeur(nom) {
-      var champ = form.elements[nom];
-      return champ ? String(champ.value || '').trim() : '';
-    }
+    // L'heure a laquelle le formulaire a ete pose. Le serveur s'en sert pour
+    // ecarter les envois instantanes, qui ne viennent pas d'une personne.
+    // Sans script, le champ reste vide et le serveur ne fait pas ce controle.
+    var pose = form.querySelector('[data-pose]');
+    if (pose) pose.value = String(Math.floor(Date.now() / 1000));
 
     // ------------------------------------------ signalement des champs
-    // Sans ce script, le navigateur affiche ses propres bulles : le
-    // formulaire reste utilisable tel quel. Avec lui, le message s'ecrit
-    // sous le champ concerne, en toutes lettres et dans le ton du site.
+    // Sans ce script, le navigateur affiche ses propres bulles et le
+    // formulaire part en POST classique : il reste utilisable tel quel.
     var ALERTE = '<svg class="icon" width="14" height="14" viewBox="0 0 16 16" fill="none"'
       + ' aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.4" stroke="currentColor"'
       + ' stroke-width="1.2"/><path d="M8 4.6v4.2M8 11.1v.9" stroke="currentColor"'
@@ -1032,22 +1033,26 @@
     }
 
     var champs = form.querySelectorAll('input, select, textarea');
-    // Le navigateur laisse la main : les messages sont les notres.
     form.setAttribute('novalidate', 'novalidate');
     Array.prototype.forEach.call(champs, function (champ) {
-      // On ne signale un champ qu'une fois quitte, puis a chaque frappe
-      // tant qu'il reste fautif : le message disparait des qu'il est reglé.
       champ.addEventListener('blur', function () { signaler(champ, true); });
-      champ.addEventListener('input', function () {
+      function siFautif() {
         var enveloppe = champ.closest ? champ.closest('.field') : null;
         if (enveloppe && enveloppe.classList.contains('est-fautif')) signaler(champ, true);
-      });
-      champ.addEventListener('change', function () {
-        var enveloppe = champ.closest ? champ.closest('.field') : null;
-        if (enveloppe && enveloppe.classList.contains('est-fautif')) signaler(champ, true);
-      });
+      }
+      champ.addEventListener('input', siFautif);
+      champ.addEventListener('change', siFautif);
     });
 
+    function dire(message, reussi) {
+      if (!etat) return;
+      etat.textContent = message;
+      etat.hidden = false;
+      etat.classList.toggle('form__etat--ok', !!reussi);
+      etat.classList.toggle('form__etat--ko', !reussi);
+    }
+
+    // ------------------------------------------------------- l'envoi
     form.addEventListener('submit', function (e) {
       var premier = null;
       Array.prototype.forEach.call(champs, function (champ) {
@@ -1056,36 +1061,48 @@
       if (premier) {
         e.preventDefault();
         premier.focus();
+        dire('Le formulaire n’est pas complet. Les champs signalés attendent une réponse.', false);
         return;
       }
+
+      // `fetch` absent : on laisse le navigateur poster le formulaire, et
+      // la page revient avec le resultat en parametre.
+      if (typeof window.fetch !== 'function') return;
+
       e.preventDefault();
+      if (bouton) bouton.disabled = true;
+      if (libelle) libelle.textContent = 'Envoi en cours…';
+      dire('Envoi en cours…', true);
 
-      var nom = (valeur('prenom') + ' ' + valeur('nom')).trim();
-      var tel = valeur('telephone');
-      var corps = [
-        'Nom : ' + nom,
-        'Adresse e-mail : ' + valeur('courriel'),
-        'Téléphone : ' + (tel ? (valeur('indicatif') + ' ' + tel).trim() : 'non communiqué'),
-        'Vous êtes : ' + valeur('qualite'),
-        'Où j’en suis : ' + valeur('profil'),
-        '',
-        valeur('message'),
-        '',
-        'Message préparé depuis le formulaire de contact d’amelie-invest.com.'
-      ].join('\r\n');
-
-      var sujet = 'Premier échange' + (nom ? ' · ' + nom : '');
-      var lien = document.createElement('a');
-      lien.href = 'mailto:' + adresse
-        + '?subject=' + encodeURIComponent(sujet)
-        + '&body=' + encodeURIComponent(corps);
-      // Un lien clique passe partout : certains navigateurs refusent une
-      // affectation directe d'adresse vers un protocole externe.
-      lien.style.display = 'none';
-      document.body.appendChild(lien);
-      lien.click();
-      document.body.removeChild(lien);
+      fetch(form.getAttribute('action'), {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json', 'X-Requested-With': 'fetch' }
+      }).then(function (r) {
+        return r.json().catch(function () { return { ok: r.ok, message: '' }; });
+      }).then(function (d) {
+        if (d && d.ok) {
+          form.reset();
+          if (pose) pose.value = String(Math.floor(Date.now() / 1000));
+          dire(d.message || 'Message envoyé. Nous répondons sous un jour ouvré.', true);
+        } else {
+          dire((d && d.message) || 'L’envoi a échoué. Réessayez dans un moment.', false);
+        }
+      }).catch(function () {
+        dire('L’envoi a échoué. Vérifiez votre connexion, puis réessayez.', false);
+      }).then(function () {
+        if (bouton) bouton.disabled = false;
+        if (libelle) libelle.textContent = libelleInitial;
+      });
     });
+
+    // Retour d'un envoi sans JavaScript : la page revient avec `?envoi=`.
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('envoi') === 'ok') {
+      dire('Message envoyé. Nous répondons sous un jour ouvré.', true);
+    } else if (params.get('envoi') === 'erreur') {
+      dire('L’envoi a échoué. Réessayez dans un moment.', false);
+    }
   }
 
   function demarrer() { initFenetre(); initFormulaire(); }

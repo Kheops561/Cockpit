@@ -50,6 +50,31 @@ base et d’une période auditées.
 - [ ] Fournir une version vectorielle du logo (`.svg`) si elle existe : plus
       nette sur les écrans à forte densité, et plus légère.
 
+## Formulaire de contact · mise en service
+
+Le formulaire envoie désormais réellement le message, par Resend, depuis un
+script PHP posé sur l’hébergement OVH. Marche à suivre complète dans
+`INSTALLATION-FORMULAIRE.md`.
+
+- [ ] **Vérifier que l’offre OVH exécute PHP 8** avec l’extension cURL. Sur
+      une offre strictement statique, le formulaire ne fonctionnera pas.
+- [ ] **Vérifier le domaine dans Resend** (enregistrements SPF et DKIM à
+      créer dans la zone DNS OVH). Tant qu’il ne l’est pas, l’envoi est
+      refusé.
+- [ ] **Créer la clé d’API Resend** et la déposer dans `contact-config.php`
+      sur le serveur. Ce fichier est exclu du dépôt : la clé ne doit jamais
+      y figurer.
+- [ ] **Choisir la région de traitement dans Resend.** Si elle est hors
+      Union européenne, la page « Données personnelles » doit citer le
+      mécanisme de transfert applicable. La mention y est en attente.
+- [ ] Confirmer l’adresse d’expédition. `site@amelie-invest.com` est une
+      proposition.
+- [ ] La protection contre les envois automatisés est entièrement côté
+      serveur : champ piège, délai de saisie, cinq envois par heure et par
+      adresse. **Cloudflare Turnstile a été écarté** : il faudrait charger un
+      script d’un domaine tiers dans les pages, ce que le cahier des charges
+      interdit. À reprendre si cette protection se révélait insuffisante.
+
 ## Tarifs et durées
 
 - [x] **Le prix du Diagnostic Stratégique** est arrêté à **432 € TTC**

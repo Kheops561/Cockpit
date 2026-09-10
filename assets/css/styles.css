@@ -1541,6 +1541,29 @@ a.card:hover,
 .field__boite--indicatif select { padding-left: 1rem; }
 @media (max-width: 460px) { .field__tel { grid-template-columns: minmax(0, 1fr); } }
 
+/* Le piege a robots. Il est retire du flux sans etre `display: none` :
+   certains robots ignorent ce qui est franchement masque, et le remplissent
+   d'autant plus volontiers. Il porte `aria-hidden` et sort du parcours au
+   clavier : personne ne le rencontre. */
+.leurre {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Le resultat de l'envoi, annonce a la lecture d'ecran par `role="status"`. */
+.form__etat {
+  margin: 0;
+  padding: .85rem 1rem;
+  border-left: 2px solid var(--line-strong);
+  font-size: .9375rem;
+  line-height: 1.55;
+}
+.form__etat--ok { border-left-color: var(--lavender-dark); background: var(--lavender-soft); color: var(--ink); }
+.form__etat--ko { border-left-color: var(--rust); background: var(--rust-soft); color: var(--ink); }
+
 /* L'asterisque des champs necessaires. La mention en toutes lettres figure
    sous le bouton : l'asterisque seul ne dirait rien a qui ne le connait. */
 .field__requis { color: var(--rust); }
