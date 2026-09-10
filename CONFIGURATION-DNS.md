@@ -34,16 +34,33 @@ lettres `@amelie-invest.com`. Les toucher coupe la réception du courrier.
 Les trois entrées du chantier A portent toutes sur des **sous-domaines**
 (`send.`, `resend._domainkey.`). Elles s'ajoutent, elles ne remplacent rien.
 
-## État actuel, relevé le 10 septembre 2026
+## État de la zone, relevé le 10 septembre 2026
 
-| Nom | Type | Valeur | Qui c'est |
-|---|---|---|---|
-| `amelie-invest.com` | A | `75.101.134.27` | Showit (via Amazon) |
-| `www.amelie-invest.com` | A | `75.101.134.27` | Showit |
+| Nom | TTL | Type | Cible | Qui c'est |
+|---|---|---|---|---|
+| `amelie-invest.com.` | défaut | `NS` | `dns16.ovh.net.` | OVH |
+| `amelie-invest.com.` | défaut | `NS` | `ns16.ovh.net.` | OVH |
+| `ftp.amelie-invest.com.` | défaut | `CNAME` | `amelie-invest.com.` | OVH, historique |
+| `amelie-invest.com.` | défaut | `SPF` | `v=spf1 include:mx.ovh.com -all` | **vos boîtes OVH** |
+| `amelie-invest.com.` | défaut | `TXT` | `"1|www.amelie-invest.com"` | Showit, jeton de vérification |
+| `amelie-invest.com.` | 300 | `A` | `75.101.134.27` | Showit |
+| `www.amelie-invest.com.` | 300 | `CNAME` | `amelie-invest.com.` | suit la racine |
 
-Les `MX`, `SPF` et `DKIM` existants n'ont pas pu être relevés depuis
-l'environnement de travail. Avant de commencer, ouvrez la zone et **notez ce
-qui existe déjà** : c'est votre filet de sécurité.
+Trois remarques qui comptent pour la suite :
+
+1. **Le SPF de la racine finit par `-all`**, un refus ferme. Il n'empêchera
+   pas Resend d'envoyer : SPF se contrôle sur l'adresse de retour, et celle
+   de Resend sera `send.amelie-invest.com`, qui portera son propre SPF. **Ne
+   touchez donc pas à cette ligne** — elle autorise vos boîtes OVH, et rien
+   d'autre n'a besoin d'y figurer.
+2. **`www` est un `CNAME` vers la racine**, pas une entrée `A`. Il suivra
+   donc la racine tout seul le jour de la bascule : il n'y a rien à y faire.
+3. **La racine est déjà à un TTL de 300 secondes.** La bascule sera
+   réversible en quelques minutes sans préparatif.
+
+La copie d'écran s'arrêtait après le `www` : les entrées `MX` et un éventuel
+`_dmarc` n'ont pas été vus. Faites-les défiler avant de commencer, et
+**notez-les** : c'est votre filet de sécurité.
 
 ---
 
@@ -75,9 +92,22 @@ vue. C'est ce que la suite corrige.
 
 Trois fois de suite, une entrée par tableau ci-dessous.
 
-> **Choisissez le type `TXT`, pas le type `DKIM`.** OVH propose un formulaire
-> `DKIM` avec des champs séparés qui reconstruit la clé à sa façon. Resend
-> attend la valeur telle quelle : passez par `TXT` et collez la valeur brute.
+L'étape 1 sur 3 demande le **type de champ**. OVH range `TXT` dans
+« Champs étendus », et propose à part des raccourcis `SPF`, `DKIM` et
+`DMARC` dans « Champs mails ».
+
+> **Ne prenez ni `DKIM` ni `SPF` dans « Champs mails ».** Ce sont des
+> assistants : ils reconstruisent la valeur à partir de cases à cocher, et
+> `SPF` vise la racine du domaine. Resend attend deux valeurs précises, sur
+> un sous-domaine. Passez par `TXT`, et collez la valeur brute.
+
+Le type à choisir, entrée par entrée :
+
+| Entrée | Bouton à cliquer, étape 1 |
+|---|---|
+| 1 · la clé DKIM | **`TXT`**, dans « Champs étendus » |
+| 2 · le MX des retours | **`MX`**, dans « Champs mails » |
+| 3 · le SPF du sous-domaine | **`TXT`**, dans « Champs étendus » |
 
 ## A.3 · Les trois entrées
 
@@ -192,9 +222,10 @@ Aucune valeur n'est révélée par ce contrôle, seulement leur présence.
 
 ## A.8 · DMARC, si vous n'en avez pas déjà un
 
-Si la zone ne contient aucun `_dmarc`, ajoutez-le : il dit aux serveurs
-destinataires quoi faire d'un message qui se réclamerait de votre domaine
-sans en avoir le droit.
+La copie d'écran de la zone s'arrêtait avant les dernières lignes : je n'ai
+pas pu voir si un `_dmarc` existe déjà. Regardez d'abord. S'il n'y en a
+aucun, ajoutez-le — il dit aux serveurs destinataires quoi faire d'un message
+qui se réclamerait de votre domaine sans en avoir le droit.
 
 | Type | Sous-domaine | Valeur |
 |---|---|---|
@@ -213,12 +244,14 @@ qu'un, et le vôtre est peut-être déjà réglé plus strictement.
 > profit du nouveau. Ne la faites qu'une fois le nouveau site validé et les
 > mentions « à compléter » traitées — voir `A-VALIDER-AVANT-LIVE.md`.
 
-## B.1 · La veille : baisser le TTL
+## B.1 · Le TTL : déjà réglé
 
-Dans la zone OVH, passez le **TTL** des entrées `A` de la racine et du `www`
-à **300 secondes**, et attendez 24 heures. Sans cela, un retour en arrière
-mettrait des heures à se propager. C'est la seule précaution qui rende la
-bascule réversible en quelques minutes.
+La racine et le `www` sont déjà à un **TTL de 300 secondes**. C'est ce qui
+rend la bascule réversible en quelques minutes : rien à préparer la veille.
+
+Vérifiez seulement que ces 300 secondes sont toujours là au moment de
+basculer. Si elles avaient été remontées, remettez-les à 300 et attendez
+l'ancienne durée avant de continuer.
 
 ## B.2 · Ajouter le domaine dans Vercel
 
@@ -240,13 +273,15 @@ injoignable.
 | Nom | Type | Action |
 |---|---|---|
 | racine (vide) | `A` | **modifier** : remplacer `75.101.134.27` par l'IP affichée par Vercel |
-| `www` | `A` puis `CNAME` | **supprimer** l'entrée `A` existante, **créer** un `CNAME` vers le nom affiché par Vercel |
+| `www` | `CNAME` | **rien à faire** : il pointe déjà sur la racine et la suivra |
 
-Un même nom ne peut pas porter à la fois un `A` et un `CNAME` : d'où la
-suppression avant création pour le `www`.
+Une seule ligne change donc. Si Vercel réclame malgré tout un `CNAME` propre
+pour le `www`, remplacez la cible `amelie-invest.com.` par le nom qu'il
+affiche — mais commencez sans, c'est le réglage le plus simple et il
+fonctionne.
 
-Ne touchez à rien d'autre. En particulier, les trois entrées du chantier A et
-les `MX` de la racine restent en place.
+Ne touchez à rien d'autre. En particulier, les trois entrées du chantier A,
+le `SPF` de la racine et les `MX` restent en place.
 
 ## B.4 · Vérifier
 
@@ -261,8 +296,8 @@ les `MX` de la racine restent en place.
 
 ## B.5 · Retour en arrière
 
-Remettre l'entrée `A` de la racine et du `www` sur `75.101.134.27`. Avec un
-TTL à 300 s, le site Showit revient en quelques minutes.
+Remettre l'entrée `A` de la racine sur `75.101.134.27`. Le `www` suit tout
+seul. Avec un TTL à 300 s, le site Showit revient en quelques minutes.
 
 ---
 
