@@ -1713,7 +1713,29 @@ a.card:hover,
   padding-block: .12rem;
   transition: color .3s var(--ease);
 }
-.footer__list a::after,
+/* Chaque entree porte un pictogramme. Il est purement decoratif — le libelle
+   dit tout — et reste donc hors du parcours des lecteurs d'ecran. Le filet
+   du survol se pose sous le mot seul : passe sous le pictogramme aussi, il
+   donnait un trait qui commencait dans le vide. */
+.footer__list a {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  font-size: .9375rem;
+}
+.footer__list a .icon {
+  flex: none;
+  width: .9375rem;
+  height: .9375rem;
+  color: var(--lavender);
+  opacity: .85;
+  transition: opacity .3s var(--ease), color .3s var(--ease);
+}
+.footer__list a span {
+  position: relative;
+  padding-block: .12rem;
+}
+.footer__list a span::after,
 .footer__legal a::after {
   content: "";
   position: absolute;
@@ -1726,15 +1748,17 @@ a.card:hover,
   transform-origin: left;
   transition: transform .35s var(--ease);
 }
-.footer__list a:hover::after,
-.footer__list a:focus-visible::after,
+.footer__list a:hover span::after,
+.footer__list a:focus-visible span::after,
 .footer__legal a:hover::after,
 .footer__legal a:focus-visible::after { transform: scaleX(1); }
-.footer__list a { font-size: .9375rem; }
 .footer__list a:hover { color: var(--white); }
+.footer__list a:hover .icon,
+.footer__list a:focus-visible .icon { opacity: 1; color: var(--lavender); }
 @media (prefers-reduced-motion: reduce) {
-  .footer__list a::after,
+  .footer__list a span::after,
   .footer__legal a::after { transition: none; }
+  .footer__list a .icon { transition: none; }
 }
 .footer__bottom {
   display: flex;
@@ -4169,6 +4193,31 @@ html:not(.js) .booking__confirm { display: none; }
   border-bottom: 1px solid var(--lavender);
 }
 .cta__seconde a:hover { color: var(--lavender); border-color: var(--lavender); }
+
+
+/* La bande « nous suivre » de la page contact : une troisieme voie, plus
+   legere que reserver ou ecrire. Une bande, pas une carte : on n'attend pas
+   de reponse d'un abonnement. */
+.suivre {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.35rem, 2.7vw, 2rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--lavender-dark);
+}
+.suivre__mot {
+  margin: .6rem 0 0;
+  max-width: 46ch;
+  color: var(--text);
+}
+@media (max-width: 559px) {
+  .suivre { align-items: stretch; }
+  .suivre .btn { justify-content: center; }
+}
 
 
 /* ==========================================================================
