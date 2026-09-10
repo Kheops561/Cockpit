@@ -162,6 +162,13 @@ Trois compléments récents :
   clavier. Les deux colonnes gardent la même hauteur : sans cela le sommaire,
   aussi court que son contenu, n’aurait aucune course et son maintien en
   place serait sans effet.
+- Le PDF de la fiche est fabriqué par `outils/fiche-pdf.py`, qui pose la
+  classe `pdf` sur la racine avant d’imprimer et demande les fonds. Ces
+  règles ne s’appliquent qu’au fichier fabriqué : couleurs de la maison,
+  bandeau bleu nuit en tête, surtitres rouille, notions clés sur lavande, et
+  une mise en page resserrée (trois pages au lieu de six). Le visiteur qui
+  imprime la page depuis son navigateur garde la version sobre, en noir sur
+  blanc, qui n’use pas d’encre.
 - La fiche se télécharge en PDF et se partage par `mailto:` avec un message
   déjà rédigé. Rien n’est calculé au clic, aucun service n’est appelé : les
   deux liens fonctionnent sans JavaScript.
@@ -175,6 +182,9 @@ Trois compléments récents :
 - Les verdicts portent un cachet tracé à l’apparition, retracé au survol.
   Purement ornemental : le nom du verdict et son explication sont écrits
   juste en dessous. Neutralisé sous `prefers-reduced-motion`.
+- Le repère de la page ouverte, dans le menu de tête comme dans le menu
+  déroulant, est en lavande sombre : la même couleur que le filet qui se
+  déroule au survol.
 - Les liens du pied de page se tiennent comme ceux du menu de tête : pas de
   trait permanent, un filet lavande qui se déroule au survol et au focus.
 - Le formulaire de contact : chaque champ porte un pictogramme dans sa marge

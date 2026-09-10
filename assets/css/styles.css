@@ -522,8 +522,10 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 .nav__link:hover::after { transform: scaleX(1); }
 
 /* Page courante : le lecteur doit voir d'un coup d'oeil ou il se trouve.
-   Un filet rouille de 2 px, un texte en bleu nuit appuye et une pastille
-   claire : le repere tient meme sur un ecran peu contraste. */
+   Un filet lavande de 2 px, un texte en bleu nuit appuye et une pastille
+   claire : le repere tient meme sur un ecran peu contraste. La lavande
+   sombre est aussi la couleur du filet qui se deroule au survol : le
+   repere de la page ouverte et celui du lien vise parlent la meme langue. */
 .nav__link[aria-current="page"] {
   color: var(--ink);
   font-weight: 600;
@@ -540,7 +542,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   left: -1px;
   right: -1px;
   height: 2px;
-  background: var(--rust);
+  background: var(--lavender-dark);
   transform: scaleX(1);
 }
 
@@ -593,7 +595,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 .drawer__link[aria-current="page"] {
   color: var(--ink);
   font-weight: 600;
-  border-left: 2px solid var(--rust);
+  border-left: 2px solid var(--lavender-dark);
   padding-left: .8rem;
   margin-left: -1rem;
 }
@@ -1878,6 +1880,98 @@ a.card:hover,
   .reperes { border-color: #999; }
   .repere { border-color: #999; }
   .prix, .card, .callout, .module__cle { background: #fff; }
+}
+
+/* ==========================================================================
+   La fiche pédagogique en PDF
+   `outils/fiche-pdf.py` pose la classe `pdf` sur la racine avant d'imprimer,
+   et demande au navigateur d'imprimer les fonds. Ces règles ne s'appliquent
+   donc qu'au fichier fabriqué : le visiteur qui imprime la page depuis son
+   navigateur garde la version sobre, en noir sur blanc, qui n'use pas
+   d'encre.
+
+   Le document est resserré : la fiche tenait en six pages très aérées, ce
+   qui la faisait paraître délayée. Les couleurs de la maison reviennent :
+   bandeau bleu nuit en tête, surtitres rouille, notions clés sur lavande.
+   ========================================================================== */
+@media print {
+  html.pdf { font-size: 70%; }
+  html.pdf body { color: var(--text); }
+
+  /* Le bandeau de tête : la couverture de la fiche. */
+  html.pdf .hero {
+    background: var(--ink);
+    color: rgba(255, 255, 255, .82);
+    padding: 9mm 8mm;
+    margin-bottom: 5mm;
+    /* Le bandeau du site reserve une hauteur d'ecran et centre son
+       contenu : sur le papier, cela laissait un vide en tete. */
+    min-height: 0;
+    display: block;
+  }
+  html.pdf .hero__inner { padding: 0; display: block; }
+  html.pdf .hero h1 { color: #fff; font-size: 2.1rem; line-height: 1.08; }
+  html.pdf .hero .lead { color: rgba(255, 255, 255, .82); font-size: .95rem; margin-top: .5rem; }
+  html.pdf .hero .eyebrow { color: var(--lavender); margin-bottom: .6rem; }
+  html.pdf .hero__meta { color: rgba(255, 255, 255, .62); margin-top: .7rem; }
+
+  /* Le rythme se resserre partout. */
+  html.pdf .section { padding-block: 3.5mm; }
+  html.pdf .section--paper-soft { background: var(--paper-soft); }
+  html.pdf .section-head { margin-bottom: 3mm; }
+  html.pdf .title { font-size: 1.5rem; line-height: 1.15; }
+  html.pdf .eyebrow { color: var(--rust); margin-bottom: .5rem; }
+  html.pdf .lead { font-size: .95rem; }
+  html.pdf .prose p { font-size: .9rem; line-height: 1.55; margin-top: .55rem; }
+  html.pdf .prose h2 { font-size: 1.15rem; margin-top: 5mm; margin-bottom: 2mm; color: var(--ink); }
+
+  /* Les repères : une bande compacte, filets rouille. */
+  html.pdf .reperes { border-color: var(--line); background: var(--white); }
+  html.pdf .repere { border-color: var(--line); padding: 2.5mm 3mm; }
+  html.pdf .repere dt { color: var(--rust); margin-bottom: .25rem; }
+  html.pdf .repere dd { font-size: .85rem; line-height: 1.3; }
+
+  /* Objectifs et vigilance passent sur deux colonnes : deux fois moins de
+     hauteur, et la lecture reste confortable à cette taille. */
+  html.pdf .objectifs { grid-template-columns: 1fr 1fr; gap: 2mm 6mm; }
+  html.pdf .objectif { font-size: .88rem; line-height: 1.45; }
+  html.pdf .objectif svg { color: var(--lavender-dark); }
+  html.pdf .vigilance { grid-template-columns: 1fr 1fr; column-gap: 6mm; }
+  html.pdf .vigilance li { padding-block: 2mm; font-size: .88rem; line-height: 1.45; }
+  html.pdf .vigilance li:nth-child(2) { border-top: 1px solid var(--line); }
+  html.pdf .vigilance svg { color: var(--rust); }
+
+  /* Le programme : une table des matières compacte. */
+  html.pdf .programme__lien { padding-block: 2.5mm; color: var(--ink); }
+  html.pdf .programme__num { color: var(--rust); }
+  html.pdf .programme__titre { font-size: 1rem; }
+  html.pdf .programme__quoi { font-size: .82rem; }
+
+  /* Les modules : la notion clé sur lavande, la bonne question sur ivoire. */
+  html.pdf .module + .module { margin-top: 5mm; }
+  html.pdf .module__cle {
+    background: var(--lavender-soft);
+    border-left: 2px solid var(--lavender-dark);
+    padding: 2.5mm 3.5mm;
+    margin-bottom: 2.5mm;
+  }
+  html.pdf .module__cle dt { color: var(--lavender-dark); }
+  html.pdf .module__cle dd { font-size: .88rem; line-height: 1.45; }
+  html.pdf .callout {
+    background: var(--paper-soft);
+    border-left: 2px solid var(--rust);
+    padding: 2.5mm 3.5mm;
+    margin-top: 3mm;
+  }
+  html.pdf .callout strong { color: var(--rust); margin-bottom: .3rem; }
+  html.pdf .callout p { font-size: .85rem; line-height: 1.45; }
+
+  html.pdf .disclaimer { font-size: .78rem; border-color: var(--line); }
+
+  /* Le corps de la fiche redevient une seule colonne : le sommaire
+     lateral repete ce que les modules disent deja. */
+  html.pdf .fiche-corps { display: block; }
+  html.pdf .fiche-nav { display: none !important; }
 }
 
 /* ==========================================================================

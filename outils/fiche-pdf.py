@@ -62,6 +62,11 @@ def main():
             page.evaluate(
                 "() => document.querySelectorAll('.reveal')"
                 ".forEach(e => e.classList.add('is-visible'))")
+            # La classe `pdf` ouvre les regles reservees au fichier
+            # fabrique : couleurs de la maison et mise en page resserree.
+            # Le visiteur qui imprime la page depuis son navigateur garde,
+            # lui, la version sobre en noir sur blanc.
+            page.evaluate("() => document.documentElement.classList.add('pdf')")
             page.emulate_media(media="print")
             if page.evaluate("() => document.fonts && document.fonts.ready ? 1 : 0"):
                 page.evaluate("() => document.fonts.ready")
@@ -69,9 +74,9 @@ def main():
             page.pdf(
                 path=os.path.join(RACINE, SORTIE),
                 format="A4",
-                print_background=False,
-                margin={"top": "18mm", "bottom": "18mm",
-                        "left": "16mm", "right": "16mm"},
+                print_background=True,
+                margin={"top": "13mm", "bottom": "14mm",
+                        "left": "13mm", "right": "13mm"},
                 display_header_footer=True,
                 header_template=(
                     '<div style="font:8px \'Helvetica\',sans-serif;color:#52616c;'
