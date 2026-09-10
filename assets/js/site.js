@@ -920,3 +920,121 @@
     demarrer();
   }
 })();
+
+/* ==========================================================================
+   Les accompagnements, en diapositives.
+   Les quatre formats d'intervention passent l'un apres l'autre. Sans ce
+   script, ils se suivent simplement dans la page, tous lisibles : le
+   defilement est un confort, jamais une condition d'acces. Rien ne defile
+   tout seul, il n'y a donc rien a mettre en pause.
+
+   Les diapositives sont superposees en grille : le bloc prend la hauteur de
+   la plus longue et ne saute plus d'un format a l'autre, sans qu'aucune
+   mesure soit necessaire.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  function initDiapos() {
+    var bloc = document.querySelector('[data-diapos]');
+    if (!bloc) return;
+
+    var diapos = bloc.querySelectorAll('[data-diapo]');
+    if (diapos.length < 2) return;
+
+    var doux = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var courant = 0;
+
+    var chevron = function (d) {
+      return '<svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none"'
+           + ' aria-hidden="true" focusable="false"><path d="M' + (d < 0 ? '10 3L5 8l5 5' : '6 3l5 5-5 5')
+           + '" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>';
+    };
+
+    // --- La barre nommee : elle annonce les quatre formats.
+    var barre = document.createElement('div');
+    barre.className = 'diapos__barre';
+    var reperes = [];
+    Array.prototype.forEach.call(diapos, function (d, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'diapos__repere';
+      b.innerHTML = '<span class="diapos__nom"></span>'
+                  + '<span class="diapos__rang"></span>';
+      b.querySelector('.diapos__nom').textContent = d.getAttribute('data-diapo-nom') || ('Format ' + (i + 1));
+      b.querySelector('.diapos__rang').textContent = ('0' + (i + 1)).slice(-2) + ' / ' + ('0' + diapos.length).slice(-2);
+      b.addEventListener('click', function () { montrer(i); });
+      barre.appendChild(b);
+      reperes.push(b);
+    });
+
+    // --- Les deux chevrons.
+    var commandes = document.createElement('div');
+    commandes.className = 'diapos__commandes';
+    var avant = document.createElement('button');
+    avant.type = 'button';
+    avant.className = 'pile__fleche';
+    avant.innerHTML = chevron(-1) + '<span class="sr-only">Accompagnement précédent</span>';
+    var apres = document.createElement('button');
+    apres.type = 'button';
+    apres.className = 'pile__fleche';
+    apres.innerHTML = chevron(1) + '<span class="sr-only">Accompagnement suivant</span>';
+    var rangs = document.createElement('span');
+    rangs.className = 'diapos__rangs';
+    commandes.appendChild(avant);
+    commandes.appendChild(apres);
+    commandes.appendChild(rangs);
+
+    bloc.appendChild(barre);
+    bloc.appendChild(commandes);
+
+    function montrer(i) {
+      courant = (i + diapos.length) % diapos.length;
+      for (var k = 0; k < diapos.length; k++) {
+        diapos[k].classList.toggle('est-visible', k === courant);
+        reperes[k].setAttribute('aria-current', String(k === courant));
+      }
+      rangs.textContent = ('0' + (courant + 1)).slice(-2) + ' / ' + ('0' + diapos.length).slice(-2);
+    }
+
+    avant.addEventListener('click', function () { montrer(courant - 1); });
+    apres.addEventListener('click', function () { montrer(courant + 1); });
+
+    bloc.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      montrer(courant + d);
+    });
+
+    // Un lien ailleurs dans la page peut viser un format : on l'amene.
+    var entete = document.querySelector('.header');
+    Array.prototype.forEach.call(diapos, function (d, i) {
+      if (!d.id) return;
+      var liens = document.querySelectorAll('a[href="#' + d.id + '"]');
+      Array.prototype.forEach.call(liens, function (a) {
+        a.addEventListener('click', function (e) {
+          e.preventDefault();
+          montrer(i);
+          var marge = (entete ? entete.offsetHeight : 0) + 32;
+          var y = window.pageYOffset + bloc.getBoundingClientRect().top - marge;
+          try {
+            window.scrollTo({ top: y, behavior: doux ? 'smooth' : 'auto' });
+          } catch (err) {
+            window.scrollTo(0, y);
+          }
+        });
+      });
+    });
+
+    bloc.classList.add('est-defilante');
+    montrer(0);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDiapos);
+  } else {
+    initDiapos();
+  }
+})();

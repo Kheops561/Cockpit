@@ -68,29 +68,32 @@ base et d’une période auditées.
 - [x] Dénomination sociale : **AMÉLIE ET PARTNERS**, nom commercial
       **AMÉLIE & PARTNERS**.
 - [x] SIREN : **940 688 377**.
-- [x] Hébergeur : **OVH**.
-- [ ] Raison sociale exacte, adresse du siège et numéro d’immatriculation
-      d’OVH, à recopier depuis la page légale d’OVHcloud : je n’ai pas pu
-      les vérifier, l’accès au web est bloqué depuis cet environnement.
+- [x] Hébergeur : **OVH SAS**, SAS au capital de 50 000 000 €, 2 rue
+      Kellermann, 59100 Roubaix, France, RCS Lille Métropole
+      424 761 419 00045, TVA FR 22 424 761 419.
 - [ ] Centre de données retenu, pour pouvoir écrire où sont les serveurs.
-- [ ] Forme juridique et capital social.
-- [ ] Adresse du siège.
-- [ ] SIRET du siège, greffe du RCS et date d’immatriculation.
-- [ ] Numéro de TVA intracommunautaire, si applicable.
-- [ ] Code APE et son libellé.
-- [ ] Nom de la directrice de publication.
+- [x] Forme juridique : **SAS**, société par actions simplifiée.
+- [x] Siège social : **123 rue des Dames, 75017 Paris**.
+- [x] SIRET du siège : **940 688 377 00016**.
+- [x] TVA intracommunautaire : **FR08 940 688 377**.
+- [x] Code APE : **74.90B**, activités spécialisées, scientifiques et
+      techniques diverses.
+- [x] Immatriculation au Registre national des entreprises : **11 février
+      2025**.
+- [ ] Capital social : la fiche d’annuaire ne le donne pas, il figure sur
+      les statuts ou l’extrait RNE.
+- [ ] Nom de la directrice de publication, à confirmer.
 - [ ] Bureau d’enregistrement du domaine `amelie-invest.com`.
 - [ ] Adresse du profil LinkedIn :
       `https://www.linkedin.com/company/amelie-partners` : page publiée ?
 
-Les données de l’éditeur n’ont pas pu être vérifiées depuis cet
-environnement : l’accès à `annuaire-entreprises.data.gouv.fr` y est bloqué.
-Rien n’a donc été deviné ; seul le SIREN transmis par Eric est inscrit, et
-toutes les autres lignes restent marquées « à compléter » dans la page.
+Les informations d’immatriculation ont été recopiées depuis la fiche
+d’annuaire transmise par Eric. Deux lignes restent marquées « à compléter »
+en couleur dans la page : le capital social et le nom de la directrice de la
+publication.
 - [ ] Mentions des activités réglementées éventuellement exercées : carte
       professionnelle, garantie financière, assurance de responsabilité civile
       professionnelle.
-- [ ] Médiateur de la consommation, si l’activité y est soumise.
 - [ ] Politique de confidentialité complétée.
 - [x] Calendly : prestataire déclaré, avec un lien vers sa politique.
 - [x] Hébergeur : OVH, déclaré. Serveurs dans l’Union européenne, donc
