@@ -117,7 +117,8 @@ vectoriels monochromes : aucun émoji, aucune flèche Unicode.
    le fichier est absent ou illisible.
 6. Aucun appel à un domaine tiers dans les pages : polices, styles et scripts
    sont hébergés avec le site. Seuls Calendly, LinkedIn et `mailto:` sont des
-   liens sortants. Le formulaire de contact n’appelle donc aucun service : il
+   liens sortants ; la politique de confidentialité de Calendly est citée
+   sur les pages légales. Le formulaire de contact n’appelle donc aucun service : il
    prépare un message dans la messagerie du visiteur.
 7. Une seule balise `h1` par page.
 

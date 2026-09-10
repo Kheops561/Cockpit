@@ -17,13 +17,16 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/source-serif-4-latin.woff2" crossorigin>
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js');try{if(!sessionStorage.getItem('ap-arrivee')){document.documentElement.classList.add('premiere-visite');sessionStorage.setItem('ap-arrivee','1');}}catch(e){}</script>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/styles.css">
 <link rel="icon" href="assets/images/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/images/favicon.png">
 </head>
 <body>
+<div class="voile" data-voile aria-hidden="true">
+  <img class="voile__marque" src="assets/images/logo.png" alt="" width="400" height="400" decoding="async">
+</div>
 <a class="skip" href="#contenu">Aller au contenu</a>
 <header class="header" data-header>
   <div class="wrap header__inner">
@@ -74,7 +77,7 @@
     <img src="assets/images/hero-mentions.jpg" alt="" width="1600" height="720" loading="eager" decoding="async" fetchpriority="high">
   </div>
   <div class="wrap hero__inner">
-    <nav class="crumbs" aria-label="Fil d&rsquo;ariane"><a href="index.html">Accueil</a><span aria-hidden="true">/</span><span>Confidentialité</span></nav>
+    
     <span class="eyebrow hero__eyebrow">Données personnelles</span>
     <h1>Politique de confidentialité.</h1>
     <p class="lead">Ce document décrit les données collectées par le site, leur usage et les droits dont vous disposez. Il doit être complété avant la mise en ligne publique.</p>
@@ -105,7 +108,7 @@
       <h2>Destinataires</h2>
       <p>Les données sont destinées à Amélie &amp; Partners. Elles peuvent être traitées par les prestataires techniques suivants&nbsp;:</p>
       <ul class="checks">
-        <li>Prise de rendez-vous&nbsp;: Calendly. <mark style="background:var(--rust-soft);color:var(--ink);padding:.1em .35em">à compléter</mark>, confirmer l&rsquo;outil retenu.</li>
+        <li>Prise de rendez-vous&nbsp;: Calendly. Le rendez-vous se prend sur le site de Calendly, qui applique sa propre politique&nbsp;: <a href="https://calendly.com/legal/privacy-notice" target="_blank" rel="noopener">politique de confidentialité de Calendly</a>. Les données que vous y saisissez, nom, adresse e-mail et créneau, sont traitées par Calendly puis transmises à Amélie &amp; Partners.</li>
         <li>Messagerie électronique&nbsp;: <mark style="background:var(--rust-soft);color:var(--ink);padding:.1em .35em">à compléter</mark></li>
         <li>Hébergement du site&nbsp;: Vercel Inc., États-Unis. L&rsquo;hébergeur conserve des journaux de connexion pour des raisons techniques et de sécurité.</li>
         <li>Mesure d&rsquo;audience&nbsp;: <mark style="background:var(--rust-soft);color:var(--ink);padding:.1em .35em">à compléter</mark>. Aucun traceur non essentiel n&rsquo;est déposé sans votre consentement.</li>

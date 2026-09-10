@@ -17,13 +17,16 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/source-serif-4-latin.woff2" crossorigin>
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js');try{if(!sessionStorage.getItem('ap-arrivee')){document.documentElement.classList.add('premiere-visite');sessionStorage.setItem('ap-arrivee','1');}}catch(e){}</script>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/styles.css">
 <link rel="icon" href="assets/images/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/images/favicon.png">
 </head>
 <body>
+<div class="voile" data-voile aria-hidden="true">
+  <img class="voile__marque" src="assets/images/logo.png" alt="" width="400" height="400" decoding="async">
+</div>
 <a class="skip" href="#contenu">Aller au contenu</a>
 <header class="header" data-header>
   <div class="wrap header__inner">
@@ -74,7 +77,7 @@
     <img src="assets/images/hero-approche.jpg" alt="" width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
   </div>
   <div class="wrap hero__inner">
-    <nav class="crumbs" aria-label="Fil d&rsquo;ariane"><a href="index.html">Accueil</a><span aria-hidden="true">/</span><span>Notre approche</span></nav>
+    
     <span class="eyebrow hero__eyebrow">Notre approche</span>
     <h1>Une manière de décider<br>avant une manière d&rsquo;acheter.</h1>
     <p class="lead">Le bon investissement n&rsquo;existe pas dans l&rsquo;absolu. Il devient cohérent, ou non, selon votre situation, votre financement, votre horizon et l&rsquo;usage futur du capital.</p>
@@ -109,13 +112,6 @@
     </div>
   </div>
   <div class="processus reveal" data-processus>
-    <nav class="processus__nav" aria-label="Aller directement à une étape de la méthode">
-      <a class="processus__stop" href="#etape-01"><span class="processus__num">01</span><span class="processus__label">Comprendre</span></a>
-      <a class="processus__stop" href="#etape-02"><span class="processus__num">02</span><span class="processus__label">Chiffrer</span></a>
-      <a class="processus__stop" href="#etape-03"><span class="processus__num">03</span><span class="processus__label">Financer</span></a>
-      <a class="processus__stop" href="#etape-04"><span class="processus__num">04</span><span class="processus__label">Acheter</span></a>
-      <a class="processus__stop" href="#etape-05"><span class="processus__num">05</span><span class="processus__label">Arbitrer</span></a>
-    </nav>
     <div class="wrap">
       <div class="steps steps--recap">
         <div class="step" id="etape-01">

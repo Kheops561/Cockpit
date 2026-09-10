@@ -17,13 +17,16 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/source-serif-4-latin.woff2" crossorigin>
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js');try{if(!sessionStorage.getItem('ap-arrivee')){document.documentElement.classList.add('premiere-visite');sessionStorage.setItem('ap-arrivee','1');}}catch(e){}</script>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/styles.css">
 <link rel="icon" href="assets/images/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/images/favicon.png">
 </head>
 <body>
+<div class="voile" data-voile aria-hidden="true">
+  <img class="voile__marque" src="assets/images/logo.png" alt="" width="400" height="400" decoding="async">
+</div>
 <a class="skip" href="#contenu">Aller au contenu</a>
 <header class="header" data-header>
   <div class="wrap header__inner">
@@ -74,7 +77,7 @@
     <img src="assets/images/hero-ressources.jpg" alt="" width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
   </div>
   <div class="wrap hero__inner">
-    <nav class="crumbs" aria-label="Fil d&rsquo;ariane"><a href="index.html">Accueil</a><span aria-hidden="true">/</span><a href="ressources.html">Ressources</a><span aria-hidden="true">/</span><span>Les 3 effets</span></nav>
+    
     <span class="eyebrow hero__eyebrow">Cadre pédagogique &middot; 8 min de lecture</span>
     <h1>Les 3 effets<br>dans l&rsquo;immobilier.</h1>
     <p class="lead">Le vrai sujet n&rsquo;est pas seulement le rendement. C&rsquo;est la manière dont un actif permet de contrôler, construire puis réemployer du capital.</p>

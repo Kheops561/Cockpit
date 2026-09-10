@@ -580,97 +580,6 @@
 })();
 
 /* ==========================================================================
-   Le processus : une barre de reperes et le recapitulatif complet.
-   Les cinq etapes restent toutes affichees, comme un schema recapitulatif.
-   La barre au-dessus est faite de vrais liens d'ancre : elle mene deja a
-   l'etape voulue sans ce script. Le script n'ajoute que deux conforts, le
-   defilement adouci et la mise en surbrillance de l'etape lue. Sous
-   mouvement reduit, le saut reste instantane.
-   ========================================================================== */
-
-(function () {
-  'use strict';
-
-  function initProcessus() {
-    var bloc = document.querySelector('[data-processus]');
-    if (!bloc) return;
-
-    var stops = bloc.querySelectorAll('.processus__stop');
-    var etapes = bloc.querySelectorAll('.step');
-    if (!stops.length || stops.length !== etapes.length) return;
-
-    var doux = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function marquer(i) {
-      for (var k = 0; k < stops.length; k++) {
-        stops[k].setAttribute('aria-current', k === i ? 'true' : 'false');
-        etapes[k].classList.toggle('est-active', k === i);
-      }
-    }
-
-    // La ligne de lecture : juste sous l'en-tete et sous la barre de reperes,
-    // tous deux collants. Le saut y depose l'etape, et c'est elle que suit la
-    // mise en surbrillance : repere et contenu ne peuvent pas se contredire.
-    var entete = document.querySelector('.header');
-    var barre = bloc.querySelector('.processus__nav');
-    function ligne() {
-      return (entete ? entete.offsetHeight : 0)
-           + (barre ? barre.offsetHeight : 0) + 16;
-    }
-
-    Array.prototype.forEach.call(stops, function (stop, i) {
-      stop.addEventListener('click', function (e) {
-        marquer(i);
-        if (!doux || !window.scrollTo) return;
-        e.preventDefault();
-        // Calcul explicite plutot que scrollIntoView : avec une barre
-        // collante, le navigateur vise trop court.
-        var y = window.pageYOffset + etapes[i].getBoundingClientRect().top - ligne();
-        try {
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        } catch (err) {
-          window.scrollTo(0, y);
-        }
-        if (window.history && window.history.replaceState) {
-          window.history.replaceState(null, '', stop.getAttribute('href'));
-        }
-      });
-    });
-
-    // Repere de lecture : la derniere etape dont le haut a passe la ligne de
-    // lecture, celle-la meme ou un clic sur un repere depose l'etape. Les
-    // deux designent ainsi toujours la meme chose.
-    var attente = false;
-    function suivre() {
-      attente = false;
-      var repere = ligne();
-      var meilleur = 0;
-      for (var k = 0; k < etapes.length; k++) {
-        if (etapes[k].getBoundingClientRect().top - repere <= 2) meilleur = k;
-      }
-      marquer(meilleur);
-    }
-    function planifier() {
-      if (attente) return;
-      attente = true;
-      window.requestAnimationFrame(suivre);
-    }
-
-    window.addEventListener('scroll', planifier, { passive: true });
-    window.addEventListener('resize', planifier);
-
-    marquer(0);
-    suivre();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initProcessus);
-  } else {
-    initProcessus();
-  }
-})();
-
-/* ==========================================================================
    Les temoignages en pile.
    Une carte devant, les suivantes derriere. On avance au doigt, a la
    souris, au clavier ou par les reperes. Sans ce script, les huit
@@ -695,6 +604,9 @@
     var courant = 0;
 
     // --- Hauteur figee : la pile ne doit pas sauter d'une carte a l'autre.
+    //     Renvoie false si le bloc n'est pas mesurable, par exemple parce
+    //     qu'il est encore masque : mieux vaut alors laisser la grille en
+    //     place que d'empiler les cartes dans une hauteur nulle.
     function figerHauteur() {
       liste.style.removeProperty('--pile-h');
       bloc.classList.remove('est-empilee');
@@ -706,8 +618,10 @@
         h = Math.max(h, cartes[k].getBoundingClientRect().height);
       }
       bloc.classList.remove('est-mesure');
+      if (h < 80) return false;
       bloc.classList.add('est-empilee');
       liste.style.setProperty('--pile-h', Math.ceil(h) + 'px');
+      return true;
     }
 
     // --- Commandes : deux chevrons et un repere par temoignage.
@@ -801,16 +715,27 @@
       montrer(courant + d);
     });
 
-    figerHauteur();
-    montrer(0);
+    function preparer() {
+      if (!figerHauteur()) return false;
+      montrer(courant);
+      return true;
+    }
+
+    if (!preparer() && window.ResizeObserver) {
+      // Le bloc etait masque : reessayer des qu'il prend une taille.
+      var guet = new ResizeObserver(function () {
+        if (preparer()) guet.disconnect();
+      });
+      guet.observe(bloc);
+    }
 
     var attente = null;
     window.addEventListener('resize', function () {
       window.clearTimeout(attente);
-      attente = window.setTimeout(function () { figerHauteur(); montrer(courant); }, 150);
+      attente = window.setTimeout(preparer, 150);
     });
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () { figerHauteur(); montrer(courant); });
+      document.fonts.ready.then(preparer);
     }
   }
 
@@ -883,5 +808,228 @@
     document.addEventListener('DOMContentLoaded', initFormulaire);
   } else {
     initFormulaire();
+  }
+})();
+
+/* ==========================================================================
+   Le carrousel.
+   La piste defile deja toute seule : c'est un conteneur a debordement
+   horizontal avec accrochage, utilisable au doigt, a la molette et au
+   clavier sans ce script. On n'ajoute ici que le confort : deux chevrons,
+   un repere par carte, et on ne les montre que si la piste deborde
+   vraiment. Rien ne defile tout seul, il n'y a rien a mettre en pause.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  function initCarrousel(bloc) {
+    var piste = bloc.querySelector('.carrousel__piste');
+    var items = bloc.querySelectorAll('.carrousel__item');
+    if (!piste || items.length < 2) return;
+
+    var doux = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var chevron = function (d) {
+      return '<svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none"'
+           + ' aria-hidden="true" focusable="false"><path d="M' + (d < 0 ? '10 3L5 8l5 5' : '6 3l5 5-5 5')
+           + '" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>';
+    };
+
+    var commandes = document.createElement('div');
+    commandes.className = 'carrousel__commandes';
+
+    var avant = document.createElement('button');
+    avant.type = 'button';
+    avant.className = 'pile__fleche carrousel__fleche';
+    avant.innerHTML = chevron(-1) + '<span class="sr-only">Carte précédente</span>';
+
+    var reperes = document.createElement('ul');
+    reperes.className = 'pile__reperes';
+
+    var apres = document.createElement('button');
+    apres.type = 'button';
+    apres.className = 'pile__fleche carrousel__fleche';
+    apres.innerHTML = chevron(1) + '<span class="sr-only">Carte suivante</span>';
+
+    var boutons = [];
+    Array.prototype.forEach.call(items, function (item, i) {
+      var li = document.createElement('li');
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'pile__repere';
+      b.innerHTML = '<span class="sr-only">Carte ' + (i + 1) + ' sur ' + items.length + '</span>';
+      b.addEventListener('click', function () { aller(i); });
+      li.appendChild(b);
+      reperes.appendChild(li);
+      boutons.push(b);
+    });
+
+    commandes.appendChild(avant);
+    commandes.appendChild(reperes);
+    commandes.appendChild(apres);
+    bloc.appendChild(commandes);
+
+    function butee() { return piste.scrollWidth - piste.clientWidth; }
+
+    // Position de repos d'une carte, ramenee dans la course reelle : les
+    // dernieres cartes ne peuvent pas toutes venir se caler a gauche.
+    function repos(i) {
+      return Math.min(items[i].offsetLeft - piste.offsetLeft, butee());
+    }
+
+    function courant() {
+      var g = piste.scrollLeft;
+      var meilleur = 0;
+      var ecart = Infinity;
+      for (var k = 0; k < items.length; k++) {
+        var d = Math.abs(repos(k) - g);
+        // A egalite, la carte la plus avancee : en bout de course, plusieurs
+        // cartes partagent la meme position de repos.
+        if (d <= ecart) { ecart = d; meilleur = k; }
+      }
+      return meilleur;
+    }
+
+    function glisser(x) {
+      try {
+        piste.scrollTo({ left: x, behavior: doux ? 'smooth' : 'auto' });
+      } catch (err) {
+        piste.scrollLeft = x;
+      }
+    }
+
+    function aller(i) {
+      glisser(repos(Math.max(0, Math.min(items.length - 1, i))));
+    }
+
+    // Les chevrons avancent d'une carte, jamais d'un indice : en bout de
+    // course, raisonner par indice bloquerait le retour en arriere.
+    function pas() {
+      var style = getComputedStyle(piste);
+      var gouttiere = parseFloat(style.columnGap || style.gap) || 0;
+      return items[0].getBoundingClientRect().width + gouttiere;
+    }
+
+    avant.addEventListener('click', function () {
+      glisser(Math.max(0, piste.scrollLeft - pas()));
+    });
+    apres.addEventListener('click', function () {
+      glisser(Math.min(butee(), piste.scrollLeft + pas()));
+    });
+
+    var attente = false;
+    function etat() {
+      attente = false;
+      // Marge d'un pixel : les navigateurs arrondissent le defilement.
+      var debut = piste.scrollLeft <= 1;
+      var fin = piste.scrollLeft >= piste.scrollWidth - piste.clientWidth - 1;
+      avant.disabled = debut;
+      apres.disabled = fin;
+      bloc.classList.toggle('est-au-bout', fin);
+      var c = courant();
+      for (var k = 0; k < boutons.length; k++) {
+        boutons[k].setAttribute('aria-current', String(k === c));
+      }
+      // Sans debordement, il n'y a rien a commander.
+      commandes.hidden = piste.scrollWidth <= piste.clientWidth + 1;
+    }
+    function planifier() {
+      if (attente) return;
+      attente = true;
+      window.requestAnimationFrame(etat);
+    }
+
+    piste.addEventListener('scroll', planifier, { passive: true });
+    window.addEventListener('resize', planifier);
+    etat();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(etat);
+  }
+
+  function tout() {
+    var blocs = document.querySelectorAll('[data-carrousel]');
+    Array.prototype.forEach.call(blocs, initCarrousel);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tout);
+  } else {
+    tout();
+  }
+})();
+
+/* ==========================================================================
+   Le voile de transition.
+   La levee du voile est une animation CSS : elle se termine seule, meme si
+   ce script ne s'execute jamais, et la page ne peut donc pas rester
+   masquee. On n'ajoute ici que le depart : au clic sur un lien interne, le
+   voile revient avant que la page suivante ne s'ouvre.
+
+   Sous mouvement reduit, rien n'est intercepte : les liens fonctionnent
+   comme des liens.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  var DUREE = 340;      // doit correspondre a la transition de .est-sortant
+  var SECOURS = 2500;   // si la navigation n'aboutit pas, on releve le voile
+
+  function initVoile() {
+    var voile = document.querySelector('[data-voile]');
+    if (!voile) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var parti = false;
+
+    function interne(a) {
+      if (!a || a.target || a.hasAttribute('download')) return null;
+      var url;
+      try { url = new URL(a.getAttribute('href'), window.location.href); }
+      catch (err) { return null; }
+      // Ni mailto:, ni tel:, ni un autre domaine.
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+      if (url.origin !== window.location.origin) return null;
+      // Une ancre dans la page courante n'est pas un changement de page.
+      if (url.pathname === window.location.pathname && url.hash) return null;
+      if (url.href === window.location.href) return null;
+      return url;
+    }
+
+    document.addEventListener('click', function (e) {
+      if (parti || e.defaultPrevented) return;
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      var url = interne(a);
+      if (!url) return;
+
+      e.preventDefault();
+      parti = true;
+      voile.classList.remove('est-pose');
+      // Forcer un calcul : sans cela, le passage de l'animation a la
+      // transition se ferait d'un coup, sans fondu.
+      void voile.offsetWidth;
+      voile.classList.add('est-sortant');
+      window.setTimeout(function () { window.location.href = url.href; }, DUREE);
+      window.setTimeout(function () {
+        parti = false;
+        voile.classList.remove('est-sortant');
+        voile.classList.add('est-pose');
+      }, SECOURS);
+    });
+
+    // Retour par le bouton precedent : la page revient du cache, le voile
+    // doit se retirer.
+    window.addEventListener('pageshow', function () {
+      parti = false;
+      voile.classList.remove('est-sortant');
+      voile.classList.add('est-pose');
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVoile);
+  } else {
+    initVoile();
   }
 })();

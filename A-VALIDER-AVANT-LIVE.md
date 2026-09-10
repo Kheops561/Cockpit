@@ -16,8 +16,10 @@ confirmés par Amélie avant de considérer la publication comme définitive.
 
 - [ ] Adresse e-mail publique : `contact@amelie-invest.com` : boîte créée et
       relevée ?
-- [ ] Lien Calendly : `https://calendly.com/amelie-partners` : compte actif,
-      créneau de **30 minutes** publié ?
+- [x] Lien Calendly : `https://calendly.com/amelie-partners`. Le compte est
+      actif et l’événement « Appel de cadrage, 30 minutes » est publié. Sa
+      politique de confidentialité est citée sur la page « Données
+      personnelles » et dans les mentions légales.
 - [ ] Durée du premier échange : 30 minutes.
 - [ ] Prix du Diagnostic Stratégique : `450 € HT / diagnostic`.
 - [ ] Zone d’intervention : Paris pour la recherche ; France au cas par cas
@@ -87,8 +89,9 @@ toutes les autres lignes restent marquées « à compléter » dans la page.
       professionnelle.
 - [ ] Médiateur de la consommation, si l’activité y est soumise.
 - [ ] Politique de confidentialité complétée.
-- [ ] Liste des prestataires recevant des données : Calendly, messagerie,
-      hébergeur, mesure d’audience, CRM éventuel.
+- [x] Calendly : prestataire déclaré, avec un lien vers sa politique.
+- [x] Hébergeur : Vercel, déclaré.
+- [ ] Reste à déclarer : messagerie, mesure d’audience, CRM éventuel.
 - [ ] Durées de conservation et base légale des données.
 - [ ] Bandeau de consentement installé **avant** tout traceur non essentiel.
 
