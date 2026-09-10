@@ -812,6 +812,12 @@
 
     piste.addEventListener('scroll', planifier, { passive: true });
     window.addEventListener('resize', planifier);
+    // La piste peut etre mesuree alors qu'elle est encore masquee : sa
+    // largeur vaut alors zero, et les commandes se cacheraient pour de bon.
+    // On la surveille : des qu'elle prend une taille, l'etat est refait.
+    if (window.ResizeObserver) {
+      new ResizeObserver(planifier).observe(piste);
+    }
     etat();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(etat);
   }
