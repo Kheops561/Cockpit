@@ -150,6 +150,14 @@ Trois compléments récents :
 - `.page-<nom>` : chaque page porte sa classe sur `<body>`, ce qui permet de
   régler une page seule. `a-propos` s’en sert pour resserrer sa colonne à
   1180 px.
+- `data-defilement="<millisecondes>"` sur un carrousel : la piste avance
+  toute seule et revient au début une fois arrivée au bout. Le script ajoute
+  alors une commande de pause visible, atteignable au clavier, à la suite des
+  chevrons. Le défilement s’interrompt au survol et au focus **dans la
+  piste** (pas sur les commandes, sinon il ne repartirait jamais), quand le
+  bloc sort de l’écran et quand l’onglet passe à l’arrière-plan. Il ne
+  démarre pas du tout sous `prefers-reduced-motion`, et pas non plus quand la
+  piste ne déborde pas. Aujourd’hui : la page `temoignages.html`, à 7 s.
 
 ### Icônes
 

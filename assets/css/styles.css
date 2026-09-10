@@ -2665,6 +2665,11 @@ html:not(.js) .booking__confirm { display: none; }
 .carrousel__fleche[disabled] { opacity: .35; cursor: default; }
 .carrousel__fleche[disabled]:hover { background: none; color: var(--ink); }
 
+/* La commande d'arret du defilement automatique. Elle se pose apres les
+   reperes, un peu detachee : c'est un reglage, pas une navigation. */
+.carrousel__pause { margin-left: clamp(.5rem, 1.5vw, 1.25rem); }
+.carrousel__pause[aria-pressed="true"] { background: var(--ink); color: var(--white); }
+
 @media (prefers-reduced-motion: reduce) {
   .carrousel__piste { scroll-behavior: auto; }
   .carrousel::after { transition: none; }

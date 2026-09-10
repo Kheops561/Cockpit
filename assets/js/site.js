@@ -661,7 +661,9 @@
    horizontal avec accrochage, utilisable au doigt, a la molette et au
    clavier sans ce script. On n'ajoute ici que le confort : deux chevrons,
    un repere par carte, et on ne les montre que si la piste deborde
-   vraiment. Rien ne defile tout seul, il n'y a rien a mettre en pause.
+   vraiment. Les carrousels qui portent `data-defilement` avancent en plus
+   tout seuls ; ceux-la recoivent une commande de pause visible et au
+   clavier, et ne demarrent jamais en mouvement reduit.
    ========================================================================== */
 
 (function () {
@@ -809,6 +811,93 @@
         });
       });
     });
+
+    // ---------------------------------------- defilement automatique
+    // Seuls les carrousels qui portent `data-defilement` avancent seuls.
+    // Rien ne demarre en mouvement reduit. Comme toute animation en boucle
+    // du site, celle-ci recoit une commande d'arret visible et atteignable
+    // au clavier ; elle s'interrompt aussi au survol, au focus, quand le
+    // bloc sort de l'ecran et quand l'onglet passe a l'arriere-plan.
+    if (doux && bloc.hasAttribute('data-defilement')) {
+      var delai = parseInt(bloc.getAttribute('data-defilement'), 10) || 7000;
+      var arrete = false;
+      var survole = false;
+      var focalise = false;
+      var visible = true;
+      var minuteur = null;
+
+      var pause = document.createElement('button');
+      pause.type = 'button';
+      pause.className = 'pile__fleche carrousel__pause';
+      pause.setAttribute('aria-pressed', 'false');
+
+      var dessinPause = '<svg class="icon" width="14" height="14" viewBox="0 0 12 12"'
+        + ' fill="none" aria-hidden="true" focusable="false"><path d="M4 2v8M8 2v8"'
+        + ' stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>';
+      var dessinLecture = '<svg class="icon" width="14" height="14" viewBox="0 0 12 12"'
+        + ' aria-hidden="true" focusable="false"><path d="M3.5 2 10 6l-6.5 4Z"'
+        + ' fill="currentColor"/></svg>';
+
+      function habiller() {
+        pause.innerHTML = (arrete ? dessinLecture : dessinPause)
+          + '<span class="sr-only">'
+          + (arrete ? 'Reprendre le défilement' : 'Mettre le défilement en pause')
+          + '</span>';
+        pause.setAttribute('aria-pressed', String(arrete));
+      }
+      habiller();
+      commandes.appendChild(pause);
+
+      function peutTourner() {
+        return !arrete && !survole && !focalise && visible && !document.hidden
+          && piste.scrollWidth > piste.clientWidth + 1;
+      }
+
+      function tic() {
+        if (!peutTourner()) return;
+        // Arrive au bout, le carrousel revient a la premiere carte.
+        if (piste.scrollLeft >= butee() - 1) glisser(0);
+        else glisser(Math.min(butee(), piste.scrollLeft + pas()));
+      }
+
+      function relancer() {
+        window.clearInterval(minuteur);
+        minuteur = window.setInterval(tic, delai);
+      }
+      relancer();
+
+      pause.addEventListener('click', function () {
+        arrete = !arrete;
+        habiller();
+        if (!arrete) relancer();
+      });
+
+      // Survol et focus retiennent le defilement quand ils sont dans la
+      // piste, la ou l'on lit. Pas sur les commandes : la touche
+      // « Reprendre » garde le pointeur et le focus apres le clic, et le
+      // defilement ne repartirait jamais.
+      piste.addEventListener('mouseenter', function () { survole = true; });
+      piste.addEventListener('mouseleave', function () { survole = false; });
+      piste.addEventListener('focusin', function () { focalise = true; });
+      piste.addEventListener('focusout', function () { focalise = false; });
+
+      // Une action de la personne repart d'un delai complet. On n'ecoute que
+      // les gestes reels : notre propre defilement declenche lui aussi des
+      // evenements `scroll`, et remettrait le compteur a zero sans fin.
+      ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(function (nom) {
+        bloc.addEventListener(nom, relancer, { passive: true });
+      });
+
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden && !arrete) relancer();
+      });
+
+      if (window.IntersectionObserver) {
+        new IntersectionObserver(function (entrees) {
+          visible = entrees[0].isIntersecting;
+        }, { threshold: 0.35 }).observe(bloc);
+      }
+    }
 
     piste.addEventListener('scroll', planifier, { passive: true });
     window.addEventListener('resize', planifier);
