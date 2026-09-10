@@ -236,6 +236,17 @@ Les personnes en copie se voient entre elles — c'est l'usage attendu entre
 collaborateurs. Le visiteur, lui, ne voit jamais cette liste : il envoie le
 message, il ne le reçoit pas.
 
+Une adresse présente dans les deux variables est retirée de la copie : sans
+cela, la même personne apparaîtrait en destinataire **et** en copie, et
+recevrait le message en double.
+
+Le réglage attendu est donc :
+
+| Variable | Ce qu'elle porte |
+|---|---|
+| `CONTACT_TO` | `contact@amelie-invest.com`, la boîte du cabinet |
+| `CONTACT_CC` | les personnes à tenir informées |
+
 > **La liste réelle n'est pas recopiée ici**, et c'est volontaire : elle
 > contient des adresses personnelles, et ce dépôt peut un jour être ouvert.
 > Sa seule source est la variable `CONTACT_CC` du projet Vercel. Pour savoir

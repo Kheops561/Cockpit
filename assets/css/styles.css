@@ -4133,6 +4133,7 @@ html:not(.js) .booking__confirm { display: none; }
 .recu__gestes {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: .8rem;
   margin-top: clamp(1.5rem, 3vw, 2rem);
   padding-top: clamp(1.25rem, 2.5vw, 1.5rem);

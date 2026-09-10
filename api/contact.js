@@ -57,7 +57,11 @@ function adresses(brut, defaut = '') {
 }
 
 const DESTINATAIRES = adresses(process.env.CONTACT_TO, 'contact@amelie-invest.com');
-const COPIES = adresses(process.env.CONTACT_CC);
+// Une adresse presente des deux cotes recevrait le message en double, et le
+// courrier afficherait la meme personne en destinataire et en copie. La
+// liste principale l'emporte.
+const COPIES = adresses(process.env.CONTACT_CC).filter(
+  (a) => !DESTINATAIRES.some((d) => d.toLowerCase() === a.toLowerCase()));
 // Une seule adresse suffit à écrire « écrivez-nous directement à… ».
 const DESTINATAIRE = DESTINATAIRES[0] || 'contact@amelie-invest.com';
 
@@ -118,6 +122,20 @@ function lireCorps(req) {
     return Object.fromEntries(new URLSearchParams(brut));
   }
   return {};
+}
+
+/**
+ * Échappe ce qui part dans la version mise en forme du courrier. Sans cela,
+ * un message contenant `<script>` ou une image piégée s'exécuterait dans la
+ * boîte de qui le lit — et ce message vient d'un inconnu.
+ */
+function echapper(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function veutJson(req) {
@@ -247,6 +265,52 @@ module.exports = async function handler(req, res) {
     'Envoyé depuis le formulaire de contact d’amelie-invest.com.',
   ].join('\n');
 
+  // La version mise en forme. Tout ce qui vient du visiteur passe par
+  // `echapper` : un message contenant `<b>` ou `<script>` doit s'afficher
+  // tel quel, jamais s'exécuter dans la boîte de qui le lit.
+  const lignes = [
+    ['Prénom', prenom],
+    ['Nom', nom],
+    ['Adresse e-mail', courriel],
+    ['Téléphone', tel],
+    ['Vous êtes', qualite],
+    ['Profil d’investisseur', profil],
+    ['Échéance', echeance],
+  ];
+
+  // Les styles sont poses sur chaque balise : les feuilles de style sont
+  // retirees par la plupart des messageries.
+  const CEL = 'padding:6px 0;vertical-align:top;font:14px/1.5 -apple-system,'
+    + 'Segoe UI,Roboto,Helvetica,Arial,sans-serif';
+  const tableau = lignes.map(([nom_, val]) => `
+        <tr>
+          <td style="${CEL};color:#5b6b7a;white-space:nowrap;padding-right:18px">${echapper(nom_)}</td>
+          <td style="${CEL};color:#12283c">${echapper(val)}</td>
+        </tr>`).join('');
+
+  const html = `<!doctype html>
+<html lang="fr"><body style="margin:0;padding:24px;background:#f8f5ef">
+  <table role="presentation" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #e3ded5">
+    <tr><td style="height:4px;background:#75508f;font-size:0;line-height:0">&nbsp;</td></tr>
+    <tr><td style="padding:28px 28px 0">
+      <p style="margin:0;font:11px/1.4 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#a05234">Formulaire de contact</p>
+      <p style="margin:10px 0 0;font:22px/1.3 Georgia,'Times New Roman',serif;color:#12283c">${echapper(prenom)} ${echapper(nom)} vous écrit.</p>
+    </td></tr>
+    <tr><td style="padding:22px 28px 0">
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%">${tableau}
+      </table>
+    </td></tr>
+    <tr><td style="padding:22px 28px 0">
+      <p style="margin:0 0 8px;font:11px/1.4 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#5b6b7a">Son message</p>
+      <div style="padding:16px 18px;background:#f8f5ef;border-left:3px solid #cbb5df;font:15px/1.7 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#12283c;white-space:pre-wrap">${echapper(message)}</div>
+    </td></tr>
+    <tr><td style="padding:24px 28px 28px">
+      <a href="mailto:${echapper(courriel)}" style="display:inline-block;padding:12px 22px;background:#12283c;color:#ffffff;text-decoration:none;font:14px/1 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">Répondre à ${echapper(prenom)}</a>
+      <p style="margin:18px 0 0;padding-top:16px;border-top:1px solid #e3ded5;font:12px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#5b6b7a">Envoyé depuis le formulaire de contact d’amelie-invest.com. Répondre à ce courrier écrit directement à la personne.</p>
+    </td></tr>
+  </table>
+</body></html>`;
+
   const cle = process.env.RESEND_API_KEY;
   if (!cle) {
     console.error('[contact] RESEND_API_KEY absente des variables du projet.');
@@ -268,6 +332,7 @@ module.exports = async function handler(req, res) {
         reply_to: courriel,
         subject: `Formulaire de contact · ${prenom} ${nom}`,
         text: texte,
+        html,
       }),
     });
 
