@@ -1906,15 +1906,18 @@ a.card:hover,
   margin-inline: auto;
 }
 
+/* La ligne qui annonce le premier echange porte la promesse du bloc :
+   trente minutes, gratuites. Elle se tient donc plus grande, et en bleu
+   nuit plutot qu'en gris courant. */
 .booking__status {
   display: inline-flex;
   align-items: center;
-  gap: .75rem;
-  font-size: .75rem;
-  font-weight: 500;
-  letter-spacing: .16em;
+  gap: .85rem;
+  font-size: clamp(.9375rem, 1.5vw, 1.125rem);
+  font-weight: 600;
+  letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--ink);
 }
 .booking__dot { position: relative; display: inline-flex; width: .5rem; height: .5rem; }
 .booking__dot::before,
@@ -1941,10 +1944,15 @@ a.card:hover,
 }
 .booking__invite:focus-visible { outline-offset: 12px; }
 
+/* Ce titre est un `span` : il ne recoit pas la regle des titres et
+   s'affichait donc en Inter, seul grand titre du site a ne pas etre en
+   Source Serif. */
 .booking__title {
+  font-family: var(--font-editorial);
   font-size: clamp(2.5rem, 7vw, 5rem);
-  line-height: 1.02;
-  letter-spacing: -.02em;
+  line-height: 1.05;
+  letter-spacing: -.01em;
+  color: var(--ink);
   transition: opacity .7s var(--ease), transform .7s var(--ease);
 }
 .booking__title .line { display: block; overflow: hidden; }
