@@ -74,7 +74,7 @@
 <main id="contenu">
 <section class="hero hero--compact">
   <div class="hero__media kenburns">
-    <img src="assets/images/hero-contact.jpg" alt="" width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
+    <img src="assets/images/hero-contact.jpg" alt="" width="1800" height="1013" loading="eager" decoding="async" fetchpriority="high">
   </div>
   <div class="wrap hero__inner">
     
@@ -103,9 +103,9 @@
           <li>Là où vous en êtes&nbsp;: propriétaire, primo-accédant, patrimoine déjà constitué</li>
           <li>Votre échéance, si vous en avez une</li>
         </ul>
-        <button class="btn btn--ghost" type="button" data-modale-ouvrir hidden>
-          <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><rect x="1.75" y="3.25" width="12.5" height="9.5" stroke="currentColor" stroke-width="1.2"/><path d="m2 4 6 4.5L14 4" stroke="currentColor" stroke-width="1.2"/></svg><span>Ouvrir le formulaire</span>
-        </button>
+        <div class="btn-row" data-modale-rangee hidden>
+          <button class="btn btn--ghost" type="button" data-modale-ouvrir><svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><rect x="1.75" y="3.25" width="12.5" height="9.5" stroke="currentColor" stroke-width="1.2"/><path d="m2 4 6 4.5L14 4" stroke="currentColor" stroke-width="1.2"/></svg><span>Ouvrir le formulaire</span></button>
+        </div>
 
         <!-- Le formulaire vit dans un `dialog` ouvert : sans JavaScript il
              s&rsquo;affiche dans la page, utilisable tel quel. Le script le
@@ -120,35 +120,70 @@
               </button>
             </div>
           <form class="form" data-form-mail action="mailto:contact@amelie-invest.com" method="post" enctype="text/plain">
-            <div class="field">
-              <label for="nom">Nom et prénom</label>
-              <input id="nom" name="nom" type="text" autocomplete="name" placeholder="Votre nom et votre prénom" required>
+            <div class="form__duo">
+              <div class="field">
+                <label for="nom">Nom et prénom</label>
+                <div class="field__boite">
+                  <svg class="icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><circle cx="9" cy="6.25" r="3.1" stroke="currentColor" stroke-width="1.2"/><path d="M3.2 15.4c.6-2.9 3-4.6 5.8-4.6s5.2 1.7 5.8 4.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/></svg>
+                  <input id="nom" name="nom" type="text" autocomplete="name" placeholder="Votre nom et votre prénom"
+                         required aria-describedby="nom-erreur" data-manque="Nous avons besoin de votre nom pour vous répondre.">
+                </div>
+                <p class="field__erreur" id="nom-erreur" hidden></p>
+              </div>
+              <div class="field">
+                <label for="courriel">Adresse e-mail</label>
+                <div class="field__boite">
+                  <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><rect x="1.75" y="3.25" width="12.5" height="9.5" stroke="currentColor" stroke-width="1.2"/><path d="m2 4 6 4.5L14 4" stroke="currentColor" stroke-width="1.2"/></svg>
+                  <input id="courriel" name="courriel" type="email" autocomplete="email" placeholder="Pour vous répondre"
+                         required aria-describedby="courriel-erreur" data-manque="Sans adresse, nous ne pourrons pas vous répondre."
+                         data-format="Cette adresse ne semble pas complète.">
+                </div>
+                <p class="field__erreur" id="courriel-erreur" hidden></p>
+              </div>
             </div>
-            <div class="field">
-              <label for="courriel">Adresse e-mail</label>
-              <input id="courriel" name="courriel" type="email" autocomplete="email" placeholder="Pour vous répondre" required>
+
+            <div class="form__duo">
+              <div class="field">
+                <label for="telephone">Téléphone <span class="field__note">facultatif</span></label>
+                <div class="field__boite">
+                  <svg class="icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><rect x="5" y="1.9" width="8" height="14.2" stroke="currentColor" stroke-width="1.2"/><path d="M7.7 14.1h2.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/></svg>
+                  <input id="telephone" name="telephone" type="tel" autocomplete="tel" placeholder="Si vous préférez être rappelé"
+                         aria-describedby="telephone-erreur">
+                </div>
+                <p class="field__erreur" id="telephone-erreur" hidden></p>
+              </div>
+              <div class="field">
+                <label for="profil">Où vous en êtes</label>
+                <div class="field__boite">
+                  <svg class="icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><path d="M3 4.5h12M3 9h12M3 13.5h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/></svg>
+                  <select id="profil" name="profil">
+                    <option>Premier projet immobilier</option>
+                    <option>Patrimoine déjà constitué</option>
+                    <option>Arbitrage ou refinancement</option>
+                    <option>Autre</option>
+                  </select>
+                </div>
+              </div>
             </div>
-            <div class="field">
-              <label for="telephone">Téléphone <span class="field__note">facultatif</span></label>
-              <input id="telephone" name="telephone" type="tel" autocomplete="tel" placeholder="Si vous préférez être rappelé">
-            </div>
-            <div class="field">
-              <label for="profil">Où vous en êtes</label>
-              <select id="profil" name="profil">
-                <option>Premier projet immobilier</option>
-                <option>Patrimoine déjà constitué</option>
-                <option>Arbitrage ou refinancement</option>
-                <option>Autre</option>
-              </select>
-            </div>
+
             <div class="field">
               <label for="message">Votre situation en quelques lignes</label>
-              <textarea id="message" name="message" rows="6" placeholder="Votre projet ou la décision qui vous bloque, votre point de départ, votre échéance si vous en avez une." required></textarea>
+              <div class="field__boite field__boite--haut">
+                <svg class="icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false"><path d="M11.6 2.6 15.4 6.4 6.6 15.2H2.8v-3.8Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.8 4.4l3.8 3.8" stroke="currentColor" stroke-width="1.2"/></svg>
+                <textarea id="message" name="message" rows="5" placeholder="Votre projet ou la décision qui vous bloque, votre point de départ, votre échéance si vous en avez une."
+                          required aria-describedby="message-erreur"
+                          data-manque="Quelques lignes suffisent : elles nous évitent un aller-retour."></textarea>
+              </div>
+              <p class="field__erreur" id="message-erreur" hidden></p>
             </div>
+
             <div class="field field--inline">
-              <input id="consentement" name="consentement" type="checkbox" required>
+              <input id="consentement" name="consentement" type="checkbox" required
+                     aria-describedby="consentement-erreur" data-manque="Merci de confirmer avant de préparer le message.">
               <label for="consentement">J&rsquo;accepte que ces informations soient utilisées pour répondre à ma demande, conformément à la page <a href="confidentialite.html">Données personnelles</a>.</label>
             </div>
+            <p class="field__erreur" id="consentement-erreur" hidden></p>
+
             <div class="form__envoi">
               <button class="btn" type="submit"><svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><rect x="1.75" y="3.25" width="12.5" height="9.5" stroke="currentColor" stroke-width="1.2"/><path d="m2 4 6 4.5L14 4" stroke="currentColor" stroke-width="1.2"/></svg><span>Préparer mon message</span></button>
               <p class="note">Le bouton ouvre votre messagerie avec le message déjà rédigé&nbsp;: rien n&rsquo;est envoyé sans votre validation, et aucune donnée ne transite par ce site.</p>

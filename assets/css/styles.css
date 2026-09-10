@@ -320,7 +320,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   display: inline-flex;
   align-items: center;
   gap: .7rem;
-  padding: 1.0625rem 1.85rem 1.0625rem 2.9rem;
+  padding: 1.0625rem 1.75rem 1.0625rem 2.65rem;
   background: var(--btn-bg);
   color: var(--btn-fg);
   border: 1px solid var(--btn-line);
@@ -334,6 +334,10 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
   transition: transform .35s var(--ease), background-color .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease);
 }
 .btn > * { position: relative; z-index: 1; }
+/* Une carte est une colonne flexible : un bouton pose directement dedans
+   s'etirerait sur toute sa largeur. Il garde sa largeur propre. */
+.card > .btn,
+.modale .btn { align-self: start; }
 
 /* Une pastille se tient a gauche du bouton. Au survol, elle se dilate en
    cercle jusqu'a couvrir le bouton entier ; le cadre etant a angles
@@ -342,10 +346,10 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 .btn::after {
   content: "";
   position: absolute;
-  left: 1.5rem;
+  left: 1.4rem;
   top: 50%;
-  width: .5rem;
-  height: .5rem;
+  width: .4375rem;
+  height: .4375rem;
   border-radius: 50%;
   background: var(--btn-fill, var(--lavender-dark));
   transform: translate(-50%, -50%);
@@ -362,7 +366,9 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 .btn:hover .icon,
 .btn:focus-visible .icon { transform: translateX(4px); }
 
-.btn--ghost { --btn-bg: transparent; --btn-fg: var(--ink); --btn-line: var(--line-strong); }
+/* Le bouton fantome se remplit de bleu nuit, pas de lavande : sur l'ivoire
+   d'une carte, un aplat violet pesait plus que l'action qu'il porte. */
+.btn--ghost { --btn-bg: transparent; --btn-fg: var(--ink); --btn-line: var(--line-strong); --btn-fill: var(--ink); }
 .btn--light { --btn-bg: var(--white); --btn-fg: var(--ink); --btn-line: var(--white); }
 .btn--outline-light { --btn-bg: transparent; --btn-fg: var(--white); --btn-line: var(--line-light); }
 .btn--rust { --btn-fill: var(--rust); }
@@ -528,8 +534,15 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
 }
 
 .header__cta { display: none; white-space: nowrap; }
-@media (min-width: 1200px) { .header__cta { display: inline-flex; padding: .75rem 1rem; font-size: .8125rem; } }
-@media (min-width: 1440px) { .header__cta { padding: .85rem 1.35rem; font-size: .9375rem; } }
+/* Le bouton de tete est l'action principale du site : il se tient plus
+   grand que les liens qui l'entourent. Le retrait a gauche laisse la place
+   a la pastille du bouton. */
+@media (min-width: 1200px) {
+  .header__cta { display: inline-flex; padding: .95rem 1.35rem .95rem 2.5rem; font-size: 1rem; }
+}
+@media (min-width: 1440px) {
+  .header__cta { padding: 1.1rem 1.7rem 1.1rem 2.85rem; font-size: 1.125rem; }
+}
 
 /* Bouton menu : trois traits, aucun émoji */
 .burger {
@@ -766,6 +779,20 @@ a:focus-visible .frame--zoom img { transform: scale(1.06); }
 .card h3 { font-size: var(--type-card); margin-bottom: .9rem; }
 .card p { font-size: .9375rem; color: var(--muted); }
 .card .linkarrow { margin-top: auto; padding-top: 1.75rem; align-self: flex-start; border-bottom: 0; }
+/* La rangee de boutons se cale en bas de la carte : deux cartes cote a
+   cote, de contenus inegaux, alignent quand meme leurs boutons. Un filet
+   la detache, de sorte que l'espace laisse au-dessus se lise comme un pied
+   de carte et non comme un vide. */
+.card > .btn-row {
+  margin-top: auto;
+  padding-top: clamp(1.5rem, 2.6vw, 2rem);
+  border-top: 1px solid var(--line);
+}
+/* Une seule carte, ou un contenu qui remplit deja la hauteur : le filet
+   n'a plus rien a separer. */
+.grid--2 > .card > .btn-row,
+.grid--3 > .card > .btn-row,
+.grid--4 > .card > .btn-row { margin-top: auto; }
 
 a.card:hover,
 .card--hover:hover {
@@ -825,6 +852,44 @@ a.card:hover,
   border: 1px solid var(--line);
   color: var(--muted);
 }
+
+/* Le bloc de tarification : un montant, ce qu'il couvre, et le premier
+   pas offert. Un filet rouille le rattache au surtitre. */
+.prix {
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--rust);
+  padding: clamp(1.35rem, 2.4vw, 2rem);
+}
+.prix .eyebrow { margin-bottom: 0; }
+.prix__montant {
+  margin: .9rem 0 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(2rem, 3.4vw, 2.875rem);
+  line-height: 1;
+  color: var(--ink);
+}
+.prix__unite {
+  margin-left: .4rem;
+  font-family: var(--font-body);
+  font-size: .875rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  vertical-align: .55em;
+}
+.prix__detail { margin: .9rem 0 0; font-size: .9375rem; color: var(--muted); }
+.prix__offert {
+  margin: clamp(.9rem, 1.8vw, 1.25rem) 0 0;
+  padding-top: clamp(.9rem, 1.8vw, 1.25rem);
+  border-top: 1px solid var(--line);
+  font-size: .9375rem;
+  color: var(--ink);
+}
+/* Les formats dont le périmètre n'est pas arrêté n'affichent pas de prix. */
+.prix--attente { border-left-color: var(--line-strong); }
+.prix--attente .prix__detail { margin-top: .75rem; }
 
 /* -------------------------------------------------------------- 11 étapes */
 
@@ -1190,24 +1255,69 @@ a.card:hover,
 /* ------------------------------------------------------------ 18 formulaire */
 
 .form { display: grid; gap: 1.35rem; }
+/* Deux champs courts tiennent sur une ligne des que la place le permet :
+   le formulaire se lit en un ecran plutot qu'en un long rouleau. */
+.form__duo { display: grid; gap: 1.35rem; }
+@media (min-width: 540px) { .form__duo { grid-template-columns: 1fr 1fr; } }
+
 .field { display: grid; gap: .5rem; }
 .field label { font-size: .8125rem; letter-spacing: .04em; color: var(--ink); font-weight: 500; }
+
+/* Chaque champ porte son pictogramme, pose dans la marge gauche. Il est
+   decoratif : l'etiquette au-dessus dit deja de quoi il s'agit. */
+.field__boite { position: relative; display: grid; }
+.field__boite > .icon {
+  position: absolute;
+  left: .95rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+  transition: color .3s var(--ease);
+}
+.field__boite--haut > .icon { top: 1.15rem; transform: none; }
+.field__boite:focus-within > .icon { color: var(--lavender-dark); }
+
 .field input,
 .field select,
 .field textarea {
   font: inherit;
   font-size: .9375rem;
   color: var(--text);
-  background: var(--white);
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 0;
-  padding: .9rem 1rem;
-  transition: border-color .3s var(--ease);
+  padding: .95rem 1rem;
+  transition: border-color .3s var(--ease), background-color .3s var(--ease), box-shadow .3s var(--ease);
 }
-.field textarea { min-height: 9rem; resize: vertical; }
+.field__boite input,
+.field__boite select,
+.field__boite textarea { padding-left: 2.9rem; }
+.field textarea { min-height: 8rem; resize: vertical; }
+/* Le champ vise s'eclaircit et prend un halo discret : on voit ou l'on
+   ecrit sans que le cadre s'epaississe et fasse sauter la mise en page. */
 .field input:focus,
 .field select:focus,
-.field textarea:focus { border-color: var(--lavender-dark); }
+.field textarea:focus {
+  outline: none;
+  background: var(--white);
+  border-color: var(--lavender-dark);
+  box-shadow: 0 0 0 3px var(--lavender-soft);
+}
+
+/* Le message d'erreur, sous son champ. Il n'apparait qu'une fois le champ
+   quitte ou l'envoi tente : personne n'est averti d'une faute qu'il n'a
+   pas encore faite. Sans JavaScript, le navigateur affiche les siens. */
+.field__erreur {
+  display: flex;
+  align-items: flex-start;
+  gap: .4rem;
+  margin: 0;
+  font-size: .8125rem;
+  line-height: 1.5;
+  color: var(--rust);
+}
+.field__erreur .icon { flex: none; margin-top: .1rem; }
 .field__note {
   font-weight: 400;
   letter-spacing: .04em;
@@ -1229,6 +1339,12 @@ a.card:hover,
    faite. */
 .field input:not(:placeholder-shown):invalid,
 .field textarea:not(:placeholder-shown):invalid { border-color: var(--rust); }
+/* Champ signale par le script : le cadre et le pictogramme passent en
+   rouille, comme le message qui l'accompagne. */
+.field.est-fautif input,
+.field.est-fautif select,
+.field.est-fautif textarea { border-color: var(--rust); }
+.field.est-fautif .field__boite > .icon { color: var(--rust); }
 
 .form__envoi { display: grid; gap: .85rem; margin-top: .5rem; }
 .form__envoi .btn { justify-self: start; }
@@ -1256,10 +1372,35 @@ a.card:hover,
 }
 /* Une fois ouverte par le script, elle se pose au centre de l'ecran. */
 .modale[open]:modal {
-  width: min(38rem, calc(100vw - 2rem));
-  max-height: min(46rem, calc(100vh - 3rem));
+  width: min(44rem, calc(100vw - 2rem));
+  max-height: min(48rem, calc(100vh - 3rem));
   margin: auto;
-  overflow: auto;
+  overflow: hidden;
+}
+/* Dans la fenetre, seuls les champs defilent : le titre et le bouton
+   d'envoi restent en place, et la barre de defilement ne traverse plus
+   toute la hauteur. */
+.modale[open]:modal .modale__cadre {
+  display: flex;
+  flex-direction: column;
+  max-height: min(48rem, calc(100vh - 3rem));
+}
+.modale[open]:modal .modale__tete { flex: none; }
+.modale[open]:modal .form {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: .35rem;
+}
+/* Le bloc d'envoi reste sous les yeux quand les champs defilent. Un filet
+   le detache : une ombre blanche masquerait la ligne juste au-dessus. */
+.modale[open]:modal .form__envoi {
+  position: sticky;
+  bottom: 0;
+  background: var(--white);
+  border-top: 1px solid var(--line);
+  padding-top: 1.1rem;
+  margin-top: .35rem;
 }
 .modale::backdrop { background: rgba(18, 40, 60, .55); }
 .js .modale[open]:modal { animation: fenetre .38s var(--ease) both; }
@@ -1982,10 +2123,18 @@ html:not(.js) .booking__confirm { display: none; }
   left: 0;
   width: 1px;
 }
-.timeline__track { bottom: 0; background: var(--line); }
+/* Le fil ne commence ni ne finit net : il se fond aux deux extremites, et
+   s'allege au passage des sections sombres, ou un trait franc ferait
+   barre en travers de l'image. */
+.timeline__rail {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7rem, #000 calc(100% - 7rem), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 7rem, #000 calc(100% - 7rem), transparent 100%);
+}
+.timeline__track { bottom: 0; background: var(--line); opacity: .7; }
 .timeline__progress {
   height: 0;
-  background: var(--lavender-dark);
+  background: linear-gradient(to bottom, transparent 0, var(--lavender-dark) 6rem);
+  opacity: .55;
   transition: height .18s linear;
 }
 
@@ -2039,14 +2188,21 @@ html:not(.js) .booking__confirm { display: none; }
 }
 /* Le libellé ne paraît que là où la marge peut vraiment l'accueillir :
    en dessous, il sortirait de l'écran par la gauche. */
-@media (min-width: 1800px) { .timeline__label { display: block; } }
+@media (min-width: 1800px) { .timeline__rail.est-pose .timeline__label { display: block; } }
 .timeline__step.is-passed .timeline__label { opacity: 1; }
 .timeline__step.is-current .timeline__label { color: var(--ink); opacity: 1; }
 
 /* Sur fond bleu nuit, le repère s'éclaircit pour rester lisible. */
 .timeline__step.on-ink .timeline__dot { background: var(--ink); border-color: var(--line-light); }
 .timeline__step.on-ink.is-passed .timeline__dot { background: var(--lavender); border-color: var(--lavender); }
-.timeline__step.on-ink .timeline__label { color: rgba(255, 255, 255, .7); }
+/* Le coussin du libelle prend la couleur du fond qu'il traverse : ivoire
+   sur ivoire, bleu nuit sur bleu nuit. Sans cela, un rectangle ivoire
+   s'imprimait en travers des sections sombres. */
+.timeline__step.on-ink .timeline__label {
+  color: rgba(255, 255, 255, .7);
+  background: var(--ink);
+  box-shadow: 0 0 0 .3rem var(--ink);
+}
 .timeline__step.on-ink.is-current .timeline__label { color: var(--white); }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2928,9 +3084,22 @@ html:not(.js) .booking__confirm { display: none; }
   margin-top: 0;
   opacity: 0;
   visibility: hidden;
-  transition: opacity .5s var(--ease);
+  /* Le format sortant s'efface sur place ; l'entrant arrive en glissant
+     depuis le cote d'ou vient la lecture. La direction est donnee par le
+     script, qui pose --diapo-sens a 1 ou a -1. */
+  transform: translateX(calc(var(--diapo-sens, 1) * 2.5rem));
+  transition: opacity .45s var(--ease), transform .55s var(--ease), visibility 0s linear .55s;
 }
-.js .diapos.est-defilante .diapo.est-visible { opacity: 1; visibility: visible; }
+.js .diapos.est-defilante .diapo.est-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity .45s var(--ease) .1s, transform .55s var(--ease) .1s, visibility 0s;
+}
+/* Reposer un format caché du bon côté ne doit pas s'animer : il traverserait
+   la largeur du bloc alors qu'il n'est pas encore à l'écran. Le script pose
+   cette classe le temps d'un calcul, puis la retire. */
+.js .diapos.est-defilante .diapo.sans-glissement { transition: none; }
 
 /* La barre de progression : un format par repère, nommé. */
 .diapos__barre {
@@ -2957,8 +3126,9 @@ html:not(.js) .booking__confirm { display: none; }
 .diapos__nom {
   display: block;
   font-family: var(--font-editorial);
-  font-size: clamp(.9375rem, 1.4vw, 1.0625rem);
-  line-height: 1.3;
+  font-size: clamp(1.0625rem, 1.75vw, 1.375rem);
+  font-weight: 600;
+  line-height: 1.25;
 }
 .diapos__rang {
   display: block;
@@ -2974,6 +3144,11 @@ html:not(.js) .booking__confirm { display: none; }
   gap: clamp(.75rem, 2vw, 1.25rem);
   margin-top: clamp(1.75rem, 3vw, 2.5rem);
 }
+/* Les chevrons reprennent la rouille des surtitres : la commande et ce
+   qu'elle change portent la meme couleur. */
+.diapos__commandes .pile__fleche { color: var(--rust); border-color: var(--rust-soft); }
+.diapos__commandes .pile__fleche:hover,
+.diapos__commandes .pile__fleche:focus-visible { background: var(--rust); color: var(--white); border-color: var(--rust); }
 .diapos__rangs {
   font-family: var(--font-editorial);
   font-size: .875rem;
@@ -2982,7 +3157,8 @@ html:not(.js) .booking__confirm { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js .diapos.est-defilante .diapo { transition: none; }
+  .js .diapos.est-defilante .diapo,
+  .js .diapos.est-defilante .diapo.est-visible { transition: none; transform: none; }
   .diapos__repere { transition: none; }
 }
 

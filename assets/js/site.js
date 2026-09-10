@@ -524,6 +524,14 @@
     }
 
     place();
+    // Les libelles ne paraissent qu'une fois le fil pose. Avant cela, un
+    // premier calcul fait sur une mise en page encore mouvante pouvait les
+    // laisser en haut de page, ou leur coussin s'imprimait en travers du
+    // bandeau de tete.
+    window.requestAnimationFrame(function () {
+      place();
+      rail.classList.add('est-pose');
+    });
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', place);
     window.addEventListener('load', place);
@@ -948,7 +956,10 @@
     if (!ouvrir) return;
 
     fenetre.close();
-    ouvrir.hidden = false;
+    // C'est la rangee qui est masquee, pas le bouton : masquer le bouton
+    // seul laisserait sa rangee occuper de la place pour rien.
+    var rangee = document.querySelector('[data-modale-rangee]') || ouvrir;
+    rangee.hidden = false;
 
     ouvrir.addEventListener('click', function () { fenetre.showModal(); });
     if (fermer) fermer.addEventListener('click', function () { fenetre.close(); });
@@ -976,9 +987,72 @@
       return champ ? String(champ.value || '').trim() : '';
     }
 
+    // ------------------------------------------ signalement des champs
+    // Sans ce script, le navigateur affiche ses propres bulles : le
+    // formulaire reste utilisable tel quel. Avec lui, le message s'ecrit
+    // sous le champ concerne, en toutes lettres et dans le ton du site.
+    var ALERTE = '<svg class="icon" width="14" height="14" viewBox="0 0 16 16" fill="none"'
+      + ' aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.4" stroke="currentColor"'
+      + ' stroke-width="1.2"/><path d="M8 4.6v4.2M8 11.1v.9" stroke="currentColor"'
+      + ' stroke-width="1.4" stroke-linecap="square"/></svg>';
+
+    function boite(champ) {
+      var id = champ.getAttribute('aria-describedby');
+      return id ? document.getElementById(id) : null;
+    }
+
+    function motif(champ) {
+      var v = champ.validity;
+      if (!v) return '';
+      if (v.valueMissing) return champ.getAttribute('data-manque') || 'Ce champ est nécessaire.';
+      if (v.typeMismatch) return champ.getAttribute('data-format') || 'Ce format ne semble pas valide.';
+      return champ.validationMessage || '';
+    }
+
+    function signaler(champ, montrer) {
+      var zone = boite(champ);
+      var enveloppe = champ.closest ? champ.closest('.field') : null;
+      var faux = montrer && champ.checkValidity && !champ.checkValidity();
+      if (enveloppe) enveloppe.classList.toggle('est-fautif', !!faux);
+      champ.setAttribute('aria-invalid', faux ? 'true' : 'false');
+      if (!zone) return faux;
+      if (faux) {
+        zone.innerHTML = ALERTE + '<span>' + motif(champ) + '</span>';
+        zone.hidden = false;
+      } else {
+        zone.hidden = true;
+        zone.textContent = '';
+      }
+      return faux;
+    }
+
+    var champs = form.querySelectorAll('input, select, textarea');
+    // Le navigateur laisse la main : les messages sont les notres.
+    form.setAttribute('novalidate', 'novalidate');
+    Array.prototype.forEach.call(champs, function (champ) {
+      // On ne signale un champ qu'une fois quitte, puis a chaque frappe
+      // tant qu'il reste fautif : le message disparait des qu'il est reglé.
+      champ.addEventListener('blur', function () { signaler(champ, true); });
+      champ.addEventListener('input', function () {
+        var enveloppe = champ.closest ? champ.closest('.field') : null;
+        if (enveloppe && enveloppe.classList.contains('est-fautif')) signaler(champ, true);
+      });
+      champ.addEventListener('change', function () {
+        var enveloppe = champ.closest ? champ.closest('.field') : null;
+        if (enveloppe && enveloppe.classList.contains('est-fautif')) signaler(champ, true);
+      });
+    });
+
     form.addEventListener('submit', function (e) {
-      // Laisser le navigateur signaler lui-meme les champs incomplets.
-      if (form.checkValidity && !form.checkValidity()) return;
+      var premier = null;
+      Array.prototype.forEach.call(champs, function (champ) {
+        if (signaler(champ, true) && !premier) premier = champ;
+      });
+      if (premier) {
+        e.preventDefault();
+        premier.focus();
+        return;
+      }
       e.preventDefault();
 
       var nom = valeur('nom');
@@ -1085,7 +1159,26 @@
     bloc.appendChild(commandes);
 
     function montrer(i) {
-      courant = (i + diapos.length) % diapos.length;
+      var vise = (i + diapos.length) % diapos.length;
+      // Le sens de lecture : en avancant, le format entre par la droite ;
+      // en revenant, par la gauche. Le passage d'un bout a l'autre garde le
+      // sens du geste. La CSS s'en sert, le contenu n'en depend pas.
+      var sens = vise === courant ? 1 : (vise > courant ? 1 : -1);
+      if (courant === 0 && vise === diapos.length - 1) sens = -1;
+      if (courant === diapos.length - 1 && vise === 0) sens = 1;
+      courant = vise;
+      // Le format entrant doit d'abord se poser du bon cote, sans animation :
+      // le transform est une propriete en transition, et le changer
+      // l'enverrait glisser d'un bord a l'autre alors qu'il est encore
+      // invisible. On coupe donc la transition, on force le calcul de la
+      // mise en page, puis on la rend.
+      var entrant = diapos[courant];
+      entrant.classList.add('sans-glissement');
+      for (var k = 0; k < diapos.length; k++) {
+        diapos[k].style.setProperty('--diapo-sens', String(k === courant ? sens : -sens));
+      }
+      void entrant.offsetWidth;
+      entrant.classList.remove('sans-glissement');
       for (var k = 0; k < diapos.length; k++) {
         diapos[k].classList.toggle('est-visible', k === courant);
         reperes[k].setAttribute('aria-current', String(k === courant));

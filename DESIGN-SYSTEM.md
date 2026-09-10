@@ -147,9 +147,36 @@ Trois compléments récents :
   n’y est cachée, et il disparaît sous `prefers-reduced-motion`.
 - `.card--vedette` : une carte visuelle dont l’image passe à gauche plutôt
   qu’en tête, pour ne pas devenir démesurée sur une pleine largeur.
+- Un bouton posé directement dans une carte ne s’étire plus : `.card > .btn`
+  garde sa largeur propre. Une `.btn-row` dans une carte se cale en bas,
+  détachée par un filet : deux cartes côte à côte, de contenus inégaux,
+  alignent quand même leurs boutons.
+- Le bouton fantôme se remplit de bleu nuit, pas de lavande : sur l’ivoire
+  d’une carte, un aplat violet pesait plus que l’action qu’il porte.
 - `.page-<nom>` : chaque page porte sa classe sur `<body>`, ce qui permet de
   régler une page seule. `a-propos` s’en sert pour resserrer sa colonne à
   1180 px.
+- Le formulaire de contact : chaque champ porte un pictogramme dans sa marge
+  gauche, deux champs courts tiennent sur une ligne (`.form__duo`), et le
+  champ visé prend un halo lavande. Les messages d’erreur s’écrivent sous
+  leur champ (`.field__erreur`), jamais avant que le champ ait été quitté ou
+  l’envoi tenté. Sans JavaScript, le navigateur affiche ses propres bulles :
+  c’est le script qui pose `novalidate`, jamais le HTML. En fenêtre, le titre
+  et le bloc d’envoi restent en place et seuls les champs défilent.
+- `.prix` : le bloc de tarification d’un accompagnement. Un surtitre rouille,
+  le montant en Source Serif, ce qu’il couvre, puis le premier pas offert
+  détaché par un filet. `.prix--attente` sert aux formats dont le périmètre
+  n’est pas arrêté : il n’affiche aucun montant.
+- Les diapositives des accompagnements glissent en changeant : le format
+  sortant part du côté opposé à la lecture, l’entrant arrive de l’autre. Le
+  script pose `--diapo-sens` (1 ou -1) et coupe brièvement la transition le
+  temps de reposer le format caché du bon côté, sans quoi il traverserait
+  tout le bloc. Neutralisé sous `prefers-reduced-motion`.
+- La frise chronologique de `a-propos` se fond : le fil est estompé à ses deux
+  extrémités par un masque en dégradé, sa progression démarre en fondu, et le
+  coussin des libellés prend la couleur du fond qu’il traverse. Les libellés
+  n’apparaissent qu’une fois le fil posé (`.est-pose`), pour qu’un premier
+  calcul fait sur une mise en page mouvante ne les laisse pas en haut de page.
 - `data-defilement="<millisecondes>"` sur un carrousel : la piste avance
   toute seule et revient au début une fois arrivée au bout. Le script ajoute
   alors une commande de pause visible, atteignable au clavier, à la suite des
