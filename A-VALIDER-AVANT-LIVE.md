@@ -78,17 +78,26 @@ c’est la règle générale de ce type d’outil.
 - [ ] **Décider du sort du site Showit actuel.** Les deux ne peuvent pas
       répondre à la même adresse. Soit le nouveau site le remplace, soit il
       faut choisir un sous-domaine, le temps de la transition.
-- [ ] **Les mentions légales déclarent OVH comme hébergeur.** Ce n’est
-      exact que si le site est effectivement servi par OVH. Tant que
+- [ ] **Les mentions légales déclarent Vercel comme hébergeur.** Ce n’est
+      exact que si le site est effectivement servi par Vercel. Tant que
       Showit sert la page, l’hébergeur à déclarer est Showit. Un paragraphe
       d’avertissement figure sur la page ; il devra être retiré une fois
-      l’hébergement tranché.
+      la bascule faite — voir `CONFIGURATION-DNS.md`.
 
-- [ ] `contact.php` est écrit, testé et prêt, mais **hors service**. Le
-      rebrancher demande un hébergement PHP : voir
-      `INSTALLATION-FORMULAIRE.md`. Une variante y est notée : passer par le
-      serveur SMTP d’OVH plutôt que par Resend, ce qui éviterait un
-      sous-traitant de plus.
+- [x] **Le formulaire de contact est en service.** Il poste sur
+      `api/contact.js`, la fonction serveur du projet Vercel, qui fait
+      partir le message par Resend. Les trois entrées DNS sont posées chez
+      OVH et vérifiées ; les variables sont en place sur Vercel.
+
+- [x] **La région de traitement Resend est arrêtée** : Irlande
+      (`eu-west-1`), dans l’Union européenne. La page « Données
+      personnelles » l’écrit.
+
+- [ ] **Resend est éditée par une société de droit américain.** Faire
+      confirmer par un professionnel du droit si son accord de traitement
+      des données suffit, ou s’il faut citer en plus un mécanisme de
+      transfert. La mention est en attente sur la page « Données
+      personnelles ».
 
 ## Tarifs et durées
 
